@@ -87,13 +87,6 @@ fi
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
-# some more ls aliases
-alias ll='ls -vAFlh --group-directories-first'
-alias la='ls -A'
-alias l='ls -CF'
-# alias for nvidia-smi on ai04 (GPU #7 out of action)
-alias watch-nvidia-smi='watch -d -n 0.5 nvidia-smi --id=0,1,2,3,4,5,6'
-
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
@@ -105,6 +98,10 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
+fi
+
+if [ -f ~/.bash_functions ]; then
+    . ~/.bash_functions
 fi
 
 # enable programmable completion features (you don't need to enable
