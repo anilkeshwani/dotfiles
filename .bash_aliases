@@ -46,6 +46,10 @@ alias di='docker image'
 alias dps='docker ps'
 alias drit='docker run -it'
 
+# Python - Tools
+alias isort='isort --profile=black --line-length=120 --lines-after-imports=2 --force-alphabetical-sort-within-sections'
+alias black='black --line-length=120'
+
 # Executables
 alias chmox='chmod +x'
 
