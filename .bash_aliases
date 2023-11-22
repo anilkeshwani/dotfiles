@@ -43,6 +43,7 @@ alias cel='conda env list'
 alias d='docker'
 alias dc='docker container'
 alias di='docker image'
+alias ds='docker system'
 alias dps='docker ps'
 alias drit='docker run -it'
 
