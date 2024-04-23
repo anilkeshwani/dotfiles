@@ -55,7 +55,7 @@ alias black='black --line-length=120'
 alias chmox='chmod +x'
 
 # Code
-alias code='code-insiders' # remember that you're using Insiders ;)
+# alias code='code-insiders' # remember that you're using Insiders ;)
 
 # Jekyll
 alias jkl='bundle exec jekyll'

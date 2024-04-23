@@ -6,8 +6,14 @@ ngclog() {
     else
         local ngc_job_logfile
         ngc_job_logfile="${ngc_log_dir}/$1.txt"
-        ngc batch log "$1" > "$ngc_job_logfile"
+        ngc batch log "$1" >"$ngc_job_logfile"
         echo "$ngc_job_logfile"
     fi
 }
 
+sshkeyadd() {
+    local ssh_key_path
+    ssh_key_path="${HOME}/.ssh/id_ed25519"
+    eval "$(ssh-agent -s)"
+    ssh-add "$ssh_key_path"
+}
