@@ -1,5 +1,9 @@
 # some more ls aliases
-alias ll='ls -vAFlh --group-directories-first'
+if [[ "$(uname)" == "Darwin" ]]; then
+    alias ll='ls -vAFlh' # macOS
+else
+    alias ll='ls -vAFlh --group-directories-first' # linux
+fi
 alias la='ls -A'
 alias l='ls -lF'
 alias ..='cd ..'
@@ -25,7 +29,7 @@ alias gddl='git diff | delta --side-by-side --line-numbers --light'
 alias gds='git diff --staged'
 alias gdsd='git diff --staged | delta --side-by-side --line-numbers'
 alias gl='git log'
-alias glo='git log --oneline' 
+alias glo='git log --oneline'
 alias gldog='git log --decorate --oneline --graph' # remember that tig is also an option
 alias gsh='git show'
 alias gst='git stash'
