@@ -16,14 +16,16 @@ mk_default_dotfiles_dir() {
     cd dotfiles
     # move existing dotfiles in $HOME to DEFAULT_DOTFILES_DIR
     for file in *; do
-        if [ ! -f "${HOME}/${file}" ]; then
+        if [ -f "${HOME}/${file}" ]; then
             mk_default_dotfiles_dir
             mv "${HOME}/${file}" "${DEFAULT_DOTFILES_DIR}/${file}"
             echo "Moved ${HOME}/${file} to ${DEFAULT_DOTFILES_DIR}/${file}"
+        else
+            echo "Did not find ${HOME}/${file}"
         fi
     done
     # create soft links in $HOME directory for repository dotfiles
     for file in *; do
-        ls -s "${file}" "${HOME}/${file}"
+        ln -s "${file}" "${HOME}/${file}"
     done
 )
