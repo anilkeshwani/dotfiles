@@ -26,6 +26,6 @@ mk_default_dotfiles_dir() {
     done
     # create soft links in $HOME directory for repository dotfiles
     for file in *; do
-        ln -s "${file}" "${HOME}/${file}"
+        ln -s $(realpath ${file}) "${HOME}/${file}"
     done
 )
