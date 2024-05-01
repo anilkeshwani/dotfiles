@@ -28,7 +28,7 @@ When spinning up a new machine, you need to set up SSH keys to authenticate with
   
   ```bash 
   ssh-keygen -t ed25519 -C "anilkeshwani@hotmail.com" &&
-      cat "${HOME}/.ssh/id_ed25519.pub
+      cat "${HOME}/.ssh/id_ed25519.pub"
   ```
   
 2. [Add the public key as a new SSH key on GitHub](https://github.com/settings/keys)
