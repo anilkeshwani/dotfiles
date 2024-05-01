@@ -19,3 +19,16 @@ Remember that you want to also create a `main` environment to keep the `base` Co
 ```bash
 conda create --name main --clone base --copy
 ```
+
+## SSH Keys
+
+When spinning up a new machine, you need to set up SSH keys to authenticate with GitHub
+
+1. Create a new SSH public-private key pair:
+  
+  ```bash 
+  ssh-keygen -t ed25519 -C "anilkeshwani@hotmail.com" &&
+      cat "${HOME}/.ssh/id_ed25519.pub
+  ```
+  
+2. [Add the public key as a new SSH key on GitHub](https://github.com/settings/keys)
