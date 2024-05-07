@@ -21,7 +21,8 @@ mk_default_dotfiles_dir() {
             mv "${HOME}/${file}" "${DEFAULT_DOTFILES_DIR}/${file}"
             echo "Moved ${HOME}/${file} to ${DEFAULT_DOTFILES_DIR}/${file}"
         else
-            echo "Did not find ${HOME}/${file}"
+            unlink "${HOME}/${file}"
+            echo "Did not find ${HOME}/${file}. Performed unlinking on danling symbolic links"
         fi
     done
     # create soft links in $HOME directory for repository dotfiles
