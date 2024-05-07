@@ -115,9 +115,8 @@ if ! shopt -oq posix; then
     fi
 fi
 
-# MLflow Credentials
-export MLFLOW_TRACKING_USERNAME=translated
-export MLFLOW_TRACKING_PASSWORD=pwgqMH43eTBsZamZZvvcf2FvNKka
+# Modifications to PATH environment variable
+export PATH="$PATH:${HOME}/bin" # contains delta - https://github.com/dandavison/delta/releases
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
