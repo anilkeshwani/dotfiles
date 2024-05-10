@@ -72,5 +72,5 @@ alias vpn="sudo openvpn --config \"${HOME}/.ssh/VPN/masterpf-UDP4-1194-config.ov
 alias jc='git add -A && git commit -am "$(date)" -m "$(git status --porcelain | tr -d \"\"\" | sort)"'
 alias jp='git pull && git add -A && git commit -am "$(date)" -m "$(git status --porcelain | tr -d \"\"\" | sort)" && git push'
 
-# Temporary
-alias cdnlp="cd ${HOME}/nlp/nlp2"
+# SSH
+alias ska='sshkeyadd'
