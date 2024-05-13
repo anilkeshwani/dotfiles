@@ -58,6 +58,12 @@ alias black='black --line-length=120'
 # Executables
 alias chmox='chmod +x'
 
+# tmux
+alias tm='tmux'
+alias tma='tmux attach'
+alias tmls='tmux ls'
+alias tmcp='tmux capture-pane'
+
 # Code
 # alias code='code-insiders' # remember that you're using Insiders ;)
 
