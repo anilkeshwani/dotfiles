@@ -16,13 +16,12 @@ mk_default_dotfiles_dir() {
     cd dotfiles
     # move existing dotfiles in $HOME to DEFAULT_DOTFILES_DIR
     for file in *; do
-        if [ -f "${HOME}/${file}" ]; then
+        if [ -e "${HOME}/${file}" ]; then
             mk_default_dotfiles_dir
             mv "${HOME}/${file}" "${DEFAULT_DOTFILES_DIR}/${file}"
             echo "Moved ${HOME}/${file} to ${DEFAULT_DOTFILES_DIR}/${file}"
         else
-            unlink "${HOME}/${file}"
-            echo "Did not find ${HOME}/${file}. Performed unlinking on danling symbolic links"
+            echo "Did not find ${HOME}/${file}."
         fi
     done
     # create soft links in $HOME directory for repository dotfiles
