@@ -120,14 +120,14 @@ export PATH="$PATH:${HOME}/bin" # contains delta - https://github.com/dandavison
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/anilkeshwani/miniconda3/bin/conda' 'shell.bash' 'hook' 2>/dev/null)"
+__conda_setup="$('/mnt/scratch-artemis/anilkeshwani/miniconda3/bin/conda' 'shell.bash' 'hook' 2>/dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/anilkeshwani/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/anilkeshwani/miniconda3/etc/profile.d/conda.sh"
+    if [ -f "/mnt/scratch-artemis/anilkeshwani/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/mnt/scratch-artemis/anilkeshwani/miniconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/home/anilkeshwani/miniconda3/bin:$PATH"
+        export PATH="/mnt/scratch-artemis/anilkeshwani/miniconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
