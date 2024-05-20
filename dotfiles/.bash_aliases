@@ -60,6 +60,7 @@ alias chmox='chmod +x'
 
 # tmux
 alias tm='tmux'
+alias tmns='tmux new-session -A -s' # new named session attaching if exists
 alias tma='tmux attach'
 alias tmls='tmux ls'
 alias tmcp='tmux capture-pane'
