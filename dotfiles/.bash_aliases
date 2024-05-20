@@ -60,7 +60,8 @@ alias chmox='chmod +x'
 
 # tmux
 alias tm='tmux'
-alias tmns='tmux new-session -A -s' # new named session attaching if exists
+alias tmns='tmux new-session -A'     # new session attaching if exists
+alias tmnss='tmux new-session -A -s' # new named session attaching if exists
 alias tma='tmux attach'
 alias tmls='tmux ls'
 alias tmcp='tmux capture-pane'
@@ -73,7 +74,7 @@ alias jkl='bundle exec jekyll'
 alias jklsw='bundle exec jekyll serve --watch --incremental'
 
 # VPN
-alias vpn="sudo openvpn --config \"${HOME}/.ssh/VPN/masterpf-UDP4-1194-config.ovpn\""
+alias vpn='sudo openvpn --config \"${HOME}/.ssh/VPN/masterpf-UDP4-1194-config.ovpn\"'
 
 # Journal
 alias jc='git add -A && git commit -am "$(date)" -m "$(git status --porcelain | tr -d \"\"\" | sort)"'
