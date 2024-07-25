@@ -83,3 +83,7 @@ alias jp='git pull && git add -A && git commit -am "$(date)" -m "$(git status --
 
 # SSH
 alias ska='sshkeyadd'
+
+# Sardine
+alias artemis='ssh artemis'
+alias poseidon='ssh poseidon'
