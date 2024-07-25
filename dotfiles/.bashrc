@@ -118,16 +118,24 @@ fi
 # Modifications to PATH environment variable
 export PATH="$PATH:${HOME}/bin" # contains delta - https://github.com/dandavison/delta/releases
 
+# Set default CONDA_INSTALL_PREFIX per usage on servers (Linux) vs local (Mac)
+if [ "$(uname -s)" == "Linux" ]; then
+    HAFH='/mnt/scratch-artemis/anilkeshwani'
+    CONDA_INSTALL_PREFIX="${HAFH}/miniconda3"
+elif [ "$(uname -s)" == "Darwin" ]; then
+    CONDA_INSTALL_PREFIX="${HOME}/miniconda3"
+fi
+
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/anilkeshwani/miniconda3/bin/conda' 'shell.bash' 'hook' 2>/dev/null)"
+__conda_setup="$("${CONDA_INSTALL_PREFIX}/bin/conda" 'shell.bash' 'hook' 2>/dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/Users/anilkeshwani/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/anilkeshwani/miniconda3/etc/profile.d/conda.sh"
+    if [ -f "${CONDA_INSTALL_PREFIX}/etc/profile.d/conda.sh" ]; then
+        . "${CONDA_INSTALL_PREFIX}/etc/profile.d/conda.sh"
     else
-        export PATH="/Users/anilkeshwani/miniconda3/bin:$PATH"
+        export PATH="${CONDA_INSTALL_PREFIX}/bin:$PATH"
     fi
 fi
 unset __conda_setup
