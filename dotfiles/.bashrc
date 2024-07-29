@@ -124,8 +124,8 @@ export PATH="$PATH:${HOME}/bin" # contains delta - https://github.com/dandavison
 
 # Set default CONDA_INSTALL_PREFIX per usage on servers (Linux) vs local (Mac)
 if [ "$(uname -s)" == "Linux" ]; then
-    CONDA_INSTALL_PREFIX="${HAFH}/miniconda3"
     export HAFH='/mnt/scratch-artemis/anilkeshwani'
+    CONDA_INSTALL_PREFIX="${HAFH}/miniconda3"
 elif [ "$(uname -s)" == "Darwin" ]; then
     CONDA_INSTALL_PREFIX="${HOME}/miniconda3"
 fi
