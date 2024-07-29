@@ -87,3 +87,6 @@ alias ska='sshkeyadd'
 # Sardine
 alias artemis='ssh artemis'
 alias poseidon='ssh poseidon'
+
+# Utils
+alias fzfp='fzf --preview "cat {}"'
