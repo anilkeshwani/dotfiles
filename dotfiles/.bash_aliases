@@ -65,6 +65,7 @@ alias tmnss='tmux new-session -s' # new named session
 alias tmnsa='tmux new-session -A' # new named session attaching if exists
 alias tma='tmux attach'
 alias tmls='tmux ls'
+alias tmlsw='tmux list-windows' # NOTE this is already aliases _by tmux_ as tmux lsw
 alias tmcp='tmux capture-pane'
 
 # Code
