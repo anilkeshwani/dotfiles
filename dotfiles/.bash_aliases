@@ -91,3 +91,4 @@ alias hafh='cd "$HAFH"'
 
 # Utils
 alias fzfp='fzf --preview "cat {}"'
+alias fzfpo='open "$(fzf --preview "cat {}")"'
