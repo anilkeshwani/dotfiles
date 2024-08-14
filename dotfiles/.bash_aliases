@@ -93,3 +93,4 @@ alias hafh='cd "$HAFH"'
 # Utils
 alias fzfp='fzf --preview "cat {}"'
 alias fzfpo='open "$(fzf --preview "cat {}")"'
+alias dog='pygmentize -g' # requires pygmentize from the python package python-pygments: `pip install Pygments`
