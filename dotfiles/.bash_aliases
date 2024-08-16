@@ -17,6 +17,7 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 
 # Git Aliases
 alias gs='git status'
+alias gsu='git status -u'
 alias ga='git add'
 alias gc='git commit'
 alias gco='git checkout'
