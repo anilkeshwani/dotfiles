@@ -17,3 +17,7 @@ sshkeyadd() {
     eval "$(ssh-agent -s)"
     ssh-add "$ssh_key_path"
 }
+
+file_ends_with_newline() {
+    [[ $(tail -c1 "$1" | wc -l) -gt 0 ]]
+}
