@@ -75,6 +75,7 @@ alias tma='tmux attach'
 alias tmls='tmux ls'
 alias tmlsw='tmux list-windows' # NOTE this is already aliases _by tmux_ as tmux lsw
 alias tmcp='tmux capture-pane'
+# watch -n .1 'tmux capture-pane -p -t 0 | tail -n 25' # TODO add this (here or in .bash_functions)
 
 # Code
 # alias code='code-insiders' # remember that you're using Insiders ;)
