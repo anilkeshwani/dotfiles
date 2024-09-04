@@ -42,6 +42,7 @@ alias gldog='git log --decorate --oneline --graph' # remember that tig is also a
 alias gsh='git show'
 alias gst='git stash'
 alias gstl='git stash list'
+alias gstls='git stash list' # doesn't adhere to the first letter-only rule but I always think it's this
 alias gpl='git pull'
 alias gplap='git pull --all --prune '
 alias gp='git push'
