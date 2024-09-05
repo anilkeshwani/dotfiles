@@ -80,6 +80,7 @@ alias tmcp='tmux capture-pane'
 
 # Code
 # alias code='code-insiders' # remember that you're using Insiders ;)
+alias code='cursor' # provisional alias whilst taking Cursor for a test drive
 
 # Jekyll
 alias jkl='bundle exec jekyll'
