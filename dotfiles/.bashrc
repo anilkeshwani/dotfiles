@@ -140,3 +140,18 @@ unset __conda_setup
 
 conda activate main
 conda env list
+
+# >>> juliaup initialize >>>
+
+# !! Contents within this block are managed by juliaup !!
+
+case ":$PATH:" in
+    *:/Users/anilkeshwani/.juliaup/bin:*)
+        ;;
+
+    *)
+        export PATH=/Users/anilkeshwani/.juliaup/bin${PATH:+:${PATH}}
+        ;;
+esac
+
+# <<< juliaup initialize <<<
