@@ -7,8 +7,5 @@ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O mi
 
 conda create --name main --clone base --copy
 
-# Create new public-private keypair for use with Github
-ssh-keygen -t ed25519 -C "anilkeshwani@hotmail.com"
-
 # Install tools
-sudo apt install tree
+apt install tree ncdu
