@@ -1,24 +1,26 @@
-source ~/.bashrc
+if [[ "$(uname)" == "Darwin" ]]; then
+    source ~/.bashrc
 
-eval "$(/opt/homebrew/bin/brew shellenv)"
-export BASH_SILENCE_DEPRECATION_WARNING=1
-. "$HOME/.cargo/env"
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+    export BASH_SILENCE_DEPRECATION_WARNING=1
+    . "$HOME/.cargo/env"
 
-# >>> juliaup initialize >>>
+    # >>> juliaup initialize >>>
 
-# !! Contents within this block are managed by juliaup !!
+    # !! Contents within this block are managed by juliaup !!
 
-case ":$PATH:" in
-*:/Users/anilkeshwani/.juliaup/bin:*) ;;
+    case ":$PATH:" in
+    *:/Users/anilkeshwani/.juliaup/bin:*) ;;
 
-*)
-    export PATH=/Users/anilkeshwani/.juliaup/bin${PATH:+:${PATH}}
-    ;;
-esac
+    *)
+        export PATH=/Users/anilkeshwani/.juliaup/bin${PATH:+:${PATH}}
+        ;;
+    esac
 
-# <<< juliaup initialize <<<
+    # <<< juliaup initialize <<<
 
-# Ruby
-source /opt/homebrew/opt/chruby/share/chruby/chruby.sh
-source /opt/homebrew/opt/chruby/share/chruby/auto.sh
-chruby ruby-3.1.3
+    # Ruby
+    source /opt/homebrew/opt/chruby/share/chruby/chruby.sh
+    source /opt/homebrew/opt/chruby/share/chruby/auto.sh
+    chruby ruby-3.1.3
+fi
