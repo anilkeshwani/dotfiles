@@ -12,5 +12,6 @@ tar -xvzf "${OUTPUT_FILE}"
 mv "${UNZIPPED_DIR}/delta" "${BIN_DIR}/delta"
 
 echo "Placed delta binary in ${BIN_DIR}"
-rm -r "${OUTPUT_FILE}"
+rm "${OUTPUT_FILE}"
+rm -r "${UNZIPPED_DIR}"
 echo "Cleaned up files. Removed ${OUTPUT_FILE}"
