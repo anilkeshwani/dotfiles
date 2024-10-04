@@ -21,3 +21,26 @@ sshkeyadd() {
 file_ends_with_newline() {
     [[ $(tail -c1 "$1" | wc -l) -gt 0 ]]
 }
+
+git_first_commit_date() {
+    if [ $# -eq 0 ]; then
+        echo "Usage: git_first_commit <file_path>"
+        return 1
+    fi
+
+    local file_path="$1"
+    if [ ! -f "$file_path" ]; then
+        echo "Error: File not found: $file_path"
+        return 1
+    fi
+
+    local first_commit=$(git log --reverse --date=format:"%a %b %d %T %Y %z" --pretty=format:"%ad" -- "$file_path" 2>/dev/null | head -1)
+    local iso_date=$(git log --reverse --date=iso8601-strict --pretty=format:"%ad" -- "$file_path" 2>/dev/null | head -1)
+
+    if [ -z "$first_commit" ]; then
+        echo "Error: No commit history found for $file_path"
+        return 1
+    fi
+
+    echo "First commit date for ${file_path}: ${first_commit} (${iso_date})"
+}
