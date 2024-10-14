@@ -171,4 +171,6 @@ if [ "$(uname -s)" == "Darwin" ]; then
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
     [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 
+    # Use Node version lts/iron -> v20.18.0 (used for quartz)
+    nvm use lts/iron
 fi
