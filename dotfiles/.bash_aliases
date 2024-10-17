@@ -49,6 +49,7 @@ alias gplr='git pull --rebase'
 alias gplap='git pull --all --prune '
 alias gp='git push'
 alias gpp='git pull && git push'
+alias gpf='git push --force-with-lease'
 
 # Conda
 alias ca='conda activate'
