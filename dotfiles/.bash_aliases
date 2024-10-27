@@ -102,6 +102,7 @@ alias ska='sshkeyadd'
 # Sardine
 alias artemis='ssh artemis'
 alias poseidon='ssh poseidon'
+alias dionysus='ssh dionysus'
 alias hafh='cd "$HAFH"'
 
 # Utils
