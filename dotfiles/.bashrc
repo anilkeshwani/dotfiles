@@ -122,7 +122,7 @@ export PATH="$PATH:${HOME}/bin" # contains delta - https://github.com/dandavison
 
 # Set default CONDA_INSTALL_PREFIX by environment. Cases: Linux Sardine, Linux other, macOS (local)
 if [ "$(uname -s)" == "Linux" ]; then
-    if [[ "$(uname -n)" =~ ^(artemis|poseidon)$ ]]; then # TODO Add new server(s) when added
+    if [[ "$(uname -n)" =~ ^(artemis|poseidon|dionysus)$ ]]; then # TODO Add new server(s) when added
         export HAFH='/mnt/scratch-artemis/anilkeshwani'
         CONDA_INSTALL_PREFIX="${HAFH}/miniconda3"
     else

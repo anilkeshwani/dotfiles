@@ -109,8 +109,15 @@ alias hafh='cd "$HAFH"'
 alias sdebug='echo "Poseidon debug" && srun --partition a6000 --time=01:00:00 --gres=gpu:1 --qos=gpu-debug -w poseidon --pty bash'
 alias sdebugw='srun --partition a6000 --time=01:00:00 --gres=gpu:1 --qos=gpu-debug --pty bash -w' # allow node specification
 
-# Sardine > Hacks
-alias psqueue='pipx run $(which psqueue_script)'
+if [[ "$(uname -n)" =~ ^(artemis|poseidon|dionysus)$ ]]; then
+    # Sardine > Aliases
+    alias nvitop="pipx run nvitop"
+    alias psinfo="pipx run /usr/local/bin/psinfo_script"
+    alias psqueue="pipx run /usr/local/bin/psqueue_script"
+    alias quotastat="pipx run /usr/local/bin/quotastat_default"
+    alias quotastat_default="pipx run /usr/local/bin/quotastat_default"
+    alias quotastat_glusterfs="pipx run /usr/local/bin/quotastat_glusterfs"
+fi
 
 # Utils
 alias watch='watch --color --interval 0.1' # NOTE appending subsequent intervals with -n is valid; overrides -n 0.1 here
