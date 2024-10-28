@@ -173,5 +173,3 @@ if [ "$(uname -s)" == "Darwin" ]; then
     # Use Node version lts/iron -> v20.18.0 (used for quartz)
     nvm use lts/iron
 fi
-
-echo "THE CONTENTS OF .bashrc HAVE BEEN SUCCESSFULLY SOURCED"

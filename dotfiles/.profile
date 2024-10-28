@@ -51,7 +51,4 @@ if [ "$(uname)" == "Darwin" ]; then
         ;;
     esac
     # <<< juliaup initialize <<<
-    echo "THE macOS-specific CONTENTS OF .profile HAVE BEEN SUCCESSFULLY SOURCED"
 fi
-
-echo "THE CONTENTS OF .profile HAVE BEEN SUCCESSFULLY SOURCED"
