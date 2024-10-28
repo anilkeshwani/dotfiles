@@ -69,7 +69,6 @@ xterm* | rxvt*)
     PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
     ;;
 *) ;;
-
 esac
 
 # enable color support of ls and also add handy aliases
@@ -89,18 +88,18 @@ fi
 
 # Alias definitions
 
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
+if [ -f "${HOME}/.bash_aliases" ]; then
+    . "${HOME}/.bash_aliases"
 fi
 
-if [ -f ~/.bash_functions ]; then
-    . ~/.bash_functions
+if [ -f "${HOME}/.bash_functions" ]; then
+    . "${HOME}/.bash_functions"
 fi
 
 # Secrets
 
-if [ -f ~/.secrets ]; then
-    . ~/.secrets
+if [ -f "${HOME}/.secrets" ]; then
+    . "${HOME}/.secrets"
 fi
 
 # enable programmable completion features (you don't need to enable
