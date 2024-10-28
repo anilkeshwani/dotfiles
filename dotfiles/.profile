@@ -12,32 +12,34 @@
 if [ -n "$BASH_VERSION" ]; then
     # include .bashrc if it exists
     if [ -f "$HOME/.bashrc" ]; then
-	. "$HOME/.bashrc"
+        . "$HOME/.bashrc"
     fi
 fi
 
 # set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
+if [ -d "$HOME/bin" ]; then
     PATH="$HOME/bin:$PATH"
 fi
 
 # set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.local/bin" ] ; then
+if [ -d "$HOME/.local/bin" ]; then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
+# Only run this block if we are on macOS
 
-# >>> juliaup initialize >>>
+if [ "$(uname)" == "Darwin" ]; then
+    # >>> juliaup initialize >>>
 
-# !! Contents within this block are managed by juliaup !!
+    # !! Contents within this block are managed by juliaup !!
 
-case ":$PATH:" in
-    *:/Users/anilkeshwani/.juliaup/bin:*)
-        ;;
+    case ":$PATH:" in
+    *:/Users/anilkeshwani/.juliaup/bin:*) ;;
 
     *)
         export PATH=/Users/anilkeshwani/.juliaup/bin${PATH:+:${PATH}}
         ;;
-esac
+    esac
 
-# <<< juliaup initialize <<<
+    # <<< juliaup initialize <<<
+fi
