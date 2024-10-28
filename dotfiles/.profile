@@ -29,17 +29,26 @@ fi
 # Only run this block if we are on macOS
 
 if [ "$(uname)" == "Darwin" ]; then
+    # Homebrew
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+
+    export BASH_SILENCE_DEPRECATION_WARNING=1 # Silence deprecation warnings
+
+    # Cargo (Rust)
+    . "${HOME}/.cargo/env"
+
+    # Ruby
+    source /opt/homebrew/opt/chruby/share/chruby/chruby.sh
+    source /opt/homebrew/opt/chruby/share/chruby/auto.sh
+    chruby ruby-3.1.3 # Set the default Ruby version
+
     # >>> juliaup initialize >>>
-
     # !! Contents within this block are managed by juliaup !!
-
     case ":$PATH:" in
     *:/Users/anilkeshwani/.juliaup/bin:*) ;;
-
     *)
         export PATH=/Users/anilkeshwani/.juliaup/bin${PATH:+:${PATH}}
         ;;
     esac
-
     # <<< juliaup initialize <<<
 fi
