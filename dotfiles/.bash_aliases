@@ -105,6 +105,10 @@ alias poseidon='ssh poseidon'
 alias dionysus='ssh dionysus'
 alias hafh='cd "$HAFH"'
 
+# Sardine > Slurm
+alias sdebug='echo "Poseidon debug" && srun --partition a6000 --time=01:00:00 --gres=gpu:1 --qos=gpu-debug -w poseidon --pty bash'
+alias sdebugw='srun --partition a6000 --time=01:00:00 --gres=gpu:1 --qos=gpu-debug --pty bash -w' # allow node specification
+
 # Utils
 alias watch='watch --color --interval 0.1' # NOTE appending subsequent intervals with -n is valid; overrides -n 0.1 here
 alias fzfp='fzf --preview "cat {}"'
