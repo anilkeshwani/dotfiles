@@ -127,3 +127,4 @@ alias watch='watch --color --interval 0.1' # NOTE appending subsequent intervals
 alias fzfp='fzf --preview "cat {}"'
 alias fzfpo='open "$(fzf --preview "cat {}")"'
 alias dog='pygmentize -g' # requires pygmentize from the python package python-pygments: `pip install Pygments`
+alias grepxg='grep --exclude-dir=.git'
