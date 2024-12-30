@@ -128,3 +128,4 @@ alias fzfp='fzf --preview "cat {}"'
 alias fzfpo='open "$(fzf --preview "cat {}")"'
 alias dog='pygmentize -g' # requires pygmentize from the python package python-pygments: `pip install Pygments`
 alias grepxg='grep --exclude-dir=.git'
+alias whichgpu='export -p | grep CUDA_VISIBLE_DEVICES'
