@@ -44,3 +44,10 @@ git_first_commit_date() {
 
     echo "First commit date for ${file_path}: ${first_commit} (${iso_date})"
 }
+
+setgpu() {
+    echo "Enter the GPU ID(s) comma-separated for multiple GPUs, e.g., 0,1:"
+    read -r gpu_ids
+    export CUDA_VISIBLE_DEVICES=$gpu_ids
+    echo "CUDA_VISIBLE_DEVICES set to: $CUDA_VISIBLE_DEVICES"
+}
