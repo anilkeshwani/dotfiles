@@ -107,6 +107,7 @@ alias dionysus='ssh dionysus'
 alias hafh='cd "$HAFH"'
 
 # Sardine > Slurm
+alias slurm-debug='echo "Queueing debug job on Poseidon..." && srun --partition a6000 --time=01:00:00 --gres=gpu:1 --qos=gpu-debug --pty bash'
 alias slurm-debug-w='srun --partition a6000 --time=01:00:00 --gres=gpu:1 --qos=gpu-debug --pty bash -w' # allow node specification
 alias slurm-debug-pos='echo "Queueing debug job on Poseidon..." && srun --partition a6000 --time=01:00:00 --gres=gpu:1 --qos=gpu-debug -w poseidon --pty bash'
 alias slurm-debug-art='echo "Queueing debug job on Artemis..." && srun --partition a6000 --time=01:00:00 --gres=gpu:1 --qos=gpu-debug -w artemis --pty bash'
@@ -129,4 +130,3 @@ alias fzfpo='open "$(fzf --preview "cat {}")"'
 alias dog='pygmentize -g' # requires pygmentize from the python package python-pygments: `pip install Pygments`
 alias grepxg='grep --exclude-dir=.git'
 alias get-gpu='export -p | grep CUDA_VISIBLE_DEVICES' # NOTE set-gpu is a function (i.e. in .bash_functions)
-
