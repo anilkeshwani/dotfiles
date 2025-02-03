@@ -36,6 +36,7 @@ if [ "$(uname)" == "Darwin" ]; then
 
     # GLOBALS
     export GARDEN="${HOME}/Desktop/garden"
+    export JOURNAL="${HOME}/Desktop/journal"
 
     # Cargo (Rust)
     . "${HOME}/.cargo/env"
