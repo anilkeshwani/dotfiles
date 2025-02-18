@@ -129,6 +129,7 @@ fi
 alias watch='watch --color --interval 0.1' # NOTE appending subsequent intervals with -n is valid; overrides -n 0.1 here
 alias fzfp='fzf --preview "cat {}"'
 alias fzfpo='open "$(fzf --preview "cat {}")"'
+alias tvt='tv text'       # https://github.com/alexpasmantier/television; `text` should be the default but it's `files`
 alias dog='pygmentize -g' # requires pygmentize from the python package python-pygments: `pip install Pygments`
 alias grepxg='grep --exclude-dir=.git'
 alias get-gpu='export -p | grep CUDA_VISIBLE_DEVICES' # NOTE set-gpu is a function (i.e. in .bash_functions)
