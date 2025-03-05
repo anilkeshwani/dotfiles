@@ -46,8 +46,12 @@ git_first_commit_date() {
 }
 
 set-gpu() {
-    echo "Enter the GPU ID(s) comma-separated for multiple GPUs, e.g., 0,1:"
-    read -r gpu_ids
+    if [ -z "$1" ]; then
+        echo "Enter the GPU ID(s) comma-separated for multiple GPUs, e.g., 0,1:"
+        read -r gpu_ids
+    else
+        gpu_ids="$1"
+    fi
     export CUDA_VISIBLE_DEVICES=$gpu_ids
     echo "CUDA_VISIBLE_DEVICES set to: $CUDA_VISIBLE_DEVICES"
 }
