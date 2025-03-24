@@ -8,7 +8,7 @@
 if [[ "$(uname)" == "Darwin" ]]; then
     # macOS
     alias ll='ls -vAFlh'
-    alias gdn='(cd $GARDEN && ./populatecontent.sh && git pull && git add -A && echo "$(git status --porcelain | tr -d \"\"\" | sort)" && git commit -am "$(date)" -m "$(git status --porcelain | tr -d \"\"\" | sort)" && git push)'
+    alias gdn='(cd $GARDEN && git pull && ./populatecontent.sh && git add -A && echo "$(git status --porcelain | tr -d \"\"\" | sort)" && git commit -am "$(date)" -m "$(git status --porcelain | tr -d \"\"\" | sort)" && git push)'
 else
     # Linux
     alias ll='ls -vAFlh --group-directories-first'
