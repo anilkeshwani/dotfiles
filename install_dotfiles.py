@@ -19,7 +19,7 @@ DOTFILES_BACKUP_DIR = Path.home() / "dotfiles_backup"
 def main():
     dotfiles: list[Path] = list(DOTFILES_DIR.iterdir())
     symlink_tgts: list[Path] = [Path.home() / dotfile.name for dotfile in dotfiles]
-    symlink_tgts_exist: list[Path] = list(filter(lambda p: p.exists(), symlink_tgts))
+    symlink_tgts_exist: list[Path] = list(filter(lambda p: p.exists(follow_symlinks=False), symlink_tgts))
 
     if symlink_tgts_exist:
         LOGGER.info(f"Existing dotfiles found in {Path.home()}:\n" + "\n".join([str(p) for p in symlink_tgts_exist]))
