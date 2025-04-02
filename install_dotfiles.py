@@ -11,12 +11,13 @@ logging.basicConfig(
 )
 LOGGER = logging.getLogger(__file__)
 
+# Constants
 DOTFILES_DIR = Path(__file__).parent / "dotfiles"
 DOTFILES_BACKUP_DIR = Path.home() / "dotfiles_backup"
 
 dotfiles: list[Path] = list(DOTFILES_DIR.iterdir())
 symlink_tgts: list[Path] = [Path.home() / dotfile.name for dotfile in dotfiles]
-symlink_tgts_exist: list[Path] = [p for p in symlink_tgts if p.exists(follow_symlinks=False)]
+symlink_tgts_exist: list[Path] = list(filter(lambda p: p.exists(), symlink_tgts))
 
 if symlink_tgts_exist:
     LOGGER.info(f"Existing dotfiles found in {Path.home()}:\n" + "\n".join([str(p) for p in symlink_tgts_exist]))
