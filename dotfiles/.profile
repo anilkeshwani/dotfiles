@@ -35,7 +35,7 @@ if [ "$(uname)" == "Darwin" ]; then
     export BASH_SILENCE_DEPRECATION_WARNING=1 # Silence deprecation warnings
 
     # GLOBALS
-    export GARDEN="${HOME}/Desktop/garden"
+    export GARDEN="${HOME}/Desktop/garden-builder"
     export JOURNAL="${HOME}/Desktop/journal"
 
     # Cargo (Rust)
