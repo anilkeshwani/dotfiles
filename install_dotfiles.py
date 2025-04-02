@@ -21,6 +21,7 @@ def main():
     symlink_tgts: list[Path] = [Path.home() / dotfile.name for dotfile in dotfiles]
     symlink_tgts_exist: list[Path] = list(filter(lambda p: p.exists(follow_symlinks=False), symlink_tgts))
 
+    # Create the backup directory if we have any existing dotfiles (inc. as symbolic links) to move
     if symlink_tgts_exist:
         LOGGER.info(f"Existing dotfiles found in {Path.home()}:\n" + "\n".join([str(p) for p in symlink_tgts_exist]))
         try:
@@ -29,13 +30,14 @@ def main():
         except FileExistsError as e:
             raise FileExistsError(f"Default backup directory for dotfiles exists at {DOTFILES_BACKUP_DIR}") from e
 
-    for dotfile, symlink_src in zip(dotfiles, symlink_tgts):
-        if symlink_src.exists():
-            dst = DOTFILES_BACKUP_DIR / symlink_src.name
-            symlink_src.rename(dst)
-            LOGGER.info(f"Moved existing {symlink_src} to {dst}")
-        symlink_src.symlink_to(dotfile)
-        LOGGER.info(f"Symlinked {symlink_src} to {dotfile}")
+    # Symlink the dotfiles in the home directory
+    for dotfile, symlink_tgt in zip(dotfiles, symlink_tgts):
+        if symlink_tgt.exists():
+            dst = DOTFILES_BACKUP_DIR / symlink_tgt.name
+            symlink_tgt.rename(dst)
+            LOGGER.info(f"Moved existing {symlink_tgt} to {dst}")
+        symlink_tgt.symlink_to(dotfile)
+        LOGGER.info(f"Symlinked {symlink_tgt} to {dotfile}")
 
     LOGGER.info("Installed dotfiles")
 
