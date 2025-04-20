@@ -118,6 +118,7 @@ alias slurm-debug-art='echo "Queueing debug job on Artemis..." && srun --partiti
 if [[ "$(uname -n)" =~ ^(artemis|poseidon|dionysus)$ ]]; then
     # Sardine > Aliases
     # alias nvitop='pipx run nvitop'
+    unalias nvitop # Sardine servers are setting this elsewhere to use pipx which sometimes fails
     alias psinfo='pipx run /usr/local/bin/psinfo_script'
     alias psqueue='pipx run /usr/local/bin/psqueue_script'
     alias wpsq='watch "FORCE_COLOR=1 pipx run /usr/local/bin/psqueue_script"'
