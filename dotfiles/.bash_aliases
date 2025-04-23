@@ -115,18 +115,6 @@ alias slurm-debug-w='srun --partition a6000 --time=01:00:00 --gres=gpu:1 --qos=g
 alias slurm-debug-pos='echo "Queueing debug job on Poseidon..." && srun --partition a6000 --time=01:00:00 --gres=gpu:1 --qos=gpu-debug -w poseidon --pty bash'
 alias slurm-debug-art='echo "Queueing debug job on Artemis..." && srun --partition a6000 --time=01:00:00 --gres=gpu:1 --qos=gpu-debug -w artemis --pty bash'
 
-if [[ "$(uname -n)" =~ ^(artemis|poseidon|dionysus)$ ]]; then
-    # Sardine > Aliases
-    # alias nvitop='pipx run nvitop'
-    unalias nvitop # Sardine servers are setting this elsewhere to use pipx which sometimes fails
-    alias psinfo='pipx run /usr/local/bin/psinfo_script'
-    alias psqueue='pipx run /usr/local/bin/psqueue_script'
-    alias wpsq='watch "FORCE_COLOR=1 pipx run /usr/local/bin/psqueue_script"'
-    alias quotastat='pipx run /usr/local/bin/quotastat_default'
-    alias quotastat_default='pipx run /usr/local/bin/quotastat_default'
-    alias quotastat_glusterfs='pipx run /usr/local/bin/quotastat_glusterfs'
-fi
-
 # Utils
 alias watch='watch --color --interval 0.1' # NOTE appending subsequent intervals with -n is valid; overrides -n 0.1 here
 alias fzfp='fzf --preview "cat {}"'
