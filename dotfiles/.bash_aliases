@@ -103,13 +103,18 @@ alias jp='git pull && git add -A && git commit -am "$(date)" -m "$(git status --
 # SSH
 alias ska='sshkeyadd'
 
-# Sardine
+# Sardine - SSH
 alias artemis='ssh artemis'
 alias poseidon='ssh poseidon'
 alias dionysus='ssh dionysus'
 alias hafh='cd "$HAFH"'
 
-# Sardine > Slurm
+# Sardine - Monitoring
+if [[ "$(uname -n)" =~ ^(artemis|poseidon|dionysus)$ ]]; then
+    alias wpsq='watch "FORCE_COLOR=1 psqueue"'
+fi
+
+# Sardine - Slurm
 alias slurm-debug='echo "Queueing debug job..." && srun --partition a6000 --time=01:00:00 --gres=gpu:1 --qos=gpu-debug --pty bash'
 alias slurm-debug-w='srun --partition a6000 --time=01:00:00 --gres=gpu:1 --qos=gpu-debug --pty bash -w' # allow node specification
 alias slurm-debug-pos='echo "Queueing debug job on Poseidon..." && srun --partition a6000 --time=01:00:00 --gres=gpu:1 --qos=gpu-debug -w poseidon --pty bash'
