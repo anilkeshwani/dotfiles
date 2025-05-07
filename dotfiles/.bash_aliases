@@ -128,3 +128,4 @@ alias tvt='tv text'       # https://github.com/alexpasmantier/television; `text`
 alias dog='pygmentize -g' # requires pygmentize from the python package python-pygments: `pip install Pygments`
 alias grepxg='grep --exclude-dir=.git'
 alias get-gpu='export -p | grep CUDA_VISIBLE_DEVICES' # NOTE set-gpu is a function (i.e. in .bash_functions)
+alias treeless='tree -C | less -R'
