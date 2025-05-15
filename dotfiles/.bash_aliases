@@ -81,8 +81,9 @@ alias tmns='tmux new-session'     # new session
 alias tmnss='tmux new-session -s' # new named session
 alias tmnsa='tmux new-session -A' # new named session attaching if exists
 alias tma='tmux attach'
-alias tmls='tmux ls'
-alias tmlsw='tmux list-windows' # NOTE this is already aliases _by tmux_ as tmux lsw
+alias tmls='tmux ls'            # NOTE tmux ls defaults to listing *sessions* / is a shortcut for tmux list-sessions
+alias tmlsw='tmux list-windows' # NOTE this is already aliased _by tmux_ as tmux lsw
+alias tmlsp='tmux list-panes'   # NOTE this is already aliased _by tmux_ as tmux lsp
 alias tmcp='tmux capture-pane'
 # watch -n .1 'tmux capture-pane -p -t 0 | tail -n 25' # TODO add this (here or in .bash_functions)
 
