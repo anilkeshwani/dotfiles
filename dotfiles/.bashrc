@@ -85,6 +85,7 @@ fi
 
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+####################################################################################################
 
 # Alias definitions
 
@@ -101,6 +102,7 @@ fi
 if [ -f "${HOME}/.secrets" ]; then
     . "${HOME}/.secrets"
 fi
+####################################################################################################
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
@@ -112,25 +114,48 @@ if ! shopt -oq posix; then
         . /etc/bash_completion
     fi
 fi
+####################################################################################################
 
-# Modifications to PATH environment variable
-export PATH="$PATH:${HOME}/bin" # contains delta - https://github.com/dandavison/delta/releases
+# OS / server / environment-specific Settings. Cases:
+#   Linux:
+#       Sardine Servers: Artemis, Poseidon, Dionysus
+#       Linux (any other e.g. Vast, AWS, GCP)
+#   macOS ("Darwin"; local)
 
-# Utils
-# TODO Add source of ../modules/fzf/shell/completion.bash
-# ...
-
-# Set default CONDA_INSTALL_PREFIX by environment. Cases: Linux Sardine, Linux other, macOS (local)
+# Linux
 if [ "$(uname -s)" == "Linux" ]; then
+    # Linux: Sardine
     if [[ "$(uname -n)" =~ ^(artemis|poseidon|dionysus)$ ]]; then # TODO Add new server(s) when added
-        export HAFH='/mnt/scratch-artemis/anilkeshwani'
-        CONDA_INSTALL_PREFIX="${HAFH}/miniconda3"
+        export HAFH='/mnt/scratch-artemis/anilkeshwani'           # Set "Home Away From Home" path environment variable
+        CONDA_INSTALL_PREFIX="${HAFH}/miniconda3"                 # Set default CONDA_INSTALL_PREFIX
+        module load jq                                            # Load jq module for JSON processing
+    # Linux: Any other
     else
-        CONDA_INSTALL_PREFIX="${HOME}/miniconda3"
+        CONDA_INSTALL_PREFIX="${HOME}/miniconda3" # Set default CONDA_INSTALL_PREFIX
     fi
+# macOS ("Darwin"; local)
 elif [ "$(uname -s)" == "Darwin" ]; then
-    CONDA_INSTALL_PREFIX="${HOME}/miniconda3"
+    CONDA_INSTALL_PREFIX="${HOME}/miniconda3" # Set default CONDA_INSTALL_PREFIX
+
+    # >>> juliaup initialize >>>
+    # !! Contents within this block are managed by juliaup !!
+    case ":$PATH:" in
+    *:/Users/anilkeshwani/.juliaup/bin:*) ;;
+    *)
+        export PATH=/Users/anilkeshwani/.juliaup/bin${PATH:+:${PATH}}
+        ;;
+    esac
+    # <<< juliaup initialize <<<
+
+    # NVM
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+
+    # Use Node version lts/iron -> v20.18.0 (used for quartz)
+    nvm use lts/iron
 fi
+####################################################################################################
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -146,30 +171,14 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
+####################################################################################################
+
+# Modifications to PATH environment variable
+export PATH="$PATH:${HOME}/bin" # contains delta - https://github.com/dandavison/delta/releases
+
+# Utils
+# TODO Add source of ../modules/fzf/shell/completion.bash
+# ...
 
 conda activate main
 conda env list
-
-if [ "$(uname -s)" == "Darwin" ]; then
-    # >>> juliaup initialize >>>
-
-    # !! Contents within this block are managed by juliaup !!
-
-    case ":$PATH:" in
-    *:/Users/anilkeshwani/.juliaup/bin:*) ;;
-
-    *)
-        export PATH=/Users/anilkeshwani/.juliaup/bin${PATH:+:${PATH}}
-        ;;
-    esac
-
-    # <<< juliaup initialize <<<
-
-    # NVM
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
-
-    # Use Node version lts/iron -> v20.18.0 (used for quartz)
-    nvm use lts/iron
-fi
