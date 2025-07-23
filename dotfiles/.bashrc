@@ -175,6 +175,7 @@ unset __conda_setup
 
 # Modifications to PATH environment variable
 export PATH="$PATH:${HOME}/bin" # contains delta - https://github.com/dandavison/delta/releases
+export PATH="$PATH:${HOME}/.local/bin"
 
 # Utils
 # TODO Add source of ../modules/fzf/shell/completion.bash
