@@ -5,7 +5,7 @@ set -euo pipefail
 DELTA_V18_2_TARBALL='https://github.com/dandavison/delta/releases/download/0.18.2/delta-0.18.2-x86_64-unknown-linux-gnu.tar.gz'
 OUTPUT_FILE="./$(basename ${DELTA_V18_2_TARBALL})"
 UNZIPPED_DIR="./$(basename -s .tar.gz ${DELTA_V18_2_TARBALL})"
-BIN_DIR="${HOME}/bin/"
+BIN_DIR="${HOME}/.local/bin/"
 
 if [ ! -d "${BIN_DIR}" ]; then
     mkdir -p "${BIN_DIR}"
