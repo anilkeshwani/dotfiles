@@ -7,7 +7,7 @@
 if [[ "$(uname)" == "Darwin" ]]; then
     # macOS
     alias ll='ls -vAFlh'
-    alias gdn='(cd $GARDEN && git pull && ./populatecontent.sh && npx quartz build && (cd public && git pull && git add -A && git commit -am "$(date)" -m "$(git status --porcelain | tr -d \"\"\" | sort)" && git push))'
+    alias gdn='(cd $GARDEN && git pull && ./populatecontent.sh && npx quartz build && (cd public && git add -A && git commit --amend -am "$(date)" -m "$(git status --porcelain | tr -d \"\"\" | sort)" && git push --force-with-lease))'
 else
     # Linux
     alias ll='ls -vAFlh --group-directories-first'
