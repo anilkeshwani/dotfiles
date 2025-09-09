@@ -112,10 +112,11 @@ alias ska='sshkeyadd'
 alias artemis='ssh artemis'
 alias poseidon='ssh poseidon'
 alias dionysus='ssh dionysus'
+alias hades='ssh hades'
 alias hafh='cd "$HAFH"'
 
 # Sardine - Monitoring
-if [[ "$(uname -n)" =~ ^(artemis|poseidon|dionysus)$ ]]; then
+if [[ "$(uname -n)" =~ ^(artemis|poseidon|dionysus|hades)$ ]]; then
     alias wpsq='watch "FORCE_COLOR=1 psqueue"'
 fi
 
