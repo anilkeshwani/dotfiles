@@ -109,10 +109,10 @@ alias jp='git pull && git add -A && git commit -am "$(date)" -m "$(git status --
 alias ska='sshkeyadd'
 
 # Sardine - SSH
-alias artemis='ssh artemis'
-alias poseidon='ssh poseidon'
-alias dionysus='ssh dionysus'
-alias hades='ssh hades'
+# alias artemis='ssh artemis'
+# alias poseidon='ssh poseidon'
+# alias dionysus='ssh dionysus'
+# alias hades='ssh hades'
 alias hafh='cd "$HAFH"'
 
 # Sardine - Monitoring
