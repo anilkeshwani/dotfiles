@@ -118,14 +118,14 @@ fi
 
 # OS / server / environment-specific Settings. Cases:
 #   Linux:
-#       Sardine Servers: Artemis, Poseidon, Dionysus
+#       Sardine Servers: Artemis, Poseidon, Dionysus, Hades
 #       Linux (any other e.g. Vast, AWS, GCP)
 #   macOS ("Darwin"; local)
 
 # Linux
 if [ "$(uname -s)" == "Linux" ]; then
     # Linux: Sardine
-    if [[ "$(uname -n)" =~ ^(artemis|poseidon|dionysus)$ ]]; then # TODO Add new server(s) when added
+    if [[ "$(uname -n)" =~ ^(artemis|poseidon|dionysus|hades)$ ]]; then # TODO Add new server(s) when added
         export HAFH='/mnt/scratch-artemis/anilkeshwani'           # Set "Home Away From Home" path environment variable
         CONDA_INSTALL_PREFIX="${HAFH}/miniconda3"                 # Set default CONDA_INSTALL_PREFIX
         module load jq                                            # Load jq module for JSON processing
