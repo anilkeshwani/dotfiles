@@ -52,6 +52,7 @@ alias gsh='git show'                               # useful to diff a commit wit
 alias gst='git stash'
 alias gstl='git stash list'
 alias gstls='git stash list' # doesn't adhere to the first letter-only rule but I always think it's this
+alias gcp='git cherry-pick' # Google Cloud Platform's CLI is gcloud so all good
 alias gf='git fetch'
 alias gpl='git pull'
 alias gplr='git pull --rebase'
