@@ -17,6 +17,12 @@ sshkeyadd() {
     ssh-add "$ssh_key_path"
 }
 
+sshkeyaddgh() {
+    local ssh_key_path="${HOME}/.ssh/id_ed25519_github"
+    eval "$(ssh-agent -s)"
+    ssh-add "$ssh_key_path"
+}
+
 file_ends_with_newline() {
     [[ $(tail -c1 "$1" | wc -l) -gt 0 ]]
 }
