@@ -240,8 +240,21 @@ if [ -x /usr/bin/dircolors ]; then
     zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 fi
 
-# some more ls aliases
+####################################################################################################
+
 source "${HOME}/.bash_aliases"
+
+if [ -f "${HOME}/.bash_functions" ]; then
+    . "${HOME}/.bash_functions"
+fi
+
+# Secrets
+
+if [ -f "${HOME}/.secrets" ]; then
+    . "${HOME}/.secrets"
+fi
+
+####################################################################################################
 
 # enable auto-suggestions based on the history
 if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
@@ -253,4 +266,8 @@ fi
 # enable command-not-found if installed
 if [ -f /etc/zsh_command_not_found ]; then
     . /etc/zsh_command_not_found
+fi
+
+if [ -f "$HOME/.faculty.zshrc" ]; then
+    . "$HOME/.faculty.zshrc"
 fi
