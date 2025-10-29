@@ -271,3 +271,6 @@ fi
 if [ -f "$HOME/.faculty.zshrc" ]; then
     . "$HOME/.faculty.zshrc"
 fi
+
+eval "$(uv generate-shell-completion zsh)"  # or bash; might have some issues where we don't have uv; fix later
+
