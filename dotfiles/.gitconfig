@@ -11,6 +11,7 @@
 [core]
 	editor = vim
 	quotepath = false
+	attributesfile = /Users/anilkeshwani/.gitattributes
     # pager = delta
 
 # [interactive]
@@ -35,3 +36,5 @@
 	autoSetupRemote = true
 [i18n]
 	logOutputEncoding = utf-8
+[diff "ipynb"]
+	textconv = jupyter nbconvert --to python --stdout
