@@ -154,6 +154,9 @@ elif [ "$(uname -s)" == "Darwin" ]; then
 
     # Use Node version lts/iron -> v20.18.0 (used for quartz)
     nvm use lts/iron
+
+    # Added by Antigravity
+    export PATH="${HOME}/.antigravity/antigravity/bin:$PATH"
 fi
 ####################################################################################################
 
