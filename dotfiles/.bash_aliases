@@ -44,6 +44,7 @@ alias gdh1='git diff HEAD~1..HEAD'
 alias gddh1='git diff HEAD~1..HEAD | delta'
 alias gl='git log'
 alias gla='git log --all' # useful for when you're in a detached HEAD state e.g. checked out earlier commit
+alias glf='git log --format=fuller' # inc. {Author,Commit} and {Author,Commit}Date
 alias glo='git log --oneline'
 alias gldog='git log --decorate --oneline --graph' # remember that tig is also an option
 alias gldtsbd='git log --decorate --tags --simplify-by-decoration' # only tagged commits
