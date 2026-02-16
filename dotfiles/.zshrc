@@ -274,3 +274,7 @@ fi
 
 eval "$(uv generate-shell-completion zsh)"  # or bash; might have some issues where we don't have uv; fix later
 
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
