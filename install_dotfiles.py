@@ -26,7 +26,7 @@ LEGACY_SOURCE_TARGETS: list[tuple[str, str]] = [
     ("dot_bashrc", ".bashrc"),
     ("dot_gitattributes", ".gitattributes"),
     ("dot_gitconfig", ".gitconfig"),
-    ("dot_gitignore_global", ".gitignore_global"),
+    ("dot_gitignore_global", ".config/git/ignore"),
     ("dot_profile", ".profile"),
     ("dot_tmux.conf", ".tmux.conf"),
     ("dot_vimrc", ".vimrc"),
