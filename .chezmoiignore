@@ -1,0 +1,20 @@
+# Ignore everything by default and explicitly whitelist managed target paths.
+*
+
+!.bash_aliases
+!.bash_functions
+!.bashrc
+!.gitattributes
+!.gitconfig
+!.gitignore_global
+!.profile
+!.tmux.conf
+!.vimrc
+!.zshrc
+
+# !.config/ enables descent into .config directory (per .gitignore rules)
+!.config/
+.config/*
+!.config/nvim/
+.config/nvim/*
+!.config/nvim/init.lua
