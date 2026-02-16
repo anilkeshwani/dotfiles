@@ -19,8 +19,20 @@ LOGGER = logging.getLogger(__file__)
 
 REPO_ROOT = Path(__file__).resolve().parent
 SOURCE_DIR = REPO_ROOT
-LEGACY_DOTFILES_DIR = REPO_ROOT / "dotfiles"
 BACKUP_ROOT = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state")) / "dotfiles-backups"
+LEGACY_SOURCE_TARGETS: list[tuple[str, str]] = [
+    ("dot_bash_aliases", ".bash_aliases"),
+    ("dot_bash_functions", ".bash_functions"),
+    ("dot_bashrc", ".bashrc"),
+    ("dot_gitattributes", ".gitattributes"),
+    ("dot_gitconfig", ".gitconfig"),
+    ("dot_gitignore_global", ".gitignore_global"),
+    ("dot_profile", ".profile"),
+    ("dot_tmux.conf", ".tmux.conf"),
+    ("dot_vimrc", ".vimrc"),
+    ("dot_zshrc", ".zshrc"),
+    ("dot_config/nvim/init.lua", ".config/nvim/init.lua"),
+]
 
 
 def parse_args() -> argparse.Namespace:
@@ -39,7 +51,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--legacy-fallback",
         action="store_true",
-        help="Use legacy symlink installer (deprecated).",
+        help="Use fallback symlink installer from repo-root source-state files (deprecated).",
     )
     return parser.parse_args()
 
@@ -92,16 +104,24 @@ def is_same_symlink_target(link: Path, target: Path) -> bool:
 
 
 def run_legacy_install() -> None:
-    dotfiles: list[Path] = [p for p in LEGACY_DOTFILES_DIR.iterdir() if p.name != ".config"]
-    installs: list[tuple[Path, Path]] = [(dotfile, Path.home() / dotfile.name) for dotfile in dotfiles]
+    installs: list[tuple[Path, Path]] = []
+    missing_sources: list[str] = []
+    for source_rel, target_rel in LEGACY_SOURCE_TARGETS:
+        source = REPO_ROOT / source_rel
+        if not source.exists():
+            missing_sources.append(source_rel)
+            continue
+        installs.append((source, Path.home() / target_rel))
 
-    extra_installs: list[tuple[Path, Path]] = [
-        (
-            LEGACY_DOTFILES_DIR / ".config/nvim/init.lua",
-            Path.home() / ".config/nvim/init.lua",
-        ),
-    ]
-    installs.extend([(src, dst) for src, dst in extra_installs if src.exists()])
+    if missing_sources:
+        LOGGER.warning(
+            "Skipping missing source-state files for fallback symlink install:\n%s",
+            "\n".join(missing_sources),
+        )
+
+    if not installs:
+        LOGGER.warning("No fallback source-state files found in repo root. Nothing to install.")
+        return
 
     # follow_symlinks=False with dst.is_symlink() -> safe in case of *broken* symlinks
     existing_targets: list[Path] = [
@@ -144,7 +164,7 @@ def main() -> None:
     args = parse_args()
 
     if args.legacy_fallback:
-        LOGGER.warning("Running deprecated legacy installer mode.")
+        LOGGER.warning("Running deprecated fallback symlink installer mode from repo-root source-state files.")
         run_legacy_install()
         return
 
@@ -153,7 +173,7 @@ def main() -> None:
         LOGGER.info("Installed dotfiles via chezmoi.")
     except Exception as exc:
         LOGGER.error("chezmoi install failed: %s", exc)
-        LOGGER.info("Use --legacy-fallback to run the previous installer behavior.")
+        LOGGER.info("Use --legacy-fallback to run the direct symlink fallback behavior.")
         raise
 
 
