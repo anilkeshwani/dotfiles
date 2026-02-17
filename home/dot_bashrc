@@ -183,7 +183,7 @@ export PATH="$PATH:${HOME}/bin" # contains delta - https://github.com/dandavison
 export PATH="$PATH:${HOME}/.local/bin"
 
 # Utils
-# TODO Add source of ../modules/fzf/shell/completion.bash
+# TODO Add source of fzf completion from installed package
 # ...
 
 conda activate main
