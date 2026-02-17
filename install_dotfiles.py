@@ -18,7 +18,7 @@ logging.basicConfig(
 LOGGER = logging.getLogger(__file__)
 
 REPO_ROOT = Path(__file__).resolve().parent
-SOURCE_DIR = REPO_ROOT
+SOURCE_DIR = REPO_ROOT / "home"
 BACKUP_ROOT = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state")) / "dotfiles-backups"
 LEGACY_SOURCE_TARGETS: list[tuple[str, str]] = [
     ("dot_bash_aliases", ".bash_aliases"),
@@ -51,7 +51,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--legacy-fallback",
         action="store_true",
-        help="Use fallback symlink installer from repo-root source-state files (deprecated).",
+        help="Use fallback symlink installer from source-state files under --source (deprecated).",
     )
     return parser.parse_args()
 
@@ -103,15 +103,16 @@ def is_same_symlink_target(link: Path, target: Path) -> bool:
     return resolved == target.resolve()
 
 
-def run_legacy_install() -> None:
+def run_legacy_install(source: Path) -> None:
+    source = source.resolve()
     installs: list[tuple[Path, Path]] = []
     missing_sources: list[str] = []
     for source_rel, target_rel in LEGACY_SOURCE_TARGETS:
-        source = REPO_ROOT / source_rel
-        if not source.exists():
+        src = source / source_rel
+        if not src.exists():
             missing_sources.append(source_rel)
             continue
-        installs.append((source, Path.home() / target_rel))
+        installs.append((src, Path.home() / target_rel))
 
     if missing_sources:
         LOGGER.warning(
@@ -120,7 +121,7 @@ def run_legacy_install() -> None:
         )
 
     if not installs:
-        LOGGER.warning("No fallback source-state files found in repo root. Nothing to install.")
+        LOGGER.warning("No fallback source-state files found in source directory %s. Nothing to install.", source)
         return
 
     # follow_symlinks=False with dst.is_symlink() -> safe in case of *broken* symlinks
@@ -164,8 +165,8 @@ def main() -> None:
     args = parse_args()
 
     if args.legacy_fallback:
-        LOGGER.warning("Running deprecated fallback symlink installer mode from repo-root source-state files.")
-        run_legacy_install()
+        LOGGER.warning("Running deprecated fallback symlink installer mode from source directory %s.", args.source)
+        run_legacy_install(source=args.source)
         return
 
     try:

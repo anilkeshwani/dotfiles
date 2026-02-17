@@ -6,8 +6,7 @@ Feel at home and work fast no matter which host you're working on.
 
 This repo now uses [`chezmoi`](https://www.chezmoi.io/) as the primary dotfiles manager while keeping the same Git history and remote.
 
-- Canonical `chezmoi` source-state files live at repo root (for example `dot_zshrc`, `dot_gitconfig`, and `dot_config/nvim/init.lua`).
-- Legacy files in `dotfiles/` are still present during migration for compatibility.
+- Canonical `chezmoi` source-state files live in `home/` (for example `home/dot_zshrc`, `home/dot_gitconfig`, and `home/dot_config/nvim/init.lua`).
 
 ### Setup
 
@@ -27,8 +26,8 @@ From this repo root, preview and apply:
 The installer wraps:
 
 ```bash
-chezmoi init --source "$PWD"
-chezmoi -S "$PWD" apply -v
+chezmoi init --source "$PWD/home"
+chezmoi -S "$PWD/home" apply -v
 ```
 
 ### Day-to-day Usage
@@ -36,16 +35,16 @@ chezmoi -S "$PWD" apply -v
 Run `chezmoi` directly against this repo as source:
 
 ```bash
-chezmoi -S "$PWD" diff
-chezmoi -S "$PWD" status
-chezmoi -S "$PWD" apply -v
+chezmoi -S "$PWD/home" diff
+chezmoi -S "$PWD/home" status
+chezmoi -S "$PWD/home" apply -v
 ```
 
 Update from remote and apply:
 
 ```bash
 git pull
-chezmoi -S "$PWD" apply -v
+chezmoi -S "$PWD/home" apply -v
 ```
 
 ### Migration Notes
