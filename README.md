@@ -89,11 +89,11 @@ When spinning up a new machine, you need to set up SSH keys to authenticate with
   
 2. [Add the public key as a new SSH key on GitHub](https://github.com/settings/keys)
 
-## Scripts
+## Bootstrap Scripts
 
-Common scripts centralised here for use agnostic of machine. 
+Bootstrap scripts are organized under `bootstrap/` by provider/platform.
 
-### SageMaker Connect (sagemaker_connect.sh)
+### SageMaker Connect (`bootstrap/aws/sagemaker_connect.sh`)
 
 > [!note]
 > Source: [Set up local Visual Studio Code](https://docs.aws.amazon.com/sagemaker/latest/dg/remote-access-local-ide-setup.html), specifically [Method 3: Connect from the terminal via SSH CLI](https://docs.aws.amazon.com/sagemaker/latest/dg/remote-access-local-ide-setup.html#remote-access-local-ide-setup-local-vs-code-method-3-connect-from-the-terminal-via-ssh-cli).
@@ -101,7 +101,7 @@ Common scripts centralised here for use agnostic of machine.
 Make the script executable:
 
 ```bash
-chmod +x /path/to/sagemaker_connect.sh
+chmod +x /path/to/bootstrap/aws/sagemaker_connect.sh
 ```
 
 Configure $HOME/.ssh/config to add the following entry:
@@ -109,7 +109,7 @@ Configure $HOME/.ssh/config to add the following entry:
 ```bash
 Host space-name
   HostName 'arn:PARTITION:sagemaker:us-east-1:111122223333:space/domain-id/space-name'
-  ProxyCommand '/path/to/sagemaker_connect.sh' '%h' AWS_PROFILE_NAME
+  ProxyCommand '/path/to/bootstrap/aws/sagemaker_connect.sh' '%h' AWS_PROFILE_NAME
   ForwardAgent yes
   AddKeysToAgent yes
   StrictHostKeyChecking accept-new
@@ -123,7 +123,7 @@ For example, the PARTITION can be aws.
 If you need to use a [named AWS credential profile](https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-files.html#cli-configure-files-using-profiles), change the proxy command as follows:
 
 ```bash
-ProxyCommand '/path/to/sagemaker_connect.sh' '%h' YOUR_CREDENTIAL_PROFILE_NAME
+ProxyCommand '/path/to/bootstrap/aws/sagemaker_connect.sh' '%h' YOUR_CREDENTIAL_PROFILE_NAME
 ```
 
 Connect via SSH or run SCP command:
@@ -132,3 +132,7 @@ Connect via SSH or run SCP command:
 ssh space-name
 scp file_abc space-name:/tmp/
 ```
+
+### Vast On-Start (`bootstrap/vast/onstart.sh`)
+
+Use this script as the on-start bootstrap for Vast instances.
