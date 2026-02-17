@@ -6,7 +6,6 @@
 !.bashrc
 !.gitattributes
 !.gitconfig
-!.gitignore_global
 !.profile
 !.tmux.conf
 !.vimrc
@@ -18,3 +17,6 @@
 !.config/nvim/
 .config/nvim/*
 !.config/nvim/init.lua
+!.config/git/
+.config/git/*
+!.config/git/ignore
