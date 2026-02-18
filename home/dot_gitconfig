@@ -38,3 +38,7 @@
 	logOutputEncoding = utf-8
 [diff "ipynb"]
 	textconv = jupyter nbconvert --to python --stdout
+[lfs "customtransfer.xet"]
+	path = git-xet
+	args = transfer
+	concurrent = true
