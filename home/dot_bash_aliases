@@ -23,17 +23,26 @@ alias ....='cd ../../..'
 alias .....='cd ../../../..'
 
 # Git Aliases
+# status -> gs
 alias gs='git status'
 alias gsu='git status -u'
+# add -> ga
 alias ga='git add'
+# commit -> gc
 alias gc='git commit'
+# checkout -> gco
 alias gco='git checkout'
+# branch -> gb
 alias gb='git branch'
+# remote -> gr
 alias gr='git remote'
+# tag -> gt
 alias gt='git tag'
+# describe -> gdsc
 alias gdsc='git describe'
 alias gdscta='git describe --tags --always'
 alias gdsctad='git describe --tags --always --dirty'
+# diff -> gd
 alias gd='git diff'
 alias gdd='git diff | delta --side-by-side --line-numbers'
 alias gddl='git diff | delta --side-by-side --line-numbers --light'
@@ -42,6 +51,7 @@ alias gdsd='git diff --staged | delta --side-by-side --line-numbers'
 alias gdsdl='git diff --staged | delta --side-by-side --line-numbers --light'
 alias gdh1='git diff HEAD~1..HEAD'
 alias gddh1='git diff HEAD~1..HEAD | delta'
+# log -> gl
 alias gl='git log'
 alias gla='git log --all' # useful for when you're in a detached HEAD state e.g. checked out earlier commit
 alias glf='git log --format=fuller' # inc. {Author,Commit} and {Author,Commit}Date
@@ -49,15 +59,21 @@ alias glo='git log --oneline'
 alias gldog='git log --decorate --oneline --graph' # remember that tig is also an option
 alias gldtsbd='git log --decorate --tags --simplify-by-decoration' # only tagged commits
 alias gldtsbdo='git log --decorate --tags --simplify-by-decoration --oneline' # only tagged commits; compact
+# show -> gsh
 alias gsh='git show'                               # useful to diff a commit with its parent
+# stash -> gst
 alias gst='git stash'
 alias gstl='git stash list'
 alias gstls='git stash list' # doesn't adhere to the first letter-only rule but I always think it's this
+# cherry-pick -> gcp
 alias gcp='git cherry-pick' # Google Cloud Platform's CLI is gcloud so all good
+# fetch -> gf
 alias gf='git fetch'
+# pull -> gpl
 alias gpl='git pull'
 alias gplr='git pull --rebase'
 alias gplap='git pull --all --prune '
+# push -> gp
 alias gp='git push'
 alias gpp='git pull && git push'
 alias gpf='git push --force-with-lease'
