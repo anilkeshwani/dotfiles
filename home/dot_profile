@@ -56,3 +56,5 @@ if [ "$(uname)" == "Darwin" ]; then
     esac
     # <<< juliaup initialize <<<
 fi
+export VOLTA_HOME="$HOME/.volta"
+export PATH="$VOLTA_HOME/bin:$PATH"
