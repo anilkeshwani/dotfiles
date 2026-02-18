@@ -11,3 +11,5 @@
 1. Leverage Bitwarden to load in secrets such as ssh keys, api keys, etc. (see the docs at: https://www.chezmoi.io/reference/templates/bitwarden-functions/)
 1. Run gitleaks to identify any other sensitive data that may have been committed to the repository
     - and remove it
+1. Set up distinct tmux configurations for local mac and remote GPU servers
+    - tmux conf on remotes must use distinct prefix (leader key) than local (e.g. local: ctrl + b, remote: ctrl + a)
