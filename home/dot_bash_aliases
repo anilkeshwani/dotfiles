@@ -61,6 +61,7 @@ alias gldtsbd='git log --decorate --tags --simplify-by-decoration' # only tagged
 alias gldtsbdo='git log --decorate --tags --simplify-by-decoration --oneline' # only tagged commits; compact
 # show -> gsh
 alias gsh='git show'                               # useful to diff a commit with its parent
+alias gshns='git show --name-status'
 # stash -> gst
 alias gst='git stash'
 alias gstl='git stash list'
