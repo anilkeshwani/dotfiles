@@ -1,0 +1,4 @@
+interface:
+  display_name: "Git Commit Staged"
+  short_description: "Commit staged git changes with a high-quality message"
+  default_prompt: "Review staged files and commit them with a concise, accurate commit message"
