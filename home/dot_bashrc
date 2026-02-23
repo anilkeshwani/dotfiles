@@ -116,6 +116,13 @@ if ! shopt -oq posix; then
 fi
 ####################################################################################################
 
+# NVM
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+
+####################################################################################################
+
 # OS / server / environment-specific Settings. Cases:
 #   Linux:
 #       Sardine Servers: Artemis, Poseidon, Dionysus, Hades
@@ -146,11 +153,6 @@ elif [ "$(uname -s)" == "Darwin" ]; then
         ;;
     esac
     # <<< juliaup initialize <<<
-
-    # NVM
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 
     # Use Node version lts/iron -> v20.18.0 (used for quartz)
     if command -v nvm >/dev/null 2>&1; then
