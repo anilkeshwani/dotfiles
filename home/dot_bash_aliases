@@ -79,6 +79,14 @@ alias gp='git push'
 alias gpp='git pull && git push'
 alias gpf='git push --force-with-lease'
 
+# worktree -> gw
+alias gw='git worktree'
+alias gwa='git worktree add'
+alias gwls='git worktree list'
+alias gwrm='git worktree remove'
+alias gwp='git worktree prune'
+alias gwr='git worktree repair'
+
 # Conda
 alias ca='conda activate'
 alias cel='conda env list'
