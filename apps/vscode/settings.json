@@ -1,0 +1,186 @@
+{
+    "python.jediEnabled": false,
+    "explorer.confirmDragAndDrop": false,
+    "git.autofetch": true,
+    "latex-workshop.view.pdf.viewer": "browser",
+    "editor.detectIndentation": false,
+    "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "extensions.ignoreRecommendations": false,
+    "workbench.editorAssociations": {
+        "*.copilotmd": "vscode.markdown.preview.editor",
+        "{hexdiff}:/**/*.*": "hexEditor.hexedit",
+        "*.ipynb": "jupyter-notebook",
+    },
+    "python.defaultInterpreterPath": "/Users/anilkeshwani/miniconda3/envs/main",
+    "python.analysis.typeCheckingMode": "basic",
+    "editor.rulers": [
+        80,
+        100,
+        120
+    ],
+    "jupyter.alwaysTrustNotebooks": true,
+    "mssql.connections": [
+        {
+            "server": "{{put-server-name-here}}",
+            "database": "{{put-database-name-here}}",
+            "user": "{{put-username-here}}",
+            "password": ""
+        }
+    ],
+    "markdown-preview-enhanced.previewTheme": "none.css",
+    "security.workspace.trust.untrustedFiles": "open",
+    "files.defaultLanguage": "${activeEditorLanguage}",
+    "notebook.cellToolbarLocation": {
+        "default": "right",
+        "jupyter-notebook": "left"
+    },
+    "remote.SSH.remotePlatform": {
+        "sapienzaAI-01.roma1.infn.it": "linux",
+        "151.100.189.36": "linux",
+        "10.40.1.7": "linux",
+        "10.40.1.18": "linux"
+    },
+    "editor.inlineSuggest.enabled": true,
+    "files.autoSave": "afterDelay",
+    "explorer.autoReveal": "focusNoScroll",
+    "workbench.tree.indent": 20,
+    "dvc.doNotShowCliUnavailable": true,
+    "terminal.integrated.automationProfile.osx": {},
+    "terminal.integrated.defaultProfile.osx": "bash",
+    "markdown.extension.toc.levels": "2..3",
+    "spellright.language": [
+        "en"
+    ],
+    "spellright.documentTypes": [
+        "markdown",
+        "latex"
+    ],
+    "terminal.integrated.enableMultiLinePasteWarning": false,
+    "terminal.integrated.scrollback": 10000,
+    "[dockerfile]": {
+        "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+    },
+    "shellformat.effectLanguages": [
+        "shellscript",
+        // "dockerfile",
+        "dotenv",
+        "hosts",
+        "jvmoptions",
+        "ignore",
+        "gitignore",
+        "properties",
+        "spring-boot-properties",
+        "azcli",
+        "bats"
+    ],
+    "html.format.unformatted": "",
+    "redhat.telemetry.enabled": false,
+    "python.analysis.autoImportCompletions": true,
+    "python.terminal.activateEnvironment": false,
+    "python.formatting.blackArgs": [
+        "--line-length",
+        "120"
+    ],
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        },
+        "editor.formatOnType": true,
+    },
+    "isort.args": [
+        "--profile",
+        "black",
+        "--line-length",
+        "120",
+        "--lines-after-imports",
+        "2",
+        "--force-alphabetical-sort-within-sections"
+    ],
+    "dvc.doNotShowWalkthroughAfterInstall": true,
+    "cmake.configureOnOpen": false,
+    "jupyter.interactiveWindow.textEditor.executeSelection": false,
+    "html.format.preserveNewLines": false,
+    "terminal.integrated.inheritEnv": true,
+    "editor.stickyScroll.enabled": true,
+    "editor.fontLigatures": true,
+    "python.formatting.provider": "black",
+    "hediet.vscode-drawio.resizeImages": null,
+    "black-formatter.args": [
+        "--line-length",
+        "120"
+    ],
+    "flake8.args": [
+        "--max-line-length=120",
+        "--extend-ignore=E203"
+    ],
+    "workbench.editor.empty.hint": "hidden",
+    "editor.minimap.enabled": false,
+    "workbench.editorLargeFileConfirmation": 80,
+    "git.openRepositoryInParentFolders": "never",
+    "[shellscript]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "evenBetterToml.formatter.indentEntries": false,
+    "evenBetterToml.formatter.indentString": "",
+    "evenBetterToml.formatter.reorderKeys": false,
+    "evenBetterToml.formatter.trailingNewline": true,
+    "workbench.colorTheme": "Default Light Modern",
+    "diffEditor.maxComputationTime": 0,
+    "codeium.enableConfig": {
+        "*": true
+    },
+    "C_Cpp.default.compilerPath": "/usr/bin/g++",
+    "explorer.confirmUndo": "verbose",
+    "editor.fontFamily": "'Fira Code', 'JetBrainsMono Nerd Font', Menlo, Monaco, 'Courier New', monospace",
+    "makefile.configureOnOpen": true,
+    "cmake.options.advanced": {
+        "build": {
+            "statusBarVisibility": "inherit",
+            "inheritDefault": "visible"
+        },
+        "launch": {
+            "statusBarVisibility": "inherit",
+            "inheritDefault": "visible"
+        },
+        "debug": {
+            "statusBarVisibility": "inherit",
+            "inheritDefault": "visible"
+        }
+    },
+    "terminal.integrated.commandsToSkipShell": [
+        "language-julia.interrupt"
+    ],
+    "julia.symbolCacheDownload": true,
+    "julia.enableTelemetry": false,
+    "window.autoDetectColorScheme": true,
+    "editor.codeActionsOnSave": {},
+    "black-formatter.importStrategy": "fromEnvironment",
+    "[yaml]": {
+        "editor.formatOnSave": true,
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "editor.autoIndent": "keep",
+        "diffEditor.ignoreTrimWhitespace": false,
+        "editor.defaultColorDecorators": "never",
+        "editor.quickSuggestions": {
+            "other": true,
+            "comments": false,
+            "strings": true
+        }
+    },
+    "workbench.preferredLightColorTheme": "Default Light+",
+    "workbench.preferredDarkColorTheme": "GitHub Dark Dimmed",
+    "window.zoomPerWindow": false,
+    "workbench.sideBar.location": "right",
+    "github.copilot.nextEditSuggestions.enabled": true,
+    "editor.fontSize": 12,
+    "python.languageServer": "Pylance",
+    "python.pyrefly.disableLanguageServices": true,
+    "gitlens.ai.model": "vscode",
+    "gitlens.ai.vscode.model": "copilot:gpt-4.1",
+    "window.zoomLevel": -0.33,
+    "editor.formatOnSave": true,
+    "chat.mcp.gallery.enabled": true,
+}
