@@ -5,3 +5,6 @@ apt install -y tree ncdu bat
 
 # uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Claude
+curl -fsSL https://claude.ai/install.sh | bash
