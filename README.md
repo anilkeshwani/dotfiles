@@ -89,7 +89,12 @@ When spinning up a new machine, you need to set up SSH keys to authenticate with
   
 2. [Add the public key as a new SSH key on GitHub](https://github.com/settings/keys)
 
-## Bootstrap Scripts
+## Bootstrapping New Instances / Machines
+
+### Hints - Bootstrapping
+
+- Vast instances throw you into tmux by default - nice but the tmux config needs reloading once dotfiles are in: **press the old prefix (CtrlB), :`source-file ~/.tmux.conf`**
+  - Source: [How do I reload TMUX configuration?](https://superuser.com/questions/580992/how-do-i-reload-tmux-configuration)
 
 Bootstrap scripts are organized under `bootstrap/` by provider/platform.
 
