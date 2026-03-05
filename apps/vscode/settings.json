@@ -34,12 +34,6 @@
         "default": "right",
         "jupyter-notebook": "left"
     },
-    "remote.SSH.remotePlatform": {
-        "sapienzaAI-01.roma1.infn.it": "linux",
-        "151.100.189.36": "linux",
-        "10.40.1.7": "linux",
-        "10.40.1.18": "linux"
-    },
     "editor.inlineSuggest.enabled": true,
     "files.autoSave": "afterDelay",
     "explorer.autoReveal": "focusNoScroll",
