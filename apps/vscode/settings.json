@@ -1,138 +1,52 @@
 {
-    "python.jediEnabled": false,
-    "explorer.confirmDragAndDrop": false,
-    "git.autofetch": true,
-    "latex-workshop.view.pdf.viewer": "browser",
-    "editor.detectIndentation": false,
-    "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-    "extensions.ignoreRecommendations": false,
-    "workbench.editorAssociations": {
-        "*.copilotmd": "vscode.markdown.preview.editor",
-        "{hexdiff}:/**/*.*": "hexEditor.hexedit",
-        "*.ipynb": "jupyter-notebook",
-    },
-    "python.defaultInterpreterPath": "python3",
-    "python.analysis.typeCheckingMode": "basic",
-    "editor.rulers": [
-        80,
-        100,
-        120
-    ],
-    "jupyter.alwaysTrustNotebooks": true,
-    "mssql.connections": [
-        {
-            "server": "{{put-server-name-here}}",
-            "database": "{{put-database-name-here}}",
-            "user": "{{put-username-here}}",
-            "password": ""
-        }
-    ],
-    "markdown-preview-enhanced.previewTheme": "none.css",
-    "security.workspace.trust.untrustedFiles": "open",
-    "files.defaultLanguage": "${activeEditorLanguage}",
-    "notebook.cellToolbarLocation": {
-        "default": "right",
-        "jupyter-notebook": "left"
-    },
-    "editor.inlineSuggest.enabled": true,
+    // User Interface
     "files.autoSave": "afterDelay",
+    "editor.formatOnSave": true,
     "explorer.autoReveal": "focusNoScroll",
-    "workbench.tree.indent": 20,
-    "dvc.doNotShowCliUnavailable": true,
-    "terminal.integrated.automationProfile.osx": {},
-    "terminal.integrated.defaultProfile.osx": "bash",
-    "markdown.extension.toc.levels": "2..3",
-    "spellright.language": [
-        "en"
-    ],
-    "spellright.documentTypes": [
-        "markdown",
-        "latex"
-    ],
-    "terminal.integrated.enableMultiLinePasteWarning": false,
-    "terminal.integrated.scrollback": 10000,
-    "[dockerfile]": {
-        "editor.defaultFormatter": "ms-azuretools.vscode-docker"
-    },
-    "shellformat.effectLanguages": [
-        "shellscript",
-        // "dockerfile",
-        "dotenv",
-        "hosts",
-        "jvmoptions",
-        "ignore",
-        "gitignore",
-        "properties",
-        "spring-boot-properties",
-        "azcli",
-        "bats"
-    ],
-    "html.format.unformatted": "",
-    "redhat.telemetry.enabled": false,
-    "python.analysis.autoImportCompletions": true,
-    "python.terminal.activateEnvironment": false,
-    "[python]": {
-        "editor.defaultFormatter": "charliermarsh.ruff",
-        "editor.formatOnSave": true,
-        "editor.codeActionsOnSave": {
-            "source.fixAll.ruff": "explicit",
-            "source.organizeImports.ruff": "explicit"
-        },
-        "editor.formatOnType": true,
-    },
-    "ruff.args": [
-        "--line-length=120"
-    ],
-    "dvc.doNotShowWalkthroughAfterInstall": true,
-    "cmake.configureOnOpen": false,
-    "jupyter.interactiveWindow.textEditor.executeSelection": false,
-    "html.format.preserveNewLines": false,
-    "terminal.integrated.inheritEnv": true,
+    "editor.minimap.enabled": false,
     "editor.stickyScroll.enabled": true,
     "editor.fontLigatures": true,
-    "hediet.vscode-drawio.resizeImages": null,
     "workbench.editor.empty.hint": "hidden",
-    "editor.minimap.enabled": false,
-    "workbench.editorLargeFileConfirmation": 80,
-    "git.openRepositoryInParentFolders": "never",
-    "[shellscript]": {
-        "editor.defaultFormatter": "foxundermoon.shell-format"
-    },
-    "evenBetterToml.formatter.indentEntries": false,
-    "evenBetterToml.formatter.indentString": "",
-    "evenBetterToml.formatter.reorderKeys": false,
-    "evenBetterToml.formatter.trailingNewline": true,
-    "workbench.colorTheme": "Default Light Modern",
-    "diffEditor.maxComputationTime": 0,
-    "codeium.enableConfig": {
-        "*": true
-    },
-    "C_Cpp.default.compilerPath": "/usr/bin/g++",
-    "explorer.confirmUndo": "verbose",
-    "editor.fontFamily": "'Fira Code', 'JetBrainsMono Nerd Font', Menlo, Monaco, 'Courier New', monospace",
-    "makefile.configureOnOpen": true,
-    "cmake.options.advanced": {
-        "build": {
-            "statusBarVisibility": "inherit",
-            "inheritDefault": "visible"
-        },
-        "launch": {
-            "statusBarVisibility": "inherit",
-            "inheritDefault": "visible"
-        },
-        "debug": {
-            "statusBarVisibility": "inherit",
-            "inheritDefault": "visible"
-        }
-    },
-    "terminal.integrated.commandsToSkipShell": [
-        "language-julia.interrupt"
+    "workbench.editorLargeFileConfirmation": 100,
+    "workbench.tree.indent": 20,
+    "remote.autoForwardPortsSource": "hybrid",
+    "editor.rulers": [
+        80,
+        88,
+        100
     ],
-    "julia.symbolCacheDownload": true,
-    "julia.enableTelemetry": false,
+    // Appearance
+    "window.zoomPerWindow": false,
+    "editor.fontFamily": "'Fira Code', 'JetBrainsMono Nerd Font', Menlo, Monaco, 'Courier New', monospace",
     "window.autoDetectColorScheme": true,
-    "editor.codeActionsOnSave": {},
-    "black-formatter.importStrategy": "fromEnvironment",
+    "workbench.colorTheme": "Default Light Modern",
+    "workbench.preferredLightColorTheme": "Default Light+",
+    "workbench.preferredDarkColorTheme": "GitHub Dark Default",
+    "workbench.sideBar.location": "right",
+    "editor.fontSize": 12,
+    "window.zoomLevel": -0.7,
+    // indentRainbow
+    "indentRainbow.colors": [
+        "rgba(255,127,255,0.05)",
+        "rgba(250, 250, 0, 0.05)",
+        "rgba(127,255,127,0.05)",
+        "rgba(79,236,236,0.05)"
+    ],
+    // Python User-level Fallback
+    "[python]": {
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.formatOnSave": true
+    },
+    // TOML User-level Fallback
+    "[toml]": {
+        "editor.defaultFormatter": "tamasfe.even-better-toml",
+        "editor.formatOnSave": true
+    },
+    "evenBetterToml.formatter.indentEntries": true,
+    "evenBetterToml.formatter.indentString": "    ",
+    "evenBetterToml.formatter.alignEntries": true,
+    "evenBetterToml.formatter.alignComments": true,
+    // YAML User-level Fallback
     "[yaml]": {
         "editor.formatOnSave": true,
         "editor.insertSpaces": true,
@@ -146,17 +60,7 @@
             "strings": true
         }
     },
-    "workbench.preferredLightColorTheme": "Default Light+",
-    "workbench.preferredDarkColorTheme": "GitHub Dark Dimmed",
-    "window.zoomPerWindow": false,
-    "workbench.sideBar.location": "right",
-    "github.copilot.nextEditSuggestions.enabled": true,
-    "editor.fontSize": 12,
-    "python.languageServer": "Pylance",
-    "python.pyrefly.disableLanguageServices": true,
-    "gitlens.ai.model": "vscode",
-    "gitlens.ai.vscode.model": "copilot:gpt-4.1",
-    "window.zoomLevel": -0.33,
-    "editor.formatOnSave": true,
-    "chat.mcp.gallery.enabled": true,
+    // Git
+    // "git.autofetch": true,
+    "git.openRepositoryInParentFolders": "never"
 }
