@@ -5,14 +5,14 @@
 
 # some more ls aliases
 if [[ "$(uname)" == "Darwin" ]]; then
-    # macOS
-    alias ll='ls -vAFlh'
-    alias gdn='(cd $GARDEN && git pull && ./populatecontent.sh && npx quartz build && (cd public && git add -A && git commit --amend -am "$(date)" -m "$(git status --porcelain | tr -d \"\"\" | sort)" && git push --force-with-lease))'
+	# macOS
+	alias ll='ls -vAFlh'
+	alias gdn='(cd $GARDEN && git pull && ./populatecontent.sh && npx quartz build && (cd public && git add -A && git commit --amend -am "$(date)" -m "$(git status --porcelain | tr -d \"\"\" | sort)" && git push --force-with-lease))'
 else
-    # Linux
-    alias ll='ls -vAFlh --group-directories-first'
-    # Add an "alert" alias for long running commands. Usage: `sleep 10; alert`
-    alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+	# Linux
+	alias ll='ls -vAFlh --group-directories-first'
+	# Add an "alert" alias for long running commands. Usage: `sleep 10; alert`
+	alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 fi
 
 alias la='ls -A'
@@ -53,14 +53,14 @@ alias gdh1='git diff HEAD~1..HEAD'
 alias gddh1='git diff HEAD~1..HEAD | delta'
 # log -> gl
 alias gl='git log'
-alias gla='git log --all' # useful for when you're in a detached HEAD state e.g. checked out earlier commit
+alias gla='git log --all'           # useful for when you're in a detached HEAD state e.g. checked out earlier commit
 alias glf='git log --format=fuller' # inc. {Author,Commit} and {Author,Commit}Date
 alias glo='git log --oneline'
-alias gldog='git log --decorate --oneline --graph' # remember that tig is also an option
-alias gldtsbd='git log --decorate --tags --simplify-by-decoration' # only tagged commits
+alias gldog='git log --decorate --oneline --graph'                            # remember that tig is also an option
+alias gldtsbd='git log --decorate --tags --simplify-by-decoration'            # only tagged commits
 alias gldtsbdo='git log --decorate --tags --simplify-by-decoration --oneline' # only tagged commits; compact
 # show -> gsh
-alias gsh='git show'                               # useful to diff a commit with its parent
+alias gsh='git show' # useful to diff a commit with its parent
 alias gshns='git show --name-status'
 # stash -> gst
 alias gst='git stash'
@@ -112,16 +112,13 @@ alias tmns='tmux new-session'     # new session
 alias tmnss='tmux new-session -s' # new named session
 alias tmnsa='tmux new-session -A' # new named session attaching if exists
 alias tma='tmux attach'
-alias tmls='tmux ls'              # NOTE tmux ls defaults to listing *sessions* / is a shortcut for tmux list-sessions
-alias tmlsw='tmux list-windows'   # NOTE this is already aliased _by tmux_ as tmux lsw
-alias tmlsp='tmux list-panes'     # NOTE this is already aliased _by tmux_ as tmux lsp
-alias tmlspa='tmux list-panes -a' # NOTE like tmux list-panes but includes all sessions/windows
+alias tmls='tmux ls'                # NOTE tmux ls lists sessions (shortcut for tmux list-sessions)
+alias tmlsw='tmux list-windows'     # NOTE tmux native alias: tmux lsw
+alias tmlswa='tmux list-windows -a' # NOTE includes all sessions
+alias tmlsp='tmux list-panes'       # NOTE tmux native alias: tmux lsp
+alias tmlspa='tmux list-panes -a'   # NOTE includes all sessions/windows
 alias tmcp='tmux capture-pane'
 # watch -n .1 'tmux capture-pane -p -t 0 | tail -n 25' # TODO add this (here or in .bash_functions)
-
-# Code
-# alias code='code-insiders' # remember that you're using Insiders ;)
-alias curs='cursor'
 
 # Jekyll
 alias jkl='bundle exec jekyll'
@@ -139,15 +136,11 @@ alias ska='sshkeyadd'
 alias skagh='sshkeyaddgh'
 
 # Sardine - SSH
-# alias artemis='ssh artemis'
-# alias poseidon='ssh poseidon'
-# alias dionysus='ssh dionysus'
-# alias hades='ssh hades'
 alias hafh='cd "$HAFH"'
 
 # Sardine - Monitoring
 if [[ "$(uname -n)" =~ ^(artemis|poseidon|dionysus|hades)$ ]]; then
-    alias wpsq='watch "FORCE_COLOR=1 psqueue"'
+	alias wpsq='watch "FORCE_COLOR=1 psqueue"'
 fi
 
 # Sardine - Slurm
@@ -159,7 +152,7 @@ alias slurm-debug-art='echo "Queueing debug job on Artemis..." && srun --partiti
 # Slurm
 alias isslurm='export -p | grep SLURM'
 
-# Utils
+# Tools & Utilities
 alias watch='watch --color --interval 0.1' # NOTE appending subsequent intervals with -n is valid; overrides -n 0.1 here
 alias fzfp='fzf --preview "cat {}"'
 alias fzfpo='open "$(fzf --preview "cat {}")"'
