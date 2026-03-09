@@ -134,16 +134,13 @@ if [ "$(uname -s)" == "Linux" ]; then
     # Linux: Sardine
     if [[ "$(uname -n)" =~ ^(artemis|poseidon|dionysus|hades)$ ]]; then # TODO Add new server(s) when added
         export HAFH='/mnt/scratch-artemis/anilkeshwani'           # Set "Home Away From Home" path environment variable
-        CONDA_INSTALL_PREFIX="${HAFH}/miniconda3"                 # Set default CONDA_INSTALL_PREFIX
         module load jq                                            # Load jq module for JSON processing
     # Linux: Any other
     else
-        CONDA_INSTALL_PREFIX="${HOME}/miniconda3" # Set default CONDA_INSTALL_PREFIX
+        : # do nothing; placeholder for future use
     fi
 # macOS ("Darwin"; local)
 elif [ "$(uname -s)" == "Darwin" ]; then
-    CONDA_INSTALL_PREFIX="${HOME}/miniconda3" # Set default CONDA_INSTALL_PREFIX
-
     # >>> juliaup initialize >>>
     # !! Contents within this block are managed by juliaup !!
     case ":$PATH:" in
@@ -162,25 +159,9 @@ elif [ "$(uname -s)" == "Darwin" ]; then
     # Added by Antigravity
     export PATH="${HOME}/.antigravity/antigravity/bin:$PATH"
 fi
-####################################################################################################
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$("${CONDA_INSTALL_PREFIX}/bin/conda" 'shell.bash' 'hook' 2>/dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "${CONDA_INSTALL_PREFIX}/etc/profile.d/conda.sh" ]; then
-        . "${CONDA_INSTALL_PREFIX}/etc/profile.d/conda.sh"
-    else
-        export PATH="${CONDA_INSTALL_PREFIX}/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-####################################################################################################
 
 # Modifications to PATH environment variable
+# TODO modify to install delta into a canonical path for bins
 export PATH="$PATH:${HOME}/bin" # contains delta - https://github.com/dandavison/delta/releases
 export PATH="$PATH:${HOME}/.local/bin"
 
@@ -188,7 +169,6 @@ export PATH="$PATH:${HOME}/.local/bin"
 # TODO Add source of fzf completion from installed package
 # ...
 
-conda activate main
-conda env list
+# TODO clean up Volta-related
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
