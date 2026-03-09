@@ -172,3 +172,6 @@ export PATH="$PATH:${HOME}/.local/bin"
 # TODO clean up Volta-related
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
+
+# Go
+export PATH="$PATH:$(go env GOPATH)/bin"
