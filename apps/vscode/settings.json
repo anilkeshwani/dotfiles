@@ -16,6 +16,7 @@
         100
     ],
     "window.zoomPerWindow": false,
+    "editor.inlineSuggest.enabled": true,
     // Appearance
     "editor.fontFamily": "'Fira Code', 'JetBrainsMono Nerd Font', Menlo, Monaco, 'Courier New', monospace",
     "window.autoDetectColorScheme": true,
@@ -35,8 +36,21 @@
     // Python User-level Fallback
     "[python]": {
         "editor.defaultFormatter": "charliermarsh.ruff",
-        "editor.formatOnSave": true
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll.ruff": "always",
+            "source.organizeImports.ruff": "always"
+        }
     },
+    // ty Python LSP
+    "python.languageServer": "None",
+    // Disable Pylance/pylint since ty owns diagnostics
+    "python.analysis.ignore": [
+        "*"
+    ],
+    "pylint.enabled": false,
+    // ty settings
+    "ty.importStrategy": "fromEnvironment", // use uv venv, not bundled ty
     // TOML User-level Fallback
     "[toml]": {
         "editor.defaultFormatter": "tamasfe.even-better-toml",
