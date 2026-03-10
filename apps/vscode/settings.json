@@ -76,5 +76,9 @@
     },
     // Git
     // "git.autofetch": true,
-    "git.openRepositoryInParentFolders": "never"
+    "git.openRepositoryInParentFolders": "never",
+    // Chat (GitHub Copilot Chat)
+    "chat.checkpoints.showFileChanges": true,
+    "chat.planAgent.defaultModel": "GPT-5.3-Codex (copilot)",
+    "chat.tools.terminal.preventShellHistory": false
 }
