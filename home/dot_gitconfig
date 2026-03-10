@@ -17,30 +17,35 @@
 # [interactive]
 #     diffFilter = delta --color-only
 
+# TODO Add delta functionality:
+# themes: https://github.com/dandavison/delta/blob/a5b8c1b57e7814e7b6e2ed6fb834cff3620b4868/themes.gitconfig
+# colours: https://dandavison.github.io/delta/choosing-colors-styles.html
 [delta]
+    # syntax-theme = base16
+    line-numbers = true
     navigate = true    # use n and N to move between diff sections
     side-by-side = true
 
-# [diff]
-#     colorMoved = default
-# [delta]
-#     side-by-side = true
-#     line-numbers = true
+[diff]
+	algorithm = histogram
+	# colorMoved = default
+
+[diff "ipynb"]
+	textconv = jupyter nbconvert --to python --stdout
 
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+
 [push]
 	autoSetupRemote = true
+
 [i18n]
 	logOutputEncoding = utf-8
-[diff "ipynb"]
-	textconv = jupyter nbconvert --to python --stdout
+
 [lfs "customtransfer.xet"]
 	path = git-xet
 	args = transfer
 	concurrent = true
-[diff]
-	algorithm = histogram
