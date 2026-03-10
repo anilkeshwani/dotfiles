@@ -42,3 +42,5 @@
 	path = git-xet
 	args = transfer
 	concurrent = true
+[diff]
+	algorithm = histogram
