@@ -154,14 +154,33 @@ alias slurm-debug-art='echo "Queueing debug job on Artemis..." && srun --partiti
 # Slurm
 alias isslurm='export -p | grep SLURM'
 
+# -----------------
 # Tools & Utilities
+# -----------------
+
+# ripgrep
+alias rgfwm='rg --files-with-matches'
+alias rgvg='rg --vimgrep'
+
+# grep
+alias grepxg='grep --exclude-dir=.git'
+
+# watch
 alias watch='watch --color --interval 0.1' # NOTE appending subsequent intervals with -n is valid; overrides -n 0.1 here
+
+# fzf
 alias fzfp='fzf --preview "cat {}"'
 alias fzfpo='open "$(fzf --preview "cat {}")"'
+
+# tv
 alias tvt='tv text'       # https://github.com/alexpasmantier/television; `text` should be the default but it's `files`
-alias dog='pygmentize -g' # requires pygmentize from the python package python-pygments: `pip install Pygments`
-alias grepxg='grep --exclude-dir=.git'
-alias rgvg='rg --vimgrep'
-alias get-gpu='export -p | grep CUDA_VISIBLE_DEVICES' # NOTE set-gpu is a function (i.e. in .bash_functions)
+
+# tree
 alias treeless='tree -C | less -R'
 alias treegi='tree --gitignore'
+
+# cat variants
+alias dog='pygmentize -g' # requires pygmentize from the python package python-pygments: `pip install Pygments`
+
+# GPU / CUDA
+alias get-gpu='export -p | grep CUDA_VISIBLE_DEVICES' # NOTE set-gpu is a function (i.e. in .bash_functions)
