@@ -22,11 +22,11 @@
     "window.autoDetectColorScheme": true,
     "workbench.colorTheme": "Default Light Modern",
     "workbench.preferredLightColorTheme": "Default Light+",
-    "workbench.preferredDarkColorTheme": "Catppuccin Macchiato",
-    "workbench.iconTheme": "catppuccin-macchiato",
+    "workbench.preferredDarkColorTheme": "Catppuccin Mocha",
+    "workbench.iconTheme": "catppuccin-mocha",
     "workbench.sideBar.location": "right",
     "editor.fontSize": 12,
-    "window.zoomLevel": -0.7,
+    "window.zoomLevel": -0.33,
     // indentRainbow (indent-rainbow by oderwat)
     "indentRainbow.colors": [
         "rgba(255,127,255,0.05)",
@@ -81,5 +81,7 @@
     // Chat (GitHub Copilot Chat)
     "chat.checkpoints.showFileChanges": true,
     "chat.planAgent.defaultModel": "GPT-5.3-Codex (copilot)",
-    "chat.tools.terminal.preventShellHistory": false
+    "chat.tools.terminal.preventShellHistory": false,
+    "claudeCode.useTerminal": true,
+    "redhat.telemetry.enabled": false
 }
