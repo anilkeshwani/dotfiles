@@ -32,6 +32,7 @@ LEGACY_SOURCE_TARGETS: list[tuple[str, str]] = [
     ("dot_vimrc", ".vimrc"),
     ("dot_zshrc", ".zshrc"),
     ("dot_config/nvim/init.lua", ".config/nvim/init.lua"),
+    ("dot_config/ghostty/config", ".config/ghostty/config"),
 ]
 
 
