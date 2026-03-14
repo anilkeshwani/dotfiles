@@ -35,42 +35,6 @@ if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
-# set a fancy prompt (non-color, unless we know we "want" color)
-case "$TERM" in
-xterm-color | *-256color) color_prompt=yes ;;
-esac
-
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
-force_color_prompt=yes
-
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-        # We have color support; assume it's compliant with Ecma-48
-        # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-        # a case would tend to support setf rather than setaf.)
-        color_prompt=yes
-    else
-        color_prompt=
-    fi
-fi
-
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
-unset color_prompt force_color_prompt
-
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm* | rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*) ;;
-esac
-
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
@@ -85,23 +49,30 @@ fi
 
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
 ####################################################################################################
+# Shell-agnostic configuration
 
-# Alias definitions
+[ -f "${HOME}/.aliases" ]   && . "${HOME}/.aliases"
+[ -f "${HOME}/.functions" ] && . "${HOME}/.functions"
+[ -f "${HOME}/.env" ]       && . "${HOME}/.env"
+[ -f "${HOME}/.secrets" ]   && . "${HOME}/.secrets"
 
-if [ -f "${HOME}/.bash_aliases" ]; then
-    . "${HOME}/.bash_aliases"
-fi
+# Machine-specific aliases and env
+case "$(uname -s)" in
+    Darwin)
+        [ -f "${HOME}/.aliases_macos" ] && . "${HOME}/.aliases_macos"
+        [ -f "${HOME}/.env_macos" ]     && . "${HOME}/.env_macos"
+        ;;
+    Linux)
+        [ -f "${HOME}/.aliases_linux" ] && . "${HOME}/.aliases_linux"
+        if [[ "$(uname -n)" =~ ^(artemis|poseidon|dionysus|hades)$ ]]; then
+            [ -f "${HOME}/.aliases_sardine" ] && . "${HOME}/.aliases_sardine"
+            [ -f "${HOME}/.env_sardine" ]     && . "${HOME}/.env_sardine"
+        fi
+        ;;
+esac
 
-if [ -f "${HOME}/.bash_functions" ]; then
-    . "${HOME}/.bash_functions"
-fi
-
-# Secrets
-
-if [ -f "${HOME}/.secrets" ]; then
-    . "${HOME}/.secrets"
-fi
 ####################################################################################################
 
 # enable programmable completion features (you don't need to enable
@@ -114,66 +85,21 @@ if ! shopt -oq posix; then
         . /etc/bash_completion
     fi
 fi
-####################################################################################################
-
-# NVM
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 
 ####################################################################################################
+# Prompt
 
-# OS / server / environment-specific Settings. Cases:
-#   Linux:
-#       Sardine Servers: Artemis, Poseidon, Dionysus, Hades
-#       Linux (any other e.g. Vast, AWS, GCP)
-#   macOS ("Darwin"; local)
+[ -f "${HOME}/.prompt" ] && . "${HOME}/.prompt"
 
-# Linux
-if [ "$(uname -s)" == "Linux" ]; then
-    # Linux: Sardine
-    if [[ "$(uname -n)" =~ ^(artemis|poseidon|dionysus|hades)$ ]]; then # TODO Add new server(s) when added
-        export HAFH='/mnt/scratch-artemis/anilkeshwani'           # Set "Home Away From Home" path environment variable
-        module load jq                                            # Load jq module for JSON processing
-    # Linux: Any other
-    else
-        : # do nothing; placeholder for future use
-    fi
-# macOS ("Darwin"; local)
-elif [ "$(uname -s)" == "Darwin" ]; then
-    # >>> juliaup initialize >>>
-    # !! Contents within this block are managed by juliaup !!
-    case ":$PATH:" in
-    *:/Users/anilkeshwani/.juliaup/bin:*) ;;
-    *)
-        export PATH=/Users/anilkeshwani/.juliaup/bin${PATH:+:${PATH}}
-        ;;
-    esac
-    # <<< juliaup initialize <<<
-
-    # Use Node version lts/iron -> v20.18.0 (used for quartz)
-    if command -v nvm >/dev/null 2>&1; then
-        nvm use --silent lts/iron >/dev/null 2>&1 || true
-    fi
-
-    # Added by Antigravity
-    export PATH="${HOME}/.antigravity/antigravity/bin:$PATH"
-fi
-
-# Modifications to PATH environment variable
-# TODO modify to install delta into a canonical path for bins
-export PATH="$PATH:${HOME}/bin" # contains delta - https://github.com/dandavison/delta/releases
-export PATH="$PATH:${HOME}/.local/bin"
-
-# Utils
-# TODO Add source of fzf completion from installed package
-# ...
-
-# TODO clean up Volta-related
-export VOLTA_HOME="$HOME/.volta"
-export PATH="$VOLTA_HOME/bin:$PATH"
-
-# Go
-if command -v go >/dev/null 2>&1; then
-    export PATH="$PATH:$(go env GOPATH)/bin"
-fi
+_bashrc_prompt_cmd() {
+    local exit_code=$?
+    local rst='\[\033[0m\]'
+    local grn='\[\033[01;32m\]'
+    local red='\[\033[01;31m\]'
+    local blu='\[\033[01;34m\]'
+    local mag='\[\033[0;35m\]'
+    local yel='\[\033[0;33m\]'
+    local arrow_color; [ $exit_code -eq 0 ] && arrow_color=$grn || arrow_color=$red
+    PS1="${grn}\u@\h${rst} ${blu}\w${rst}${mag}$(_prompt_git_branch)${rst}${yel}$(_prompt_venv)${rst}\n${arrow_color}❯${rst} "
+}
+PROMPT_COMMAND=_bashrc_prompt_cmd

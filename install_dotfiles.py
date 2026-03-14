@@ -21,18 +21,31 @@ REPO_ROOT = Path(__file__).resolve().parent
 SOURCE_DIR = REPO_ROOT / "home"
 BACKUP_ROOT = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state")) / "dotfiles-backups"
 LEGACY_SOURCE_TARGETS: list[tuple[str, str]] = [
-    ("dot_bash_aliases", ".bash_aliases"),
-    ("dot_bash_functions", ".bash_functions"),
-    ("dot_bashrc", ".bashrc"),
-    ("dot_gitattributes", ".gitattributes"),
-    ("dot_gitconfig", ".gitconfig"),
-    ("dot_config/git/ignore", ".config/git/ignore"),
-    ("dot_profile", ".profile"),
-    ("dot_tmux.conf", ".tmux.conf"),
-    ("dot_vimrc", ".vimrc"),
-    ("dot_zshrc", ".zshrc"),
-    ("dot_config/nvim/init.lua", ".config/nvim/init.lua"),
-    ("dot_config/ghostty/config", ".config/ghostty/config"),
+    # Shell-agnostic
+    ("dot_aliases",         ".aliases"),
+    ("dot_aliases_macos",   ".aliases_macos"),
+    ("dot_aliases_linux",   ".aliases_linux"),
+    ("dot_aliases_sardine", ".aliases_sardine"),
+    ("dot_functions",       ".functions"),
+    ("dot_env",             ".env"),
+    ("dot_env_macos",       ".env_macos"),
+    ("dot_env_sardine",     ".env_sardine"),
+    ("dot_prompt",          ".prompt"),
+    # Shell-specific
+    ("dot_bashrc",          ".bashrc"),
+    ("dot_zshrc",           ".zshrc"),
+    ("dot_profile",         ".profile"),
+    ("dot_profile_macos",   ".profile_macos"),
+    # Git
+    ("dot_gitattributes",              ".gitattributes"),
+    ("dot_gitconfig",                  ".gitconfig"),
+    ("dot_config/git/ignore",          ".config/git/ignore"),
+    # Editor
+    ("dot_tmux.conf",                  ".tmux.conf"),
+    ("dot_vimrc",                      ".vimrc"),
+    ("dot_config/nvim/init.lua",       ".config/nvim/init.lua"),
+    # Terminal
+    ("dot_config/ghostty/config",      ".config/ghostty/config"),
 ]
 
 

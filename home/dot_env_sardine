@@ -1,0 +1,7 @@
+# ~/.env_sardine — Sardine HPC server env, sourced on artemis/poseidon/dionysus/hades.
+
+# Scratch storage home (server-specific; artemis path used as canonical)
+export HAFH='/mnt/scratch-artemis/anilkeshwani'
+
+# Load jq from module system
+module load jq
