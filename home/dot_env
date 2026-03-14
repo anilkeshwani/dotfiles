@@ -1,8 +1,7 @@
 # ~/.env — shell-agnostic exported env vars and PATH additions.
 # Sourced by both .bashrc and .zshrc.
 
-# User-local binaries (e.g. delta)
-export PATH="$PATH:${HOME}/bin"
+# User-local binaries
 export PATH="$PATH:${HOME}/.local/bin"
 
 # NVM — Node Version Manager
