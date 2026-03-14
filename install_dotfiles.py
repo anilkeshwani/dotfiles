@@ -5,8 +5,6 @@ from __future__ import annotations
 import argparse
 import logging
 import os
-import shutil
-import subprocess
 from datetime import datetime
 from pathlib import Path
 
@@ -20,82 +18,51 @@ LOGGER = logging.getLogger(__file__)
 REPO_ROOT = Path(__file__).resolve().parent
 SOURCE_DIR = REPO_ROOT / "home"
 BACKUP_ROOT = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state")) / "dotfiles-backups"
-LEGACY_SOURCE_TARGETS: list[tuple[str, str]] = [
+
+# Paths relative to SOURCE_DIR — identical to paths relative to $HOME.
+DOTFILES: list[str] = [
     # Shell-agnostic
-    ("dot_aliases",         ".aliases"),
-    ("dot_aliases_macos",   ".aliases_macos"),
-    ("dot_aliases_linux",   ".aliases_linux"),
-    ("dot_aliases_sardine", ".aliases_sardine"),
-    ("dot_functions",       ".functions"),
-    ("dot_env",             ".env"),
-    ("dot_env_macos",       ".env_macos"),
-    ("dot_env_sardine",     ".env_sardine"),
-    ("dot_prompt",          ".prompt"),
+    ".aliases",
+    ".aliases_macos",
+    ".aliases_linux",
+    ".aliases_sardine",
+    ".functions",
+    ".env",
+    ".env_macos",
+    ".env_sardine",
+    ".prompt",
     # Shell-specific
-    ("dot_bashrc",          ".bashrc"),
-    ("dot_zshrc",           ".zshrc"),
-    ("dot_profile",         ".profile"),
-    ("dot_profile_macos",   ".profile_macos"),
+    ".bashrc",
+    ".zshrc",
+    ".profile",
+    ".profile_macos",
     # Git
-    ("dot_gitattributes",              ".gitattributes"),
-    ("dot_gitconfig",                  ".gitconfig"),
-    ("dot_config/git/ignore",          ".config/git/ignore"),
+    ".gitattributes",
+    ".gitconfig",
+    ".config/git/ignore",
     # Editor
-    ("dot_tmux.conf",                  ".tmux.conf"),
-    ("dot_vimrc",                      ".vimrc"),
-    ("dot_config/nvim/init.lua",       ".config/nvim/init.lua"),
+    ".tmux.conf",
+    ".vimrc",
+    ".config/nvim/init.lua",
     # Terminal
-    ("dot_config/ghostty/config",      ".config/ghostty/config"),
+    ".config/ghostty/config",
 ]
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Install dotfiles via chezmoi.")
+    parser = argparse.ArgumentParser(description="Install dotfiles via symlinks.")
     parser.add_argument(
         "--source",
         type=Path,
         default=SOURCE_DIR,
-        help=f"chezmoi source directory (default: {SOURCE_DIR})",
+        help=f"Source directory containing dotfiles (default: {SOURCE_DIR})",
     )
     parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Show what would change without updating destination files.",
     )
-    parser.add_argument(
-        "--legacy-fallback",
-        action="store_true",
-        help="Use fallback symlink installer from source-state files under --source (deprecated).",
-    )
     return parser.parse_args()
-
-
-def run_checked(cmd: list[str]) -> None:
-    LOGGER.info("Running: %s", " ".join(cmd))
-    subprocess.run(cmd, check=True)
-
-
-def resolve_chezmoi() -> str:
-    chezmoi = shutil.which("chezmoi")
-    if chezmoi is None:
-        raise RuntimeError("chezmoi is not installed or not on PATH.")
-    run_checked([chezmoi, "--version"])
-    return chezmoi
-
-
-def run_chezmoi_install(source: Path, dry_run: bool) -> None:
-    source = source.resolve()
-    chezmoi = resolve_chezmoi()
-
-    # Initialize against this repository; this keeps source state in-repo.
-    run_checked([chezmoi, "init", "--source", str(source)])
-
-    if dry_run:
-        run_checked([chezmoi, "-S", str(source), "diff"])
-        run_checked([chezmoi, "-n", "-v", "-S", str(source), "apply"])
-        return
-
-    run_checked([chezmoi, "-v", "-S", str(source), "apply"])
 
 
 def unique_path(path: Path) -> Path:
@@ -117,79 +84,77 @@ def is_same_symlink_target(link: Path, target: Path) -> bool:
     return resolved == target.resolve()
 
 
-def run_legacy_install(source: Path) -> None:
+def install(source: Path, dry_run: bool) -> None:
     source = source.resolve()
     installs: list[tuple[Path, Path]] = []
     missing_sources: list[str] = []
-    for source_rel, target_rel in LEGACY_SOURCE_TARGETS:
-        src = source / source_rel
+
+    for dotfile_rel in DOTFILES:
+        src = source / dotfile_rel
         if not src.exists():
-            missing_sources.append(source_rel)
+            missing_sources.append(dotfile_rel)
             continue
-        installs.append((src, Path.home() / target_rel))
+        installs.append((src, Path.home() / dotfile_rel))
 
     if missing_sources:
         LOGGER.warning(
-            "Skipping missing source-state files for fallback symlink install:\n%s",
+            "Skipping missing source files:\n%s",
             "\n".join(missing_sources),
         )
 
     if not installs:
-        LOGGER.warning("No fallback source-state files found in source directory %s. Nothing to install.", source)
+        LOGGER.warning("No dotfiles found in %s. Nothing to install.", source)
         return
 
-    # follow_symlinks=False with dst.is_symlink() -> safe in case of *broken* symlinks
-    existing_targets: list[Path] = [
+    if dry_run:
+        for src, dst in installs:
+            if is_same_symlink_target(dst, src):
+                LOGGER.info("OK (already linked): %s -> %s", dst, src)
+            elif dst.exists(follow_symlinks=False) or dst.is_symlink():
+                LOGGER.info("WOULD UPDATE: %s -> %s", dst, src)
+            else:
+                LOGGER.info("WOULD LINK:   %s -> %s", dst, src)
+        return
+
+    # Collect targets that already exist so we can create one backup dir up front.
+    existing_targets = [
         dst for _, dst in installs if dst.exists(follow_symlinks=False) or dst.is_symlink()
     ]
 
     backup_dir: Path | None = None
     if existing_targets:
-        LOGGER.info("Existing dotfiles found in %s:\n%s", Path.home(), "\n".join([str(p) for p in existing_targets]))
+        LOGGER.info("Existing dotfiles found:\n%s", "\n".join(str(p) for p in existing_targets))
         BACKUP_ROOT.mkdir(parents=True, exist_ok=True)
-        backup_dir = BACKUP_ROOT / datetime.now().strftime("%Y%m%d-%H%M%S")
-        backup_dir = unique_path(backup_dir)
+        backup_dir = unique_path(BACKUP_ROOT / datetime.now().strftime("%Y%m%d-%H%M%S"))
         backup_dir.mkdir(parents=True, exist_ok=False)
         LOGGER.info("Created backup directory at %s", backup_dir)
 
-    for dotfile, symlink_tgt in installs:
-        symlink_tgt.parent.mkdir(parents=True, exist_ok=True)
-        if is_same_symlink_target(symlink_tgt, dotfile):
-            LOGGER.info("Symlink already in place: %s -> %s", symlink_tgt, dotfile)
+    for src, dst in installs:
+        dst.parent.mkdir(parents=True, exist_ok=True)
+
+        if is_same_symlink_target(dst, src):
+            LOGGER.info("Already linked: %s -> %s", dst, src)
             continue
-        if symlink_tgt.exists(follow_symlinks=False) or symlink_tgt.is_symlink():
+
+        if dst.exists(follow_symlinks=False) or dst.is_symlink():
             if backup_dir is None:
                 BACKUP_ROOT.mkdir(parents=True, exist_ok=True)
-                backup_dir = BACKUP_ROOT / datetime.now().strftime("%Y%m%d-%H%M%S")
-                backup_dir = unique_path(backup_dir)
+                backup_dir = unique_path(BACKUP_ROOT / datetime.now().strftime("%Y%m%d-%H%M%S"))
                 backup_dir.mkdir(parents=True, exist_ok=False)
-            rel = symlink_tgt.relative_to(Path.home())
-            dst = backup_dir / rel
-            dst.parent.mkdir(parents=True, exist_ok=True)
-            dst = unique_path(dst)
-            symlink_tgt.rename(dst)
-            LOGGER.info("Moved existing %s to %s", symlink_tgt, dst)
-        symlink_tgt.symlink_to(dotfile)
-        LOGGER.info("Symlinked %s to %s", symlink_tgt, dotfile)
+            bk = unique_path(backup_dir / dst.relative_to(Path.home()))
+            bk.parent.mkdir(parents=True, exist_ok=True)
+            dst.rename(bk)
+            LOGGER.info("Backed up %s -> %s", dst, bk)
 
-    LOGGER.info("Installed dotfiles using legacy symlink mode.")
+        dst.symlink_to(src)
+        LOGGER.info("Linked %s -> %s", dst, src)
+
+    LOGGER.info("Done.")
 
 
 def main() -> None:
     args = parse_args()
-
-    if args.legacy_fallback:
-        LOGGER.warning("Running deprecated fallback symlink installer mode from source directory %s.", args.source)
-        run_legacy_install(source=args.source)
-        return
-
-    try:
-        run_chezmoi_install(source=args.source, dry_run=args.dry_run)
-        LOGGER.info("Installed dotfiles via chezmoi.")
-    except Exception as exc:
-        LOGGER.error("chezmoi install failed: %s", exc)
-        LOGGER.info("Use --legacy-fallback to run the direct symlink fallback behavior.")
-        raise
+    install(source=args.source, dry_run=args.dry_run)
 
 
 if __name__ == "__main__":

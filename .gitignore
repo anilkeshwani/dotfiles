@@ -150,6 +150,8 @@ activemq-data/
 # Environments
 .env
 .envrc
+# Dotfiles repo exception — home/.env is the shell env dotfile, not a secrets file
+!home/.env
 .venv
 env/
 venv/
