@@ -118,7 +118,7 @@ def install(source: Path, dry_run: bool) -> None:
 
     # Collect targets that already exist so we can create one backup dir up front.
     existing_targets = [
-        dst for _, dst in installs if dst.exists(follow_symlinks=False) or dst.is_symlink()
+        dst for _, dst in installs if dst.exists() or dst.is_symlink()
     ]
 
     backup_dir: Path | None = None
@@ -136,7 +136,7 @@ def install(source: Path, dry_run: bool) -> None:
             LOGGER.info("Already linked: %s -> %s", dst, src)
             continue
 
-        if dst.exists(follow_symlinks=False) or dst.is_symlink():
+        if dst.exists() or dst.is_symlink():
             if backup_dir is None:
                 BACKUP_ROOT.mkdir(parents=True, exist_ok=True)
                 backup_dir = unique_path(BACKUP_ROOT / datetime.now().strftime("%Y%m%d-%H%M%S"))
