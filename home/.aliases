@@ -6,6 +6,12 @@
 alias la='ls -A'
 alias l='ls -lF'
 
+# Directory traversal
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+
 # Git Aliases
 # status -> gs
 alias gs='git status'
