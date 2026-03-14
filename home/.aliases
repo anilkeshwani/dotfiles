@@ -5,10 +5,6 @@
 
 alias la='ls -A'
 alias l='ls -lF'
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias .....='cd ../../../..'
 
 # Git Aliases
 # status -> gs

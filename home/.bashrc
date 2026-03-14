@@ -8,6 +8,13 @@ case $- in
 *) return ;;
 esac
 
+# On systems where chsh is unavailable (e.g. HPC clusters), switch to zsh if it is installed.
+# exec replaces the bash process — no subshell overhead, clean environment inheritance.
+# Everything below is only reached when zsh is not available.
+if [ -z "$ZSH_VERSION" ] && command -v zsh >/dev/null 2>&1; then
+    exec zsh
+fi
+
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth

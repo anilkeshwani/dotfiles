@@ -36,6 +36,7 @@ DOTFILES: list[str] = [
     ".zshrc",
     ".profile",
     ".profile_macos",
+    ".zprofile",
     # Git
     ".gitattributes",
     ".gitconfig",
