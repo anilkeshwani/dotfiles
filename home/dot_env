@@ -1,0 +1,21 @@
+# ~/.env — shell-agnostic exported env vars and PATH additions.
+# Sourced by both .bashrc and .zshrc.
+
+# User-local binaries (e.g. delta)
+export PATH="$PATH:${HOME}/bin"
+export PATH="$PATH:${HOME}/.local/bin"
+
+# NVM — Node Version Manager
+# Sourced here for PATH; machine-specific version pins are in .env_macos / .env_linux
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
+
+# Volta — alternative Node version manager (kept alongside NVM for compatibility)
+export VOLTA_HOME="$HOME/.volta"
+export PATH="$VOLTA_HOME/bin:$PATH"
+
+# Go: add compiled binaries to PATH
+if command -v go >/dev/null 2>&1; then
+    export PATH="$PATH:$(go env GOPATH)/bin"
+fi

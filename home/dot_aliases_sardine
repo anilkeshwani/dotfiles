@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Sardine HPC server aliases (artemis, poseidon, dionysus, hades)
+
+# Navigation: jump to scratch storage home
+alias hafh='cd "$HAFH"'
+
+# Monitoring: live process queue with colour
+alias wpsq='watch "FORCE_COLOR=1 psqueue"'
+
+# Slurm: inspect environment
+alias isslurm='export -p | grep SLURM'
+
+# Slurm: interactive debug jobs on A6000 partition
+alias slurm-debug='echo "Queueing debug job..." && srun --partition a6000 --time=01:00:00 --gres=gpu:1 --qos=gpu-debug --pty bash'
+alias slurm-debug-w='srun --partition a6000 --time=01:00:00 --gres=gpu:1 --qos=gpu-debug --pty bash -w' # -w: specify node
+alias slurm-debug-pos='echo "Queueing debug job on Poseidon..." && srun --partition a6000 --time=01:00:00 --gres=gpu:1 --qos=gpu-debug -w poseidon --pty bash'
+alias slurm-debug-art='echo "Queueing debug job on Artemis..." && srun --partition a6000 --time=01:00:00 --gres=gpu:1 --qos=gpu-debug -w artemis --pty bash'

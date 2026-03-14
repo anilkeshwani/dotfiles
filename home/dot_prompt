@@ -1,0 +1,13 @@
+# ~/.prompt — shared prompt helpers, sourced by both .bashrc and .zshrc.
+
+# Helper: emit current git branch with leading icon, or nothing if not in a repo.
+_prompt_git_branch() {
+    local branch
+    branch=$(git branch --show-current 2>/dev/null) || return
+    [ -n "$branch" ] && printf ' \ue0a0 %s' "$branch"  # \ue0a0 = Powerline branch icon
+}
+
+# Helper: emit active virtualenv name in parens, or nothing.
+_prompt_venv() {
+    [ -n "$VIRTUAL_ENV" ] && printf ' (%s)' "$(basename "$VIRTUAL_ENV")"
+}

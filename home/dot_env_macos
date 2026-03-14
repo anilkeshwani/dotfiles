@@ -1,0 +1,9 @@
+# ~/.env_macos — macOS-specific env, sourced from .bashrc/.zshrc on Darwin.
+
+# Antigravity
+export PATH="${HOME}/.antigravity/antigravity/bin:$PATH"
+
+# NVM: pin to lts/iron (v20) — used by quartz
+if command -v nvm >/dev/null 2>&1; then
+    nvm use --silent lts/iron >/dev/null 2>&1 || true
+fi

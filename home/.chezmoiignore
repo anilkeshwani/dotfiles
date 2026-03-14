@@ -1,17 +1,24 @@
-# Ignore everything by default and explicitly whitelist managed target paths.
+# Ignore everything; explicitly whitelist managed files.
 *
 
-!.bash_aliases
-!.bash_functions
+!.aliases
+!.aliases_macos
+!.aliases_linux
+!.aliases_sardine
+!.functions
+!.env
+!.env_macos
+!.env_sardine
+!.prompt
 !.bashrc
 !.gitattributes
 !.gitconfig
 !.profile
+!.profile_macos
 !.tmux.conf
 !.vimrc
 !.zshrc
 
-# !.config/ enables descent into .config directory (per .gitignore rules)
 !.config/
 .config/*
 !.config/nvim/
@@ -20,3 +27,6 @@
 !.config/git/
 .config/git/*
 !.config/git/ignore
+!.config/ghostty/
+.config/ghostty/*
+!.config/ghostty/config

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# macOS-specific aliases
+
+# ls: macOS BSD ls has no --group-directories-first
+alias ll='ls -vAFlh'
+
+# Garden builder: pull, build, push quartz site
+alias gdn='(cd $GARDEN && git pull && ./populatecontent.sh && npx quartz build && (cd public && git add -A && git commit --amend -am "$(date)" -m "$(git status --porcelain | tr -d "\"" | sort)" && git push --force-with-lease))'
+
+# Jekyll
+alias jkl='bundle exec jekyll'
+alias jklsw='bundle exec jekyll serve --watch --incremental'
+
+# fzf: open selected file — uses macOS `open` (not available on Linux)
+alias fzfpo='open "$(fzf --preview "cat {}")"'

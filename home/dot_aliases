@@ -3,18 +3,6 @@
 # Alias definitions.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
-# some more ls aliases
-if [[ "$(uname)" == "Darwin" ]]; then
-	# macOS
-	alias ll='ls -vAFlh'
-	alias gdn='(cd $GARDEN && git pull && ./populatecontent.sh && npx quartz build && (cd public && git add -A && git commit --amend -am "$(date)" -m "$(git status --porcelain | tr -d \"\"\" | sort)" && git push --force-with-lease))'
-else
-	# Linux
-	alias ll='ls -vAFlh --group-directories-first'
-	# Add an "alert" alias for long running commands. Usage: `sleep 10; alert`
-	alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-fi
-
 alias la='ls -A'
 alias l='ls -lF'
 alias ..='cd ..'
@@ -120,39 +108,18 @@ alias tmlswa='tmux list-windows -a' # NOTE includes all sessions
 alias tmlsp='tmux list-panes'       # NOTE tmux native alias: tmux lsp
 alias tmlspa='tmux list-panes -a'   # NOTE includes all sessions/windows
 alias tmcp='tmux capture-pane'
-# watch -n .1 'tmux capture-pane -p -t 0 | tail -n 25' # TODO add this (here or in .bash_functions)
-
-# Jekyll
-alias jkl='bundle exec jekyll'
-alias jklsw='bundle exec jekyll serve --watch --incremental'
+# watch -n .1 'tmux capture-pane -p -t 0 | tail -n 25' # TODO add this (here or in .functions)
 
 # VPN
-alias vpn='sudo openvpn --config \"${HOME}/.ssh/VPN/masterpf-UDP4-1194-config.ovpn\"'
+alias vpn='sudo openvpn --config "${HOME}/.ssh/VPN/masterpf-UDP4-1194-config.ovpn"'
 
 # Journal
-alias jc='git add -A && git commit -am "$(date)" -m "$(git status --porcelain | tr -d \"\"\" | sort)"'
-alias jp='git pull && git add -A && git commit -am "$(date)" -m "$(git status --porcelain | tr -d \"\"\" | sort)" && git push'
+alias jc='git add -A && git commit -am "$(date)" -m "$(git status --porcelain | tr -d "\"" | sort)"'
+alias jp='git pull && git add -A && git commit -am "$(date)" -m "$(git status --porcelain | tr -d "\"" | sort)" && git push'
 
 # SSH
 alias ska='sshkeyadd'
 alias skagh='sshkeyaddgh'
-
-# Sardine - SSH
-alias hafh='cd "$HAFH"'
-
-# Sardine - Monitoring
-if [[ "$(uname -n)" =~ ^(artemis|poseidon|dionysus|hades)$ ]]; then
-	alias wpsq='watch "FORCE_COLOR=1 psqueue"'
-fi
-
-# Sardine - Slurm
-alias slurm-debug='echo "Queueing debug job..." && srun --partition a6000 --time=01:00:00 --gres=gpu:1 --qos=gpu-debug --pty bash'
-alias slurm-debug-w='srun --partition a6000 --time=01:00:00 --gres=gpu:1 --qos=gpu-debug --pty bash -w' # allow node specification
-alias slurm-debug-pos='echo "Queueing debug job on Poseidon..." && srun --partition a6000 --time=01:00:00 --gres=gpu:1 --qos=gpu-debug -w poseidon --pty bash'
-alias slurm-debug-art='echo "Queueing debug job on Artemis..." && srun --partition a6000 --time=01:00:00 --gres=gpu:1 --qos=gpu-debug -w artemis --pty bash'
-
-# Slurm
-alias isslurm='export -p | grep SLURM'
 
 # -----------------
 # Tools & Utilities
@@ -170,7 +137,6 @@ alias watch='watch --color --interval 0.1' # NOTE appending subsequent intervals
 
 # fzf
 alias fzfp='fzf --preview "cat {}"'
-alias fzfpo='open "$(fzf --preview "cat {}")"'
 
 # tv
 alias tvt='tv text'       # https://github.com/alexpasmantier/television; `text` should be the default but it's `files`
@@ -183,4 +149,4 @@ alias treegi='tree --gitignore'
 alias dog='pygmentize -g' # requires pygmentize from the python package python-pygments: `pip install Pygments`
 
 # GPU / CUDA
-alias get-gpu='export -p | grep CUDA_VISIBLE_DEVICES' # NOTE set-gpu is a function (i.e. in .bash_functions)
+alias get-gpu='export -p | grep CUDA_VISIBLE_DEVICES' # NOTE set-gpu is a function (i.e. in .functions)
