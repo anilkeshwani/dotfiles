@@ -201,7 +201,7 @@ fi
 [ -f "${HOME}/.prompt" ] && . "${HOME}/.prompt"
 
 autoload -Uz vcs_info
-zstyle ':vcs_info:git:*' formats ' \ue0a0 %b'   # Powerline branch icon + branch name
+zstyle ':vcs_info:git:*' formats $' \ue0a0 %b'   # U+E0A0 Powerline branch icon + branch name
 zstyle ':vcs_info:*' enable git
 setopt PROMPT_SUBST
 
