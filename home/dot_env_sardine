@@ -1,5 +1,8 @@
 # ~/.env_sardine — Sardine HPC server env, sourced on artemis/poseidon/dionysus/hades.
 
+# User-local binaries - Sardine keeps various binaries here, not installed by me
+export PATH="$PATH:${HOME}/bin"
+
 # Scratch storage home (server-specific; artemis path used as canonical)
 export HAFH='/mnt/scratch-artemis/anilkeshwani'
 
