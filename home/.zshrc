@@ -217,5 +217,7 @@ _zsh_venv_indicator() {
 
 VIRTUAL_ENV_DISABLE_PROMPT=1  # suppress venv prefix from venv activation script
 
+# %(?.A.B) -> ❯ color based on previous command’s exit status (green success, red failure)
+# %f resets color formatting after each colored segment -> styles do not leak
 PROMPT='%F{green}%n@%m%f %F{blue}%~%f%F{magenta}${vcs_info_msg_0_}%f%F{yellow}$(_zsh_venv_indicator)%f
 %(?.%F{green}.%F{red})❯%f '
