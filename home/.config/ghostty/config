@@ -49,5 +49,4 @@
 # resize-overlay-duration = 4s 200ms
 
 keybind = global:shift+escape=toggle_quick_terminal
-macos-hidden = always
-
+# macos-hidden = always
