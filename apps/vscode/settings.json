@@ -21,12 +21,9 @@
     "editor.fontFamily": "'Fira Code', 'JetBrainsMono Nerd Font', Menlo, Monaco, 'Courier New', monospace",
     "window.autoDetectColorScheme": true,
     "workbench.colorTheme": "Default Light Modern",
-    "workbench.preferredLightColorTheme": "Default Light+",
-    "workbench.preferredDarkColorTheme": "Catppuccin Mocha",
     "workbench.iconTheme": "catppuccin-mocha",
     "workbench.sideBar.location": "right",
     "editor.fontSize": 12,
-    "window.zoomLevel": -0.33,
     // indentRainbow (indent-rainbow by oderwat)
     "indentRainbow.colors": [
         "rgba(255,127,255,0.05)",
@@ -83,5 +80,8 @@
     "chat.planAgent.defaultModel": "GPT-5.3-Codex (copilot)",
     "chat.tools.terminal.preventShellHistory": false,
     "claudeCode.useTerminal": true,
-    "redhat.telemetry.enabled": false
+    "redhat.telemetry.enabled": false,
+    "window.zoomLevel": -1,
+    "workbench.preferredDarkColorTheme": "Default Dark+",
+    "workbench.preferredLightColorTheme": "Default Light+"
 }
