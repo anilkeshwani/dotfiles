@@ -51,5 +51,5 @@
 keybind = global:shift+escape=toggle_quick_terminal
 # macos-hidden = always
 
-theme = light:Tango Light,dark:Ghostty Default Style Dark
+theme = light:Builtin Light,dark:Ghostty Default Style Dark
 
