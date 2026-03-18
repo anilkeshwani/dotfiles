@@ -17,6 +17,7 @@
     ],
     "window.zoomPerWindow": false,
     "editor.inlineSuggest.enabled": true,
+    "window.confirmBeforeClose": "keyboardOnly",
     // Appearance
     "editor.fontFamily": "'Fira Code', 'JetBrainsMono Nerd Font', Menlo, Monaco, 'Courier New', monospace",
     "window.autoDetectColorScheme": true,
