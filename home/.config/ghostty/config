@@ -51,5 +51,6 @@
 keybind = global:shift+escape=toggle_quick_terminal
 # macos-hidden = always
 
-theme = light:Aizen Light,dark:Ghostty Default Style Dark
-
+# Appearance
+theme = light:Builtin Light,dark:Ghostty Default Style Dark
+# font-size = 10
