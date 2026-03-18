@@ -1,0 +1,49 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(echo:*)",
+      "Bash(python -c \"import sys; print\\(sys.executable\\)\" && python -m pip show arxivbot 2>&1 | head -5)",
+      "WebFetch(domain:api.semanticscholar.org)",
+      "WebSearch",
+      "WebFetch(domain:www.semanticscholar.org)",
+      "Bash(curl -s \"https://api.semanticscholar.org/graph/v1/paper/ArXiv:2408.16532?fields=paperId,title,abstract,authors,year,publicationDate,venue,externalIds,url,openAccessPdf,tldr,fieldsOfStudy,citationCount,influentialCitationCount,referenceCount,isOpenAccess,journal,publicationVenue,publicationTypes\")",
+      "Bash(python3 -m json.tool)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:pypi.org)",
+      "WebFetch(domain:semanticscholar.readthedocs.io)",
+      "Bash(curl -s \"https://api.semanticscholar.org/graph/v1/paper/ArXiv:1706.03762?fields=paperId,title,publicationDate,year,authors,externalIds,openAccessPdf,tldr,abstract,venue,citationCount,influentialCitationCount,fieldsOfStudy,referenceCount,isOpenAccess,journal,publicationVenue,publicationTypes\")",
+      "Bash(curl -s -w \"\\\\nHTTP_STATUS:%{http_code}\" \"https://api.semanticscholar.org/graph/v1/paper/ArXiv:9999.99999?fields=title\")",
+      "Read(//private/tmp/**)",
+      "Bash(uv venv:*)",
+      "Bash(/tmp/arxiv-test-venv/bin/pip install:*)",
+      "Bash(/tmp/arxiv-test-venv/bin/python -c \":*)",
+      "Bash(uv pip:*)",
+      "Bash(curl -s -w \"\\\\nHTTP_STATUS:%{http_code}\" \"https://api.semanticscholar.org/graph/v1/paper/search?query=wavtokenizer+acoustic+codec&fields=title,publicationDate,externalIds&limit=3\")",
+      "Bash(curl -s -D- \"https://api.semanticscholar.org/graph/v1/paper/ArXiv:2408.16532?fields=title\")",
+      "Bash(curl -s \"https://api.semanticscholar.org/graph/v1/paper/649def34f8be52c8b66281af98ae884c09aef38b?fields=title,publicationDate,year\")",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(curl -s \"https://api.semanticscholar.org/graph/v1/paper/CorpusId:10137425?fields=title,publicationDate,year,openAccessPdf,isOpenAccess\")",
+      "Bash(curl -s \"https://api.semanticscholar.org/graph/v1/paper/MAG:112218234?fields=title,publicationDate,year\")"
+    ],
+    "defaultMode": "plan"
+  },
+  "model": "opus",
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "ralph-loop@claude-plugins-official": true,
+    "github@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true,
+    "figma@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "explanatory-output-style@claude-plugins-official": true,
+    "slack@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true
+  },
+  "effortLevel": "high",
+  "voiceEnabled": true
+}
