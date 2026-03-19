@@ -171,6 +171,7 @@ case "$(uname -s)" in
     Linux)
         [ -f "${HOME}/.aliases_linux" ] && . "${HOME}/.aliases_linux"
         if [[ "$(uname -n)" =~ ^(artemis|poseidon|dionysus|hades)$ ]]; then
+            [ -f /etc/profile.d/02-lmod.sh ] && . /etc/profile.d/02-lmod.sh
             [ -f "${HOME}/.aliases_sardine" ] && . "${HOME}/.aliases_sardine"
             [ -f "${HOME}/.env_sardine" ]     && . "${HOME}/.env_sardine"
         fi
