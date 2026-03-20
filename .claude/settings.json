@@ -27,7 +27,6 @@
     ],
     "defaultMode": "plan"
   },
-  "model": "opus",
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true,
     "code-review@claude-plugins-official": true,

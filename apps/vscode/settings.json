@@ -83,6 +83,6 @@
     "claudeCode.useTerminal": true,
     "redhat.telemetry.enabled": false,
     "window.zoomLevel": -1,
-    "workbench.preferredDarkColorTheme": "Default Dark+",
+    "workbench.preferredDarkColorTheme": "Visual Studio Dark",
     "workbench.preferredLightColorTheme": "Default Light+"
 }
