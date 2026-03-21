@@ -19,35 +19,10 @@ REPO_ROOT = Path(__file__).resolve().parent
 SOURCE_DIR = REPO_ROOT / "home"
 BACKUP_ROOT = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state")) / "dotfiles-backups"
 
-# Paths relative to SOURCE_DIR — identical to paths relative to $HOME.
-DOTFILES: list[str] = [
-    # Shell-agnostic
-    ".aliases",
-    ".aliases_macos",
-    ".aliases_linux",
-    ".aliases_sardine",
-    ".functions",
-    ".env",
-    ".env_macos",
-    ".env_sardine",
-    ".prompt",
-    # Shell-specific
-    ".bashrc",
-    ".zshrc",
-    ".profile",
-    ".profile_macos",
-    ".zprofile",
-    # Git
-    ".gitattributes",
-    ".gitconfig",
-    ".config/git/ignore",
-    # Editor
-    ".tmux.conf",
-    ".vimrc",
-    ".config/nvim/init.lua",
-    # Terminal
-    ".config/ghostty/config",
-]
+
+def discover_dotfiles(source: Path) -> list[str]:
+    """Walk SOURCE_DIR and return all file paths relative to it."""
+    return sorted(str(p.relative_to(source)) for p in source.rglob("*") if p.is_file())
 
 
 def parse_args() -> argparse.Namespace:
@@ -87,21 +62,8 @@ def is_same_symlink_target(link: Path, target: Path) -> bool:
 
 def install(source: Path, dry_run: bool) -> None:
     source = source.resolve()
-    installs: list[tuple[Path, Path]] = []
-    missing_sources: list[str] = []
-
-    for dotfile_rel in DOTFILES:
-        src = source / dotfile_rel
-        if not src.exists():
-            missing_sources.append(dotfile_rel)
-            continue
-        installs.append((src, Path.home() / dotfile_rel))
-
-    if missing_sources:
-        LOGGER.warning(
-            "Skipping missing source files:\n%s",
-            "\n".join(missing_sources),
-        )
+    dotfiles = discover_dotfiles(source)
+    installs = [(source / rel, Path.home() / rel) for rel in dotfiles]
 
     if not installs:
         LOGGER.warning("No dotfiles found in %s. Nothing to install.", source)
