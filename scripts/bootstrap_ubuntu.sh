@@ -6,16 +6,21 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export DEBIAN_FRONTEND=noninteractive
 
 # ---------------------------------------------------------------------------
-# APT packages
+# APT packages (requires root or sudo)
 # ---------------------------------------------------------------------------
 
 install_apt_packages() {
     echo "--- Installing apt packages ---"
-    apt-get update -qq
-    apt-get install -y -qq \
+    local sudo=""
+    if [ "$(id -u)" -ne 0 ]; then
+        sudo="sudo"
+    fi
+    $sudo apt-get update -qq
+    $sudo apt-get install -y -qq \
         build-essential \
         curl \
         wget \
@@ -80,25 +85,11 @@ install_uv() {
 
 # ---------------------------------------------------------------------------
 # Delta (git pager with syntax highlighting)
+#   Delegates to the standalone install_delta.sh script.
 # ---------------------------------------------------------------------------
 
 install_delta() {
-    local version="0.19.1"
-    local archive="delta-${version}-x86_64-unknown-linux-gnu"
-    local url="https://github.com/dandavison/delta/releases/download/${version}/${archive}.tar.gz"
-    local install_dir="${HOME}/.local/bin"
-
-    echo "--- Installing delta ${version} ---"
-
-    local tmpdir
-    tmpdir="$(mktemp -d)"
-    trap 'rm -rf "${tmpdir}"' RETURN  # clean up temp dir when this function returns
-
-    wget -q "${url}" -O "${tmpdir}/delta.tar.gz"
-    tar -xzf "${tmpdir}/delta.tar.gz" -C "${tmpdir}"
-    mkdir -p "${install_dir}"
-    mv "${tmpdir}/${archive}/delta" "${install_dir}/delta"
-    echo "delta installed to ${install_dir}/delta."
+    bash "${SCRIPT_DIR}/install_delta.sh"
 }
 
 # ---------------------------------------------------------------------------
