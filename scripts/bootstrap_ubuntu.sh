@@ -7,11 +7,20 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 export DEBIAN_FRONTEND=noninteractive
 
 # ---------------------------------------------------------------------------
 # Privilege detection
+#   can_sudo: returns 0 if we are root or have passwordless sudo.
+#   SUDO: prefix for commands that need root. Empty when already root,
+#         "sudo" otherwise. Only meaningful when can_sudo returns 0.
 # ---------------------------------------------------------------------------
+
+SUDO=""
+if [ "$(id -u)" -ne 0 ]; then
+    SUDO="sudo"
+fi
 
 can_sudo() {
     [ "$(id -u)" -eq 0 ] || sudo -n true 2>/dev/null
@@ -23,12 +32,8 @@ can_sudo() {
 
 install_apt_packages() {
     echo "--- Installing apt packages via apt ---"
-    local sudo=""
-    if [ "$(id -u)" -ne 0 ]; then
-        sudo="sudo"
-    fi
-    $sudo apt-get update -qq
-    $sudo apt-get install -y -qq \
+    $SUDO apt-get update -qq
+    $SUDO apt-get install -y -qq \
         build-essential \
         curl \
         wget \
@@ -122,6 +127,57 @@ install_system_packages() {
 }
 
 # ---------------------------------------------------------------------------
+# Set zsh as default shell
+#   Uses chsh when we have root/sudo. On HPC clusters without sudo, chsh
+#   won't work — the bootstrap prints a hint to add 'exec zsh' to .bashrc
+#   as a workaround (the dotfiles installer will overwrite .bashrc anyway,
+#   so this is safe to do before running install.py).
+# ---------------------------------------------------------------------------
+
+set_default_shell_zsh() {
+    local zsh_path
+    zsh_path="$(command -v zsh)"
+    if [ -z "${zsh_path}" ]; then
+        echo "--- zsh not found, skipping default shell change ---"
+        return
+    fi
+    if [ "$(basename "${SHELL}")" = "zsh" ]; then
+        echo "--- zsh is already the default shell, skipping ---"
+        return
+    fi
+    if can_sudo; then
+        echo "--- Setting zsh as default shell ---"
+        # Ensure zsh is listed in /etc/shells — chsh rejects unlisted shells
+        if ! grep -qx "${zsh_path}" /etc/shells 2>/dev/null; then
+            echo "${zsh_path}" | $SUDO tee -a /etc/shells >/dev/null
+        fi
+        $SUDO chsh -s "${zsh_path}" "$(whoami)"
+        echo "Default shell set to ${zsh_path}."
+    else
+        echo "--- Cannot change default shell without sudo ---"
+        echo "    Workaround: add 'exec zsh' to the end of ~/.bashrc"
+    fi
+}
+
+# ---------------------------------------------------------------------------
+# Ghostty terminfo
+#   Compiles the xterm-ghostty terminfo entry so that SSH sessions from
+#   Ghostty on macOS work correctly (clear, Ctrl+L, tmux, etc.).
+#   tic installs to ~/.terminfo/ as a regular user, or /usr/share/terminfo/
+#   as root — no special handling needed.
+# ---------------------------------------------------------------------------
+
+install_ghostty_terminfo() {
+    if infocmp xterm-ghostty >/dev/null 2>&1; then
+        echo "--- xterm-ghostty terminfo already installed, skipping ---"
+        return
+    fi
+    echo "--- Installing xterm-ghostty terminfo ---"
+    tic -x "${REPO_DIR}/data/xterm-ghostty.terminfo"
+    echo "xterm-ghostty terminfo installed."
+}
+
+# ---------------------------------------------------------------------------
 # Rust (via rustup)
 # ---------------------------------------------------------------------------
 
@@ -172,65 +228,6 @@ install_nvm() {
 }
 
 # ---------------------------------------------------------------------------
-# Set zsh as default shell
-#   Uses chsh when we have root/sudo. On HPC clusters without sudo, chsh
-#   won't work — the bootstrap prints a hint to add 'exec zsh' to .bashrc
-#   as a workaround (the dotfiles installer will overwrite .bashrc anyway,
-#   so this is safe to do before running install.py).
-# ---------------------------------------------------------------------------
-
-set_default_shell_zsh() {
-    local zsh_path
-    zsh_path="$(command -v zsh)"
-    if [ -z "${zsh_path}" ]; then
-        echo "--- zsh not found, skipping default shell change ---"
-        return
-    fi
-    if [ "$(basename "${SHELL}")" = "zsh" ]; then
-        echo "--- zsh is already the default shell, skipping ---"
-        return
-    fi
-    if can_sudo; then
-        echo "--- Setting zsh as default shell ---"
-        # Ensure zsh is listed in /etc/shells — chsh rejects unlisted shells
-        if ! grep -qx "${zsh_path}" /etc/shells 2>/dev/null; then
-            if [ "$(id -u)" -eq 0 ]; then
-                echo "${zsh_path}" >> /etc/shells
-            else
-                echo "${zsh_path}" | sudo tee -a /etc/shells >/dev/null  # pipe through tee: >> runs as current user and would fail on a root-owned file
-            fi
-        fi
-        if [ "$(id -u)" -eq 0 ]; then
-            chsh -s "${zsh_path}"
-        else
-            sudo chsh -s "${zsh_path}" "$(whoami)"
-        fi
-        echo "Default shell set to ${zsh_path}."
-    else
-        echo "--- Cannot change default shell without sudo ---"
-        echo "    Workaround: add 'exec zsh' to the end of ~/.bashrc"
-    fi
-}
-
-# ---------------------------------------------------------------------------
-# Ghostty terminfo
-#   Compiles the xterm-ghostty terminfo entry so that SSH sessions from
-#   Ghostty on macOS work correctly (clear, Ctrl+L, tmux, etc.).
-#   tic installs to ~/.terminfo/ as a regular user, or /usr/share/terminfo/
-#   as root — no special handling needed.
-# ---------------------------------------------------------------------------
-
-install_ghostty_terminfo() {
-    if infocmp xterm-ghostty >/dev/null 2>&1; then
-        echo "--- xterm-ghostty terminfo already installed, skipping ---"
-        return
-    fi
-    echo "--- Installing xterm-ghostty terminfo ---"
-    tic -x "${SCRIPT_DIR}/xterm-ghostty.terminfo"
-    echo "xterm-ghostty terminfo installed."
-}
-
-# ---------------------------------------------------------------------------
 # Claude Code
 # ---------------------------------------------------------------------------
 
@@ -261,7 +258,7 @@ main() {
     echo "Next steps:"
     echo "  1. Set up SSH keys and clone dotfiles"
     echo "  2. Run: uv run --script install.py"
-    echo "  3. Run: exec bash"
+    echo "  3. Open a new shell session"
 }
 
 main "$@"
