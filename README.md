@@ -2,61 +2,21 @@
 
 Feel at home and work fast no matter which host you're working on. 
 
-## Dotfiles Management (chezmoi)
+## Setup
 
-This repo now uses [`chezmoi`](https://www.chezmoi.io/) as the primary dotfiles manager while keeping the same Git history and remote.
+Dotfiles live in `home/` and are installed as symlinks into `$HOME` via `install_dotfiles.py`. Existing files are backed up to `~/.local/state/dotfiles-backups/` before being replaced.
 
-- Canonical `chezmoi` source-state files live in `home/` (for example `home/dot_zshrc`, `home/dot_gitconfig`, and `home/dot_config/nvim/init.lua`).
-
-### Setup
-
-Install `chezmoi`:
+Preview what would change:
 
 ```bash
-sh -c "$(curl -fsLS get.chezmoi.io)"
+uv run --script install_dotfiles.py --dry-run
 ```
 
-From this repo root, preview and apply:
+Apply:
 
 ```bash
-./install_dotfiles.py --dry-run
-./install_dotfiles.py
+uv run --script install_dotfiles.py
 ```
-
-The installer wraps:
-
-```bash
-chezmoi init --source "$PWD/home"
-chezmoi -S "$PWD/home" apply -v
-```
-
-### Day-to-day Usage
-
-Run `chezmoi` directly against this repo as source:
-
-```bash
-chezmoi -S "$PWD/home" diff
-chezmoi -S "$PWD/home" status
-chezmoi -S "$PWD/home" apply -v
-```
-
-Update from remote and apply:
-
-```bash
-git pull
-chezmoi -S "$PWD/home" apply -v
-```
-
-### Migration Notes
-
-- `install_dotfiles.py` now uses `chezmoi` by default.
-- The previous symlink installer is available temporarily as:
-
-  ```bash
-  ./install_dotfiles.py --legacy-fallback
-  ```
-
-- Bitwarden integration is planned but not wired yet in templates/scripts.
 
 ## Conda
 
