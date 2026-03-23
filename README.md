@@ -1,21 +1,9 @@
-# dotfiles
-
-Feel at home and work fast no matter which host you're working on. 
-
-## Setup
+## Setup dotfiles
 
 Dotfiles live in `home/` and are installed as symlinks into `$HOME` via `install.py`. Existing files are backed up to `~/.local/state/dotfiles-backups/` before being replaced.
 
-Preview what would change:
-
 ```bash
-uv run --script install.py --dry-run
-```
-
-Apply:
-
-```bash
-uv run --script install.py
+uv run --script install.py [-h] [--source SOURCE] [--dry-run]
 ```
 
 ## SSH Keys
@@ -31,13 +19,7 @@ When spinning up a new machine, you need to set up SSH keys to authenticate with
   
 2. [Add the public key as a new SSH key on GitHub](https://github.com/settings/keys)
 
-## Bootstrapping New Instances / Machines
-
-### Hints - Bootstrapping
-
-- A good old `exec bash` is always handy
-- Vast instances throw you into tmux by default - nice but the tmux config needs reloading once dotfiles are in: **press the old prefix (CtrlB), :`source-file ~/.tmux.conf`**
-  - Source: [How do I reload TMUX configuration?](https://superuser.com/questions/580992/how-do-i-reload-tmux-configuration)
+## Bootstrapping Machines
 
 Bootstrap and install scripts live in `scripts/`:
 
@@ -52,3 +34,7 @@ Bootstrap a fresh cloud instance:
 ```bash
 bash scripts/bootstrap_ubuntu.sh
 ```
+
+Hints:
+- [Reload the tmux config mid-session](https://superuser.com/questions/580992/how-do-i-reload-tmux-configuration) with `(ctrl + B), :` then `source-file ~/.tmux.conf`
+- Always handy: `exec zsh` 
