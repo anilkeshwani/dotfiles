@@ -197,7 +197,7 @@ set_default_shell_zsh() {
             if [ "$(id -u)" -eq 0 ]; then
                 echo "${zsh_path}" >> /etc/shells
             else
-                echo "${zsh_path}" | sudo tee -a /etc/shells >/dev/null
+                echo "${zsh_path}" | sudo tee -a /etc/shells >/dev/null  # pipe through tee: >> runs as current user and would fail on a root-owned file
             fi
         fi
         if [ "$(id -u)" -eq 0 ]; then
