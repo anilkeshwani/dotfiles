@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Bootstrap a fresh Ubuntu instance for development.
-# Designed for cloud GPU providers: Vast, Lambda Labs, Prime Intellect, AWS, etc.
+# Bootstrap a fresh Ubuntu/Linux instance for development.
+# Works with or without root — falls back to Homebrew when sudo is unavailable.
 # Run: bash scripts/bootstrap_ubuntu.sh
 
 set -euo pipefail
@@ -10,11 +10,19 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export DEBIAN_FRONTEND=noninteractive
 
 # ---------------------------------------------------------------------------
-# APT packages (requires root or sudo)
+# Privilege detection
+# ---------------------------------------------------------------------------
+
+can_sudo() {
+    [ "$(id -u)" -eq 0 ] || sudo -n true 2>/dev/null
+}
+
+# ---------------------------------------------------------------------------
+# APT packages (requires root or passwordless sudo)
 # ---------------------------------------------------------------------------
 
 install_apt_packages() {
-    echo "--- Installing apt packages ---"
+    echo "--- Installing apt packages via apt ---"
     local sudo=""
     if [ "$(id -u)" -ne 0 ]; then
         sudo="sudo"
@@ -46,14 +54,69 @@ install_apt_packages() {
 # Symlinks for Ubuntu-renamed binaries
 #   Ubuntu installs bat as "batcat" and fd as "fdfind" due to name conflicts.
 #   Create symlinks in ~/.local/bin so the standard names work everywhere.
+#   Only needed for the apt path — Homebrew uses the standard names.
 # ---------------------------------------------------------------------------
 
-setup_symlinks() {
+setup_apt_symlinks() {
     echo "--- Setting up binary symlinks ---"
     mkdir -p "${HOME}/.local/bin"
     [ ! -e "${HOME}/.local/bin/bat" ] && ln -s "$(command -v batcat)" "${HOME}/.local/bin/bat" || true
     [ ! -e "${HOME}/.local/bin/fd" ]  && ln -s "$(command -v fdfind)" "${HOME}/.local/bin/fd"  || true
     echo "Symlinks created in ~/.local/bin."
+}
+
+# ---------------------------------------------------------------------------
+# Homebrew on Linux (rootless fallback)
+# ---------------------------------------------------------------------------
+
+install_homebrew() {
+    if command -v brew >/dev/null 2>&1; then
+        echo "--- Homebrew already installed ---"
+        return
+    fi
+    echo "--- Installing Homebrew (no root required) ---"
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    # Add brew to PATH for the rest of this script
+    eval "$("${HOME}/.linuxbrew/bin/brew" shellenv 2>/dev/null || "/home/linuxbrew/.linuxbrew/bin/brew" shellenv)"
+    echo "Homebrew installed."
+}
+
+install_brew_packages() {
+    echo "--- Installing packages via Homebrew ---"
+    brew install \
+        gcc \
+        curl \
+        wget \
+        unzip \
+        git \
+        git-lfs \
+        vim \
+        tmux \
+        tree \
+        bat \
+        ripgrep \
+        fd \
+        fzf \
+        jq \
+        ncdu \
+        htop
+    git lfs install
+    echo "Homebrew packages installed."
+}
+
+# ---------------------------------------------------------------------------
+# System packages — dispatches to apt or Homebrew based on privileges
+# ---------------------------------------------------------------------------
+
+install_system_packages() {
+    if can_sudo; then
+        install_apt_packages
+        setup_apt_symlinks
+    else
+        echo "--- No root/sudo access detected, using Homebrew ---"
+        install_homebrew
+        install_brew_packages
+    fi
 }
 
 # ---------------------------------------------------------------------------
@@ -121,10 +184,9 @@ install_claude() {
 # ---------------------------------------------------------------------------
 
 main() {
-    echo "=== Ubuntu bootstrap starting ==="
+    echo "=== Bootstrap starting ==="
 
-    install_apt_packages
-    setup_symlinks
+    install_system_packages
     install_rust
     install_uv
     install_delta
