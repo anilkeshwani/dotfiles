@@ -1,29 +1,5 @@
 {
   "permissions": {
-    "deny": [
-      "Bash(git push *)",
-      "Bash(git push)",
-      "Bash(git remote *)",
-      "Bash(git tag *)",
-      "Bash(git tag)",
-      "Bash(git reset --hard *)",
-      "Bash(git reset --hard)",
-      "Bash(git clean *)",
-      "Bash(git switch main)",
-      "Bash(git switch master)",
-      "Bash(git restore --source main *)",
-      "Bash(git restore --source=main *)",
-      "Bash(git restore -s main *)",
-      "Bash(git restore --source master *)",
-      "Bash(git restore --source=master *)",
-      "Bash(git restore -s master *)",
-      "Bash(gh pr merge *)",
-      "Bash(gh pr close *)",
-      "Bash(sudo *)",
-      "Bash(ssh *)",
-      "Bash(scp *)",
-      "Bash(rsync *)"
-    ],
     "allow": [
       "Read",
       "Edit",
@@ -158,13 +134,31 @@
       "Bash([ *)",
       "Bash(true)",
       "Bash(false)"
+    ],
+    "deny": [
+      "Bash(git push *)",
+      "Bash(git push)",
+      "Bash(git remote *)",
+      "Bash(git tag *)",
+      "Bash(git tag)",
+      "Bash(git reset --hard *)",
+      "Bash(git reset --hard)",
+      "Bash(git clean *)",
+      "Bash(git switch main)",
+      "Bash(git switch master)",
+      "Bash(git restore --source main *)",
+      "Bash(git restore --source=main *)",
+      "Bash(git restore -s main *)",
+      "Bash(git restore --source master *)",
+      "Bash(git restore --source=master *)",
+      "Bash(git restore -s master *)",
+      "Bash(gh pr merge *)",
+      "Bash(gh pr close *)",
+      "Bash(sudo *)",
+      "Bash(ssh *)",
+      "Bash(scp *)",
+      "Bash(rsync *)"
     ]
-  },
-  "sandbox": {
-    "enabled": true,
-    "filesystem": {
-      "denyRead": ["~/.ssh", "~/.gnupg", "~/.aws", "~/.config/gh"]
-    }
   },
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true,
@@ -181,6 +175,17 @@
     "explanatory-output-style@claude-plugins-official": true,
     "slack@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true
+  },
+  "sandbox": {
+    "enabled": true,
+    "filesystem": {
+      "denyRead": [
+        "~/.ssh",
+        "~/.gnupg",
+        "~/.aws",
+        "~/.config/gh"
+      ]
+    }
   },
   "effortLevel": "high",
   "voiceEnabled": true
