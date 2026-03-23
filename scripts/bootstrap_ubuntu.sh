@@ -199,6 +199,10 @@ install_rust() {
 # ---------------------------------------------------------------------------
 
 install_uv() {
+    if command -v uv >/dev/null 2>&1; then
+        echo "--- uv already installed, skipping ---"
+        return
+    fi
     echo "--- Installing uv ---"
     curl -LsSf https://astral.sh/uv/install.sh | sh
     echo "uv installed."
@@ -232,6 +236,10 @@ install_nvm() {
 # ---------------------------------------------------------------------------
 
 install_claude() {
+    if command -v claude >/dev/null 2>&1; then
+        echo "--- Claude Code already installed, skipping ---"
+        return
+    fi
     echo "--- Installing Claude Code ---"
     curl -fsSL https://claude.ai/install.sh | bash
     echo "Claude Code installed."
