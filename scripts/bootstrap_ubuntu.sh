@@ -45,6 +45,7 @@ install_apt_packages() {
         jq \
         ncdu \
         htop \
+        zsh \
         >/dev/null
     git lfs install
     echo "apt packages installed."
@@ -99,7 +100,8 @@ install_brew_packages() {
         fzf \
         jq \
         ncdu \
-        htop
+        htop \
+        zsh
     git lfs install
     echo "Homebrew packages installed."
 }
@@ -170,6 +172,47 @@ install_nvm() {
 }
 
 # ---------------------------------------------------------------------------
+# Set zsh as default shell
+#   Uses chsh when we have root/sudo. On HPC clusters without sudo, chsh
+#   won't work — the bootstrap prints a hint to add 'exec zsh' to .bashrc
+#   as a workaround (the dotfiles installer will overwrite .bashrc anyway,
+#   so this is safe to do before running install.py).
+# ---------------------------------------------------------------------------
+
+set_default_shell_zsh() {
+    local zsh_path
+    zsh_path="$(command -v zsh)"
+    if [ -z "${zsh_path}" ]; then
+        echo "--- zsh not found, skipping default shell change ---"
+        return
+    fi
+    if [ "$(basename "${SHELL}")" = "zsh" ]; then
+        echo "--- zsh is already the default shell, skipping ---"
+        return
+    fi
+    if can_sudo; then
+        echo "--- Setting zsh as default shell ---"
+        # Ensure zsh is listed in /etc/shells — chsh rejects unlisted shells
+        if ! grep -qx "${zsh_path}" /etc/shells 2>/dev/null; then
+            if [ "$(id -u)" -eq 0 ]; then
+                echo "${zsh_path}" >> /etc/shells
+            else
+                echo "${zsh_path}" | sudo tee -a /etc/shells >/dev/null
+            fi
+        fi
+        if [ "$(id -u)" -eq 0 ]; then
+            chsh -s "${zsh_path}"
+        else
+            sudo chsh -s "${zsh_path}" "$(whoami)"
+        fi
+        echo "Default shell set to ${zsh_path}."
+    else
+        echo "--- Cannot change default shell without sudo ---"
+        echo "    Workaround: add 'exec zsh' to the end of ~/.bashrc"
+    fi
+}
+
+# ---------------------------------------------------------------------------
 # Ghostty terminfo
 #   Compiles the xterm-ghostty terminfo entry so that SSH sessions from
 #   Ghostty on macOS work correctly (clear, Ctrl+L, tmux, etc.).
@@ -205,6 +248,7 @@ main() {
     echo "=== Bootstrap starting ==="
 
     install_system_packages
+    set_default_shell_zsh
     install_ghostty_terminfo
     install_rust
     install_uv
