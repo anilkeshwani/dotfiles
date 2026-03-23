@@ -39,8 +39,9 @@ git_first_commit_date() {
         return 1
     fi
 
-    local first_commit=$(git log --reverse --date=format:"%a %b %d %T %Y %z" --pretty=format:"%ad" -- "$file_path" 2>/dev/null | head -1)
-    local iso_date=$(git log --reverse --date=iso8601-strict --pretty=format:"%ad" -- "$file_path" 2>/dev/null | head -1)
+    local first_commit iso_date
+    first_commit=$(git log --reverse --date=format:"%a %b %d %T %Y %z" --pretty=format:"%ad" -- "$file_path" 2>/dev/null | head -1)
+    iso_date=$(git log --reverse --date=iso8601-strict --pretty=format:"%ad" -- "$file_path" 2>/dev/null | head -1)
 
     if [ -z "$first_commit" ]; then
         echo "Error: No commit history found for $file_path"
