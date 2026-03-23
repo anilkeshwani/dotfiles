@@ -170,6 +170,24 @@ install_nvm() {
 }
 
 # ---------------------------------------------------------------------------
+# Ghostty terminfo
+#   Compiles the xterm-ghostty terminfo entry so that SSH sessions from
+#   Ghostty on macOS work correctly (clear, Ctrl+L, tmux, etc.).
+#   tic installs to ~/.terminfo/ as a regular user, or /usr/share/terminfo/
+#   as root — no special handling needed.
+# ---------------------------------------------------------------------------
+
+install_ghostty_terminfo() {
+    if infocmp xterm-ghostty >/dev/null 2>&1; then
+        echo "--- xterm-ghostty terminfo already installed, skipping ---"
+        return
+    fi
+    echo "--- Installing xterm-ghostty terminfo ---"
+    tic -x "${SCRIPT_DIR}/xterm-ghostty.terminfo"
+    echo "xterm-ghostty terminfo installed."
+}
+
+# ---------------------------------------------------------------------------
 # Claude Code
 # ---------------------------------------------------------------------------
 
@@ -187,6 +205,7 @@ main() {
     echo "=== Bootstrap starting ==="
 
     install_system_packages
+    install_ghostty_terminfo
     install_rust
     install_uv
     install_delta
