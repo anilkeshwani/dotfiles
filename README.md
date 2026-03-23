@@ -4,18 +4,18 @@ Feel at home and work fast no matter which host you're working on.
 
 ## Setup
 
-Dotfiles live in `home/` and are installed as symlinks into `$HOME` via `install_dotfiles.py`. Existing files are backed up to `~/.local/state/dotfiles-backups/` before being replaced.
+Dotfiles live in `home/` and are installed as symlinks into `$HOME` via `install.py`. Existing files are backed up to `~/.local/state/dotfiles-backups/` before being replaced.
 
 Preview what would change:
 
 ```bash
-uv run --script install_dotfiles.py --dry-run
+uv run --script install.py --dry-run
 ```
 
 Apply:
 
 ```bash
-uv run --script install_dotfiles.py
+uv run --script install.py
 ```
 
 ## SSH Keys

@@ -197,7 +197,7 @@ main() {
     echo "=== Bootstrap complete ==="
     echo "Next steps:"
     echo "  1. Set up SSH keys and clone dotfiles"
-    echo "  2. Run: uv run --script install_dotfiles.py"
+    echo "  2. Run: uv run --script install.py"
     echo "  3. Run: exec bash"
 }
 
