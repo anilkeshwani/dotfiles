@@ -224,7 +224,7 @@ PROMPT='%F{green}%n@%m%f %F{blue}%~%f%F{magenta}${vcs_info_msg_0_}%f%F{yellow}$(
 %(?.%F{green}.%F{red})❯%f '
 
 # bun completions
-[ -s "/Users/anilkeshwani/.bun/_bun" ] && source "/Users/anilkeshwani/.bun/_bun"
+[ -s "${HOME}/.bun/_bun" ] && source "${HOME}/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
