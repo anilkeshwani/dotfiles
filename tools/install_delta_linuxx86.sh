@@ -2,21 +2,21 @@
 
 set -euo pipefail
 
-DELTA_V18_2_TARBALL='https://github.com/dandavison/delta/releases/download/0.18.2/delta-0.18.2-x86_64-unknown-linux-gnu.tar.gz'
+DELTA_V18_2_TARBALL='https://github.com/dandavison/delta/releases/download/0.19.1/delta-0.19.1-x86_64-unknown-linux-gnu.tar.gz'
 OUTPUT_FILE="./$(basename ${DELTA_V18_2_TARBALL})"
 UNZIPPED_DIR="./$(basename -s .tar.gz ${DELTA_V18_2_TARBALL})"
-BIN_DIR="${HOME}/.local/bin/"
+INSTALL_DIR="${HOME}/.local/bin/"
 
-if [ ! -d "${BIN_DIR}" ]; then
-    mkdir -p "${BIN_DIR}"
-    echo "Created user binaries directory at: ${BIN_DIR}"
+if [ ! -d "${INSTALL_DIR}" ]; then
+    mkdir -p "${INSTALL_DIR}"
+    echo "Created user binaries directory at: ${INSTALL_DIR}"
 fi
 
 wget ${DELTA_V18_2_TARBALL} --output-document="${OUTPUT_FILE}"
 tar -xvzf "${OUTPUT_FILE}"
-mv "${UNZIPPED_DIR}/delta" "${BIN_DIR}/delta"
+mv "${UNZIPPED_DIR}/delta" "${INSTALL_DIR}/delta"
 
-echo "Placed delta binary in ${BIN_DIR}"
+echo "Placed delta binary in ${INSTALL_DIR}"
 rm "${OUTPUT_FILE}"
 rm -r "${UNZIPPED_DIR}"
 echo "Cleaned up files. Removed ${OUTPUT_FILE}"
