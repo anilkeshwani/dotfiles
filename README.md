@@ -1,4 +1,4 @@
-## Setup dotfiles
+## Set up dotfiles
 
 Dotfiles live in `home/` and are installed as symlinks into `$HOME` via `install.py`. Existing files are backed up to `~/.local/state/dotfiles-backups/` before being replaced.
 
