@@ -38,8 +38,8 @@ if [ -d "${HOME}/.config" ] && [ "$(stat -c '%u' "${HOME}/.config")" != "$(id -u
         $SUDO chown -R "$(id -u):$(id -g)" "${HOME}/.config"
         echo "Fixed ownership of ~/.config"
     else
-        echo "WARNING: ~/.config is not owned by you and no sudo available."
-        echo "         Some installers may fail."
+        echo "ERROR: ~/.config is not owned by you and no sudo available." >&2
+        exit 1
     fi
 fi
 
