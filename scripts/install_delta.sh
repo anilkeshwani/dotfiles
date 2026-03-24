@@ -17,8 +17,8 @@ fi
 # Detect architecture
 ARCH="$(uname -m)"
 case "${ARCH}" in
-    x86_64)  ARCH_TRIPLE="x86_64-unknown-linux-gnu" ;;
-    aarch64) ARCH_TRIPLE="aarch64-unknown-linux-gnu" ;;
+    x86_64)  ARCH_TRIPLE="x86_64-unknown-linux-musl" ;;
+    aarch64) ARCH_TRIPLE="aarch64-unknown-linux-gnu" ;;  # no musl build published
     *)
         echo "ERROR: install_delta.sh does not support architecture: ${ARCH}" >&2
         exit 1
