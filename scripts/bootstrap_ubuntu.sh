@@ -27,21 +27,27 @@ can_sudo() {
 }
 
 # ---------------------------------------------------------------------------
-# Fix ~/.config ownership
-#   On some Ubuntu images, ~/.config is created by root (e.g. for system pip
-#   config). Many user-level tools (uv, etc.) need to write here, so ensure
-#   the current user owns it.
+# Fix ownership of user directories
+#   On some Ubuntu images, ~/.config and ~/.local are created by root (e.g.
+#   via system pip). Many user-level tools (uv, delta, etc.) need to write
+#   here, so ensure the current user owns them.
 # ---------------------------------------------------------------------------
 
-if [ -d "${HOME}/.config" ] && [ "$(stat -c '%u' "${HOME}/.config")" != "$(id -u)" ]; then
-    if can_sudo; then
-        $SUDO chown -R "$(id -u):$(id -g)" "${HOME}/.config"
-        echo "Fixed ownership of ~/.config"
-    else
-        echo "ERROR: ~/.config is not owned by you and no sudo available." >&2
-        exit 1
+fix_dir_ownership() {
+    local dir="$1"
+    if [ -d "${dir}" ] && [ "$(stat -c '%u' "${dir}")" != "$(id -u)" ]; then
+        if can_sudo; then
+            $SUDO chown -R "$(id -u):$(id -g)" "${dir}"
+            echo "Fixed ownership of ${dir}"
+        else
+            echo "ERROR: ${dir} is not owned by you and no sudo available." >&2
+            exit 1
+        fi
     fi
-fi
+}
+
+fix_dir_ownership "${HOME}/.config"
+fix_dir_ownership "${HOME}/.local"
 
 # ---------------------------------------------------------------------------
 # APT packages (requires root or passwordless sudo)
