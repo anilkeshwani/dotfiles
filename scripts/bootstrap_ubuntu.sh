@@ -27,6 +27,23 @@ can_sudo() {
 }
 
 # ---------------------------------------------------------------------------
+# Fix ~/.config ownership
+#   On some Ubuntu images, ~/.config is created by root (e.g. for system pip
+#   config). Many user-level tools (uv, etc.) need to write here, so ensure
+#   the current user owns it.
+# ---------------------------------------------------------------------------
+
+if [ -d "${HOME}/.config" ] && [ "$(stat -c '%u' "${HOME}/.config")" != "$(id -u)" ]; then
+    if can_sudo; then
+        $SUDO chown -R "$(id -u):$(id -g)" "${HOME}/.config"
+        echo "Fixed ownership of ~/.config"
+    else
+        echo "WARNING: ~/.config is not owned by you and no sudo available."
+        echo "         Some installers may fail."
+    fi
+fi
+
+# ---------------------------------------------------------------------------
 # APT packages (requires root or passwordless sudo)
 # ---------------------------------------------------------------------------
 
