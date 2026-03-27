@@ -29,6 +29,11 @@ bindkey '^[[H' beginning-of-line                  # home
 bindkey '^[[F' end-of-line                        # end
 bindkey '^[[Z' undo                               # shift + tab undo last action
 
+# Homebrew completions must be on fpath before compinit (for non-login shells e.g. tmux)
+if [[ -d /opt/homebrew/share/zsh/site-functions ]]; then
+    fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+fi
+
 # enable completion features
 autoload -Uz compinit
 compinit -d ~/.cache/zcompdump
