@@ -82,7 +82,7 @@
     "chat.tools.terminal.preventShellHistory": false,
     "claudeCode.useTerminal": true,
     "redhat.telemetry.enabled": false,
-    "window.zoomLevel": -1,
     "workbench.preferredDarkColorTheme": "Visual Studio Dark",
-    "workbench.preferredLightColorTheme": "Default Light+"
+    "workbench.preferredLightColorTheme": "Default Light+",
+    "window.zoomLevel": -1
 }
