@@ -21,7 +21,7 @@
     // Appearance
     "editor.fontFamily": "'Fira Code', 'JetBrainsMono Nerd Font', Menlo, Monaco, 'Courier New', monospace",
     "window.autoDetectColorScheme": true,
-    "workbench.colorTheme": "Default Light Modern",
+    "workbench.colorTheme": "Light Modern",
     "workbench.iconTheme": "catppuccin-mocha",
     "workbench.sideBar.location": "right",
     "editor.fontSize": 12,
@@ -82,7 +82,6 @@
     "chat.tools.terminal.preventShellHistory": false,
     "claudeCode.useTerminal": true,
     "redhat.telemetry.enabled": false,
-    "workbench.preferredDarkColorTheme": "Visual Studio Dark",
-    "workbench.preferredLightColorTheme": "Default Light+",
-    "window.zoomLevel": -1
+    "window.zoomLevel": -1,
+    "editor.accessibilitySupport": "off"
 }
