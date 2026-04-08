@@ -195,6 +195,8 @@
     }
   },
   "effortLevel": "high",
+  "autoUpdatesChannel": "stable",
+  "minimumVersion": "2.1.85",
   "voiceEnabled": true,
   "skipDangerousModePermissionPrompt": true
 }
