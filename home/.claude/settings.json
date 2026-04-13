@@ -172,8 +172,7 @@
     "claude-md-management@claude-plugins-official": true,
     "explanatory-output-style@claude-plugins-official": true,
     "slack@claude-plugins-official": true,
-    "pyright-lsp@claude-plugins-official": true,
-    "github@claude-plugins-official": true
+    "pyright-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "obsidian-skills": {
