@@ -234,3 +234,11 @@ PROMPT='%F{green}%n@%m%f %F{blue}%~%f%F{magenta}${vcs_info_msg_0_}%f%F{yellow}$(
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# For SkyPilot shell completion
+. ~/.sky/.sky-complete.zsh
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/anilkeshwani/.docker/completions $fpath)
+autoload -Uz compinit
+compinit
+# End of Docker CLI completions
