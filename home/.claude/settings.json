@@ -171,7 +171,8 @@
       "Bash(ssh *)",
       "Bash(scp *)",
       "Bash(rsync *)"
-    ]
+    ],
+    "defaultMode": "auto"
   },
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true,
@@ -185,13 +186,20 @@
     "claude-md-management@claude-plugins-official": true,
     "explanatory-output-style@claude-plugins-official": true,
     "slack@claude-plugins-official": true,
-    "pyright-lsp@claude-plugins-official": true
+    "pyright-lsp@claude-plugins-official": true,
+    "skypilot@skypilot": true
   },
   "extraKnownMarketplaces": {
     "obsidian-skills": {
       "source": {
         "source": "github",
         "repo": "kepano/obsidian-skills"
+      }
+    },
+    "skypilot": {
+      "source": {
+        "source": "github",
+        "repo": "skypilot-org/skypilot"
       }
     }
   },
@@ -207,8 +215,9 @@
     }
   },
   "effortLevel": "high",
-  "autoUpdatesChannel": "stable",
+  "autoUpdatesChannel": "latest",
   "minimumVersion": "2.1.85",
+  "skipDangerousModePermissionPrompt": true,
   "voiceEnabled": true,
-  "skipDangerousModePermissionPrompt": true
+  "skipAutoPermissionPrompt": true
 }
