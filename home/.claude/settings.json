@@ -172,7 +172,7 @@
       "Bash(scp *)",
       "Bash(rsync *)"
     ],
-    "defaultMode": "auto"
+    "defaultMode": "default"
   },
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true,
@@ -218,6 +218,6 @@
   "autoUpdatesChannel": "latest",
   "minimumVersion": "2.1.85",
   "skipDangerousModePermissionPrompt": true,
-  "voiceEnabled": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "voiceEnabled": true
 }
