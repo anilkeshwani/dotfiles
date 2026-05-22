@@ -201,6 +201,12 @@
         "source": "github",
         "repo": "skypilot-org/skypilot"
       }
+    },
+    "dagster": {
+      "source": {
+        "source": "github",
+        "repo": "dagster-io/skills"
+      }
     }
   },
   "sandbox": {
