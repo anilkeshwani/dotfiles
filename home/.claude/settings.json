@@ -172,7 +172,7 @@
       "Bash(scp *)",
       "Bash(rsync *)"
     ],
-    "defaultMode": "default"
+    "defaultMode": "auto"
   },
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true,
@@ -217,6 +217,9 @@
         "~/.gnupg",
         "~/.aws",
         "~/.config/gh"
+      ],
+      "allowWrite": [
+        "~/.cache/uv"
       ]
     }
   },
