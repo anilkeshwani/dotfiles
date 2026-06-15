@@ -8,6 +8,32 @@ case $- in
 *) return ;;
 esac
 
+# Self-heal terminfo: terminals like Ghostty advertise TERM=xterm-ghostty, but
+# remote hosts often lack that terminfo entry, so tmux/ssh tools die with
+# "open terminal failed: missing or unsuitable terminal: <TERM>". If the current
+# TERM doesn't resolve here, clone a known base entry into ~/.terminfo (user-level,
+# no sudo). Idempotent: once installed, infocmp "$TERM" succeeds and this returns early.
+_ensure_terminfo() {
+    [ -n "$TERM" ] || return 0
+    command -v infocmp >/dev/null 2>&1 || return 0
+    infocmp "$TERM" >/dev/null 2>&1 && return 0   # already known — nothing to do
+    command -v tic >/dev/null 2>&1 || return 0
+    local base
+    for base in xterm-256color xterm; do
+        infocmp "$base" >/dev/null 2>&1 && break
+        base=""
+    done
+    [ -n "$base" ] || return 0
+    # Anchor on "^<base>|" (infocmp prepends a "# Reconstructed" comment, so a line
+    # number won't do) and use a comma-free description (comma separates capabilities).
+    infocmp -x "$base" 2>/dev/null \
+        | sed "s/^${base}|[^,]*/${TERM}|${TERM} (auto-cloned from ${base})/" \
+        | tic -x -o "${HOME}/.terminfo" - 2>/dev/null \
+        && echo "terminfo: installed '${TERM}' (cloned from '${base}') into ~/.terminfo" >&2
+}
+_ensure_terminfo
+unset -f _ensure_terminfo
+
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
@@ -103,3 +129,5 @@ _bashrc_prompt_cmd() {
     PS1="${grn}\u@\h${rst} ${blu}\w${rst}${mag}$(_prompt_git_branch)${rst}${yel}$(_prompt_venv)${rst}\n${arrow_color}❯${rst} "
 }
 PROMPT_COMMAND=_bashrc_prompt_cmd
+
+source '/home/anilkeshwani/.bash_completions/hf.sh'
