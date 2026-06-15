@@ -199,17 +199,49 @@ def build(spec: dict) -> dict:
     return sc.dump()
 
 
+_OBSIDIAN_WARNING = (
+    "==⚠  Switch to EXCALIDRAW VIEW in the MORE OPTIONS menu of this document. ⚠== "
+    "You can decompress Drawing data with the command palette: 'Decompress current "
+    "Excalidraw file'. For more info check in plugin settings under 'Saving'"
+)
+
+
+def to_obsidian_md(scene: dict) -> str:
+    """Wrap a scene in the Obsidian Excalidraw plugin's native .excalidraw.md format.
+
+    A raw .excalidraw (pure JSON) opens read-only in the plugin's "compatibility
+    mode"; this Markdown form (frontmatter excalidraw-plugin: parsed, a Text
+    Elements mirror, and the scene JSON under ## Drawing inside %% comments) is
+    the editable native format. The ## Drawing JSON is authoritative.
+    """
+    texts = [e for e in scene["elements"] if e["type"] == "text"]
+    text_block = "\n\n".join(f'{e["text"]} ^{e["id"]}' for e in texts)
+    scene_json = json.dumps(scene, indent=2)
+    return (
+        "---\n\nexcalidraw-plugin: parsed\ntags: [excalidraw]\n\n---\n"
+        f"{_OBSIDIAN_WARNING}\n\n\n"
+        "# Excalidraw Data\n\n"
+        f"## Text Elements\n{text_block}\n\n"
+        "%%\n## Drawing\n"
+        f"```json\n{scene_json}\n```\n%%\n"
+    )
+
+
 def main() -> None:
     if len(sys.argv) != 3:
-        raise SystemExit("usage: excalidraw_gen.py SPEC.json OUT.excalidraw")
+        raise SystemExit("usage: excalidraw_gen.py SPEC.json OUT.{excalidraw|excalidraw.md}")
     with open(sys.argv[1]) as f:
         spec = json.load(f)
     scene = build(spec)
-    out = json.dumps(scene, indent=2)
-    json.loads(out)
-    with open(sys.argv[2], "w") as f:
-        f.write(out)
-    print(f"wrote {sys.argv[2]}: {len(scene['elements'])} elements")
+    out_path = sys.argv[2]
+    if out_path.endswith(".md"):  # Obsidian-native format
+        payload = to_obsidian_md(scene)
+    else:  # raw .excalidraw JSON (excalidraw.com / compatibility mode)
+        payload = json.dumps(scene, indent=2)
+        json.loads(payload)
+    with open(out_path, "w") as f:
+        f.write(payload)
+    print(f"wrote {out_path}: {len(scene['elements'])} elements")
 
 
 if __name__ == "__main__":

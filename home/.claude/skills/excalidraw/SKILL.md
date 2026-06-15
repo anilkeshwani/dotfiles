@@ -28,11 +28,22 @@ Markdown is often enough and complements the Excalidraw source — consider emit
    so `uv run --script` resolves its deps):
 
    ```bash
+   # raw .excalidraw (JSON) — for excalidraw.com:
    uv run --script ~/.claude/skills/excalidraw/scripts/excalidraw_gen.py SPEC.json OUT.excalidraw
+   # Obsidian-native — pick this when the file lives in an Obsidian vault:
+   uv run --script ~/.claude/skills/excalidraw/scripts/excalidraw_gen.py SPEC.json OUT.excalidraw.md
    ```
 
-3. Tell the user how to open it (excalidraw.com → "Open", or drop into an Obsidian vault
-   with the Excalidraw plugin). The file is plain JSON — safe to commit and diff.
+   **Output format is chosen by extension.** `.md` emits the Obsidian Excalidraw plugin's
+   native format (`excalidraw-plugin: parsed` frontmatter + a `## Text Elements` mirror +
+   the scene JSON under `## Drawing` inside `%%` comments). A raw `.excalidraw` JSON file
+   opens **read-only in "compatibility mode"** in Obsidian — so for a vault, always emit
+   `.excalidraw.md`. Embed it from a note with `![[Name.excalidraw]]` (Obsidian resolves the
+   `.md`). For excalidraw.com, use the raw `.excalidraw`.
+
+3. Tell the user how to open it (excalidraw.com → "Open" for `.excalidraw`; in Obsidian the
+   `.excalidraw.md` opens directly with the Excalidraw plugin). Both are text — safe to
+   commit and diff.
 
 ## Spec schema (JSON)
 
