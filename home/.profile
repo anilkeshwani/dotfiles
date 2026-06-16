@@ -33,3 +33,6 @@ fi
 if [ "$(uname)" = "Darwin" ]; then
     [ -f "${HOME}/.profile_macos" ] && . "${HOME}/.profile_macos"
 fi
+
+# Cargo (Rust)
+[ -f "${HOME}/.cargo/env" ] && . "${HOME}/.cargo/env"

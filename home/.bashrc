@@ -131,3 +131,6 @@ _bashrc_prompt_cmd() {
 PROMPT_COMMAND=_bashrc_prompt_cmd
 
 source '/home/anilkeshwani/.bash_completions/hf.sh'
+
+# Cargo (Rust)
+[ -f "${HOME}/.cargo/env" ] && . "${HOME}/.cargo/env"
