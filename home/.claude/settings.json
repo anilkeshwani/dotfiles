@@ -212,18 +212,18 @@
   "sandbox": {
     "enabled": true,
     "filesystem": {
+      "allowWrite": [
+        "~/.cache/uv"
+      ],
       "denyRead": [
         "~/.ssh",
         "~/.gnupg",
         "~/.aws",
         "~/.config/gh"
-      ],
-      "allowWrite": [
-        "~/.cache/uv"
       ]
     }
   },
-  "effortLevel": "high",
+  "effortLevel": "xhigh",
   "autoUpdatesChannel": "latest",
   "minimumVersion": "2.1.85",
   "skipDangerousModePermissionPrompt": true,
