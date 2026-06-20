@@ -242,3 +242,5 @@ fpath=(/Users/anilkeshwani/.docker/completions $fpath)
 autoload -Uz compinit
 compinit
 # End of Docker CLI completions
+
+fpath+=~/.zfunc; autoload -Uz compinit; compinit

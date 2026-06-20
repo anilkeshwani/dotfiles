@@ -229,6 +229,7 @@
   "skipDangerousModePermissionPrompt": true,
   "theme": "auto",
   "agentPushNotifEnabled": true,
+  "remoteControlAtStartup": true,
   "skipAutoPermissionPrompt": true,
   "voiceEnabled": true
 }
