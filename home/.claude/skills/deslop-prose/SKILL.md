@@ -1,6 +1,6 @@
 ---
 name: deslop-prose
-description: Rewrite prose to remove AI-writing tells — em-dashes, "not X, but Y" antithesis, overused vocabulary (delve, seamless, robust...), rule-of-three, hedging, sycophancy, and uniform sentence rhythm. Use when asked to humanize, de-slop, or "de-AI" writing, make text sound less like an LLM, or edit an essay/doc/blog post/email/PR narrative for AI tells. NOT for code comments, docstrings, or commit messages — use deslop-code for those.
+description: Rewrite prose to remove AI-writing tells — em-dashes, "not X, but Y" antithesis, overused vocabulary (delve, seamless, robust...), rule-of-three, hedging, sycophancy, vague abstraction over concrete detail, and uniform sentence rhythm. Use when asked to humanize, de-slop, or "de-AI" writing, make text sound less like an LLM, or edit an essay/doc/blog post/email/PR narrative for AI tells. NOT for code comments, docstrings, or commit messages — use deslop-code for those.
 metadata:
   short-description: De-slop prose (essays, docs, emails, PR narrative)
 ---
@@ -16,7 +16,7 @@ The core belief, which shapes everything below: **the enemy is lexical-syntactic
 ## Register gate — check this first
 
 - If the text is **code comments, docstrings, commit messages, or PR/commit prose**, stop and use `deslop-code` instead. The correct "human" voice there is terse and plain; this skill's instincts would over-edit it.
-- If the text is **encyclopedic, technical, legal, or scientific**, neutral-and-plain *is* the human register. Do not inject personality, contractions, or "voice." Apply only the punctuation, banned-vocabulary, and structure rules; skip the tone/warmth rules.
+- If the text is **encyclopedic, technical, legal, or scientific**, neutral-and-plain *is* the human register. Do not inject personality, contractions, or "voice." Apply the punctuation, banned-vocabulary, and structure rules, and **prefer the concrete mechanism over vague abstraction (§9)** — technical docs especially should name the actual mechanism and read standalone. Skip only the tone/warmth rules.
 - Otherwise (general prose), apply everything.
 
 ## Process
@@ -35,6 +35,7 @@ The core belief, which shapes everything below: **the enemy is lexical-syntactic
 - **Structure.** Break the rule-of-three (use two or four). Kill "In conclusion" bookends and framing sandwiches. Drop "Let's dive in" openers and rhetorical-question section headers.
 - **Hedging/filler.** Delete "It's worth noting", "It's important to", "Generally speaking", "In today's fast-paced world", "That being said". Lead with the point.
 - **Tone** (general prose only). Cut sycophancy ("Great question!", "You're absolutely right!"), performative enthusiasm, servile closers, and **faux-candor** ("Let me be honest", "To be honest", "Honestly," "The honest truth is") — the candor belongs in the content, not the announcement.
+- **Concrete over vague** (§9, applies even to technical text). Name the mechanism instead of gesturing at it ("sits behind several checks" → which checks, which flags, which default), and don't string two vague clauses together with a floaty ", and" — state how they relate. Each sentence should read standalone.
 - **Formatting.** No mechanical bolding, no "Bold lead-in: explanation" bullets, no title-case headings, no emoji headers.
 - **Rhythm.** Vary sentence length: at least one short (<10 words) and one long (>20) per few sentences. Uniform length is the most measurable machine signal.
 

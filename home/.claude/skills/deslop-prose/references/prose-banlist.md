@@ -64,6 +64,21 @@ Boldface overuse; "Bold lead-in: explanation" bullets; Title Case In Headings; e
 - **Vagueness** — no names, numbers, dates, lived detail.
 - **Sourceless authority** — "Studies show...", "Experts argue..." with no citation.
 
+## 9. Vague abstraction over concrete mechanism [B] — applies even in technical/encyclopedic text
+
+A clause gestures at something ("sits behind several checks", "has safeguards in place", "handles this carefully") where the concrete mechanism belongs, and often two hazy halves get strung together with a floaty ", and". Name the mechanism inline, state how the halves actually relate, and make each sentence stand on its own without the surrounding context. Note: the tell is the vagueness and the loose syntax, not any single adjective — "conservative", "robust", and the like are fine once the sentence says what they refer to.
+
+Worked example:
+- Vague: "Real money sits behind several checks, and the defaults are conservative."
+- Concrete: "Trading with real money is guarded by several checks that require explicit flags; the default runs only against the demo (paper) environment."
+
+Tells:
+- **Hand-wavy summary instead of the mechanism.** "several checks", "safeguards in place", "a number of steps", "properly handled", "sits behind checks" — say which checks, which flags, which default, which value. The reader wants the mechanism, not the assurance that one exists.
+- **Floaty comma coordination.** Two vague clauses joined by ", and" / ", but" with the relationship left implicit. Usually the second clause explains or conditions the first; make that explicit with "requiring", "because", "so that", "unless", or subordinate it, instead of the loose comma.
+- **Not standalone.** The sentence only resolves once you have read the list or paragraph it introduces. A reader landing on it cold should still understand it.
+- **Telegraphic fragment lead.** A slogan-like fragment standing in for the actual rule ("Secrets stay out of git.", "Paper by default.") where the reader needs the mechanism. Expand it into a full sentence that says how, e.g. "Credentials live in `.env`, which is git-ignored, and gitleaks scans every commit."
+- Test: could someone act on this sentence alone? If they would have to read on to learn what the "checks" or "defaults" actually are, inline the specifics. Concreteness beats brevity here.
+
 ## Source
 
 Distilled from `docs/CLAUDEISMS_MASTER_CATALOGUE.md` (§1–§8) in this repo, which carries full citations and the existing-skill lineage (blader/humanizer, humanize-prose, avoid-ai-writing, Wikipedia:Signs of AI writing, Kobak et al. arXiv 2406.07016).
