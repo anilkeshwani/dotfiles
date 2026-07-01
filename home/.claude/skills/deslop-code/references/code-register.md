@@ -41,7 +41,7 @@ Mined from 416 local Claude Code sessions: 710k words of Claude prose vs 368k of
 | plumb | 4.0× | prefer "pass"/"thread" or just name it |
 | cleanly | 3.5× | |
 | genuinely | 3.1× | (26% of sessions) |
-| load-bearing | 2.8× | |
+| load-bearing | 2.8× | **hard-ban** — always replace; name what depends on it, or "critical"/"essential" |
 | **seam** | 2.5× | (12% of sessions) prefer "interface"/"boundary"/"integration point" |
 | collapse | 2.5× | |
 | blast radius | 2.3× | prefer "scope"/"how much this touches" |
@@ -50,6 +50,8 @@ Mined from 416 local Claude Code sessions: 710k words of Claude prose vs 368k of
 | canonical | 1.5× | |
 | first-class, holistic | ∞ (user: 0) | |
 | "you're (absolutely) right" | ∞ | sycophancy |
+
+**Hard-ban (overrides the Tier-2 "never hard-ban" default): `load-bearing`.** It reads as pure Claude. Always replace it rather than merely flagging: name what actually depends on the thing, or use "critical"/"essential".
 
 **Discovered discourse tics (not in the original seed list):** "confirmed/confirms/confirming" (~21×, narrating one's own verification) · "the picture / full picture" (27×) · "wording" (22×) · "trust/intact" (~18×) · "trap" ("the X trap", 16×) · "harmless/cosmetic/purely" (risk-triage, ~12–17×) · "couple", "defensible", "lanes", "spine", "caveat", "neutral", "slightly/subtle/literally". And the pervasive **"Let me [verb]…"** opener (check/read/verify/confirm/look).
 

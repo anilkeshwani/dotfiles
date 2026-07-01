@@ -13,7 +13,7 @@ The full catalogue behind `deslop-prose`. Evidence tiers: **[A]** measured/corro
 
 Do not hard-ban single instances; a lone legitimate use is human. Measured evidence (Kobak et al., ~15M PubMed abstracts): delve 28×, underscore 13.8×, showcasing 10.7× vs pre-2022 baseline.
 
-**Tier 1 — almost always replace:** delve/delving, tapestry, landscape (figurative), realm, testament (to), leverage (v), utilize, harness, underscore, showcasing, seamless, robust (outside engineering), pivotal, intricate, meticulous, comprehensive (of one's own output), cutting-edge, game-changer, synergy, holistic, paradigm, embark, endeavor, myriad, plethora, facilitate, elucidate.
+**Tier 1 — almost always replace:** delve/delving, tapestry, landscape (figurative), realm, testament (to), leverage (v), utilize, harness, underscore, showcasing, seamless, robust (outside engineering), pivotal, intricate, meticulous, comprehensive (of one's own output), cutting-edge, game-changer, synergy, holistic, paradigm, embark, endeavor, myriad, plethora, facilitate, elucidate, load-bearing (figurative).
 
 **Tier 2 — flag when 2+ cluster in a paragraph:** foster, bolster, garner, navigate (figurative), elevate, unleash, streamline, empower, spearhead, resonate, revolutionize, nuanced (filler), crucial, ecosystem, cultivate, illuminate, catalyze, galvanize, transformative, multifaceted, profound, vibrant.
 
