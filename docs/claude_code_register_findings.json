@@ -1,0 +1,1601 @@
+{
+  "corpus": {
+    "files": 430,
+    "sessions": 416,
+    "asst_text_blocks": 8480,
+    "asst_words": 710280,
+    "user_words": 368290
+  },
+  "singles": [
+    {
+      "term": "first-class",
+      "asst": 14,
+      "user": 0,
+      "asst_rate": 1.97,
+      "user_rate": 0.0,
+      "ratio": "inf",
+      "sessions": 14,
+      "session_pct": 3.4
+    },
+    {
+      "term": "holistic",
+      "asst": 13,
+      "user": 0,
+      "asst_rate": 1.83,
+      "user_rate": 0.0,
+      "ratio": "inf",
+      "sessions": 4,
+      "session_pct": 1.0
+    },
+    {
+      "term": "squarely",
+      "asst": 3,
+      "user": 0,
+      "asst_rate": 0.42,
+      "user_rate": 0.0,
+      "ratio": "inf",
+      "sessions": 3,
+      "session_pct": 0.7
+    },
+    {
+      "term": "tighten",
+      "asst": 50,
+      "user": 2,
+      "asst_rate": 7.04,
+      "user_rate": 0.54,
+      "ratio": 13.0,
+      "sessions": 29,
+      "session_pct": 7.0
+    },
+    {
+      "term": "converge",
+      "asst": 62,
+      "user": 3,
+      "asst_rate": 8.73,
+      "user_rate": 0.81,
+      "ratio": 10.7,
+      "sessions": 20,
+      "session_pct": 4.8
+    },
+    {
+      "term": "spurious",
+      "asst": 13,
+      "user": 1,
+      "asst_rate": 1.83,
+      "user_rate": 0.27,
+      "ratio": 6.7,
+      "sessions": 6,
+      "session_pct": 1.4
+    },
+    {
+      "term": "stale",
+      "asst": 317,
+      "user": 25,
+      "asst_rate": 44.63,
+      "user_rate": 6.79,
+      "ratio": 6.6,
+      "sessions": 77,
+      "session_pct": 18.5
+    },
+    {
+      "term": "honest(ly)",
+      "asst": 157,
+      "user": 15,
+      "asst_rate": 22.1,
+      "user_rate": 4.07,
+      "ratio": 5.4,
+      "sessions": 34,
+      "session_pct": 8.2
+    },
+    {
+      "term": "essentially",
+      "asst": 37,
+      "user": 4,
+      "asst_rate": 5.21,
+      "user_rate": 1.09,
+      "ratio": 4.8,
+      "sessions": 26,
+      "session_pct": 6.2
+    },
+    {
+      "term": "hot path",
+      "asst": 9,
+      "user": 1,
+      "asst_rate": 1.27,
+      "user_rate": 0.27,
+      "ratio": 4.7,
+      "sessions": 5,
+      "session_pct": 1.2
+    },
+    {
+      "term": "cutover",
+      "asst": 17,
+      "user": 2,
+      "asst_rate": 2.39,
+      "user_rate": 0.54,
+      "ratio": 4.4,
+      "sessions": 3,
+      "session_pct": 0.7
+    },
+    {
+      "term": "fold (into)",
+      "asst": 161,
+      "user": 20,
+      "asst_rate": 22.67,
+      "user_rate": 5.43,
+      "ratio": 4.2,
+      "sessions": 41,
+      "session_pct": 9.9
+    },
+    {
+      "term": "effectively",
+      "asst": 24,
+      "user": 3,
+      "asst_rate": 3.38,
+      "user_rate": 0.81,
+      "ratio": 4.1,
+      "sessions": 22,
+      "session_pct": 5.3
+    },
+    {
+      "term": "plumb",
+      "asst": 54,
+      "user": 7,
+      "asst_rate": 7.6,
+      "user_rate": 1.9,
+      "ratio": 4.0,
+      "sessions": 26,
+      "session_pct": 6.2
+    },
+    {
+      "term": "pivotal",
+      "asst": 15,
+      "user": 2,
+      "asst_rate": 2.11,
+      "user_rate": 0.54,
+      "ratio": 3.9,
+      "sessions": 4,
+      "session_pct": 1.0
+    },
+    {
+      "term": "nuance(d)",
+      "asst": 81,
+      "user": 11,
+      "asst_rate": 11.4,
+      "user_rate": 2.99,
+      "ratio": 3.8,
+      "sessions": 47,
+      "session_pct": 11.3
+    },
+    {
+      "term": "cleanly",
+      "asst": 318,
+      "user": 47,
+      "asst_rate": 44.77,
+      "user_rate": 12.76,
+      "ratio": 3.5,
+      "sessions": 85,
+      "session_pct": 20.4
+    },
+    {
+      "term": "underscore",
+      "asst": 43,
+      "user": 7,
+      "asst_rate": 6.05,
+      "user_rate": 1.9,
+      "ratio": 3.2,
+      "sessions": 12,
+      "session_pct": 2.9
+    },
+    {
+      "term": "genuinely",
+      "asst": 285,
+      "user": 47,
+      "asst_rate": 40.13,
+      "user_rate": 12.76,
+      "ratio": 3.1,
+      "sessions": 109,
+      "session_pct": 26.2
+    },
+    {
+      "term": "cohesive",
+      "asst": 6,
+      "user": 1,
+      "asst_rate": 0.84,
+      "user_rate": 0.27,
+      "ratio": 3.1,
+      "sessions": 4,
+      "session_pct": 1.0
+    },
+    {
+      "term": "seamless",
+      "asst": 17,
+      "user": 3,
+      "asst_rate": 2.39,
+      "user_rate": 0.81,
+      "ratio": 2.9,
+      "sessions": 5,
+      "session_pct": 1.2
+    },
+    {
+      "term": "load-bearing",
+      "asst": 101,
+      "user": 19,
+      "asst_rate": 14.22,
+      "user_rate": 5.16,
+      "ratio": 2.8,
+      "sessions": 52,
+      "session_pct": 12.5
+    },
+    {
+      "term": "seam",
+      "asst": 238,
+      "user": 50,
+      "asst_rate": 33.51,
+      "user_rate": 13.58,
+      "ratio": 2.5,
+      "sessions": 48,
+      "session_pct": 11.5
+    },
+    {
+      "term": "collapse",
+      "asst": 153,
+      "user": 32,
+      "asst_rate": 21.54,
+      "user_rate": 8.69,
+      "ratio": 2.5,
+      "sessions": 45,
+      "session_pct": 10.8
+    },
+    {
+      "term": "idiomatic",
+      "asst": 28,
+      "user": 6,
+      "asst_rate": 3.94,
+      "user_rate": 1.63,
+      "ratio": 2.4,
+      "sessions": 16,
+      "session_pct": 3.8
+    },
+    {
+      "term": "delve",
+      "asst": 28,
+      "user": 6,
+      "asst_rate": 3.94,
+      "user_rate": 1.63,
+      "ratio": 2.4,
+      "sessions": 4,
+      "session_pct": 1.0
+    },
+    {
+      "term": "robust",
+      "asst": 183,
+      "user": 42,
+      "asst_rate": 25.76,
+      "user_rate": 11.4,
+      "ratio": 2.3,
+      "sessions": 77,
+      "session_pct": 18.5
+    },
+    {
+      "term": "surface (n/v)",
+      "asst": 428,
+      "user": 112,
+      "asst_rate": 60.26,
+      "user_rate": 30.41,
+      "ratio": 2.0,
+      "sessions": 137,
+      "session_pct": 32.9
+    },
+    {
+      "term": "wire (up/in)",
+      "asst": 448,
+      "user": 122,
+      "asst_rate": 63.07,
+      "user_rate": 33.13,
+      "ratio": 1.9,
+      "sessions": 106,
+      "session_pct": 25.5
+    },
+    {
+      "term": "tapestry",
+      "asst": 10,
+      "user": 3,
+      "asst_rate": 1.41,
+      "user_rate": 0.81,
+      "ratio": 1.7,
+      "sessions": 3,
+      "session_pct": 0.7
+    },
+    {
+      "term": "entrench",
+      "asst": 3,
+      "user": 1,
+      "asst_rate": 0.42,
+      "user_rate": 0.27,
+      "ratio": 1.6,
+      "sessions": 2,
+      "session_pct": 0.5
+    },
+    {
+      "term": "canonical",
+      "asst": 204,
+      "user": 70,
+      "asst_rate": 28.72,
+      "user_rate": 19.01,
+      "ratio": 1.5,
+      "sessions": 78,
+      "session_pct": 18.8
+    },
+    {
+      "term": "downstream",
+      "asst": 126,
+      "user": 47,
+      "asst_rate": 17.74,
+      "user_rate": 12.76,
+      "ratio": 1.4,
+      "sessions": 50,
+      "session_pct": 12.0
+    },
+    {
+      "term": "repoint",
+      "asst": 49,
+      "user": 18,
+      "asst_rate": 6.9,
+      "user_rate": 4.89,
+      "ratio": 1.4,
+      "sessions": 12,
+      "session_pct": 2.9
+    },
+    {
+      "term": "thread (through)",
+      "asst": 186,
+      "user": 79,
+      "asst_rate": 26.19,
+      "user_rate": 21.45,
+      "ratio": 1.2,
+      "sessions": 66,
+      "session_pct": 15.9
+    },
+    {
+      "term": "upstream",
+      "asst": 112,
+      "user": 47,
+      "asst_rate": 15.77,
+      "user_rate": 12.76,
+      "ratio": 1.2,
+      "sessions": 40,
+      "session_pct": 9.6
+    },
+    {
+      "term": "footprint",
+      "asst": 26,
+      "user": 11,
+      "asst_rate": 3.66,
+      "user_rate": 2.99,
+      "ratio": 1.2,
+      "sessions": 10,
+      "session_pct": 2.4
+    },
+    {
+      "term": "concretely",
+      "asst": 28,
+      "user": 14,
+      "asst_rate": 3.94,
+      "user_rate": 3.8,
+      "ratio": 1.0,
+      "sessions": 24,
+      "session_pct": 5.8
+    },
+    {
+      "term": "leverage",
+      "asst": 33,
+      "user": 20,
+      "asst_rate": 4.65,
+      "user_rate": 5.43,
+      "ratio": 0.9,
+      "sessions": 17,
+      "session_pct": 4.1
+    },
+    {
+      "term": "orthogonal",
+      "asst": 20,
+      "user": 12,
+      "asst_rate": 2.82,
+      "user_rate": 3.26,
+      "ratio": 0.9,
+      "sessions": 11,
+      "session_pct": 2.6
+    },
+    {
+      "term": "envelope",
+      "asst": 16,
+      "user": 11,
+      "asst_rate": 2.25,
+      "user_rate": 2.99,
+      "ratio": 0.8,
+      "sessions": 10,
+      "session_pct": 2.4
+    },
+    {
+      "term": "crisp/crisply",
+      "asst": 7,
+      "user": 9,
+      "asst_rate": 0.99,
+      "user_rate": 2.44,
+      "ratio": 0.4,
+      "sessions": 6,
+      "session_pct": 1.4
+    }
+  ],
+  "phrases": [
+    {
+      "term": "you're right",
+      "asst": 16,
+      "user": 0,
+      "asst_rate": 2.25,
+      "user_rate": 0.0,
+      "ratio": "inf"
+    },
+    {
+      "term": "rip out",
+      "asst": 5,
+      "user": 0,
+      "asst_rate": 0.7,
+      "user_rate": 0.0,
+      "ratio": "inf"
+    },
+    {
+      "term": "you're absolutely right",
+      "asst": 4,
+      "user": 0,
+      "asst_rate": 0.56,
+      "user_rate": 0.0,
+      "ratio": "inf"
+    },
+    {
+      "term": "in all honesty",
+      "asst": 1,
+      "user": 0,
+      "asst_rate": 0.14,
+      "user_rate": 0.0,
+      "ratio": "inf"
+    },
+    {
+      "term": "the honest truth",
+      "asst": 1,
+      "user": 0,
+      "asst_rate": 0.14,
+      "user_rate": 0.0,
+      "ratio": "inf"
+    },
+    {
+      "term": "the right amount of",
+      "asst": 1,
+      "user": 0,
+      "asst_rate": 0.14,
+      "user_rate": 0.0,
+      "ratio": "inf"
+    },
+    {
+      "term": "want me to",
+      "asst": 180,
+      "user": 2,
+      "asst_rate": 25.34,
+      "user_rate": 0.54,
+      "ratio": 46.7
+    },
+    {
+      "term": "the cleanest",
+      "asst": 70,
+      "user": 2,
+      "asst_rate": 9.86,
+      "user_rate": 0.54,
+      "ratio": 18.1
+    },
+    {
+      "term": "the honest ...",
+      "asst": 54,
+      "user": 3,
+      "asst_rate": 7.6,
+      "user_rate": 0.81,
+      "ratio": 9.3
+    },
+    {
+      "term": "bottom line",
+      "asst": 41,
+      "user": 3,
+      "asst_rate": 5.77,
+      "user_rate": 0.81,
+      "ratio": 7.1
+    },
+    {
+      "term": "bake(d) in",
+      "asst": 12,
+      "user": 1,
+      "asst_rate": 1.69,
+      "user_rate": 0.27,
+      "ratio": 6.2
+    },
+    {
+      "term": "worth noting/flagging",
+      "asst": 105,
+      "user": 11,
+      "asst_rate": 14.78,
+      "user_rate": 2.99,
+      "ratio": 4.9
+    },
+    {
+      "term": "great question",
+      "asst": 9,
+      "user": 1,
+      "asst_rate": 1.27,
+      "user_rate": 0.27,
+      "ratio": 4.7
+    },
+    {
+      "term": "the live (consumer/...)",
+      "asst": 131,
+      "user": 15,
+      "asst_rate": 18.44,
+      "user_rate": 4.07,
+      "ratio": 4.5
+    },
+    {
+      "term": "net:",
+      "asst": 24,
+      "user": 3,
+      "asst_rate": 3.38,
+      "user_rate": 0.81,
+      "ratio": 4.1
+    },
+    {
+      "term": "escape hatch",
+      "asst": 6,
+      "user": 1,
+      "asst_rate": 0.84,
+      "user_rate": 0.27,
+      "ratio": 3.1
+    },
+    {
+      "term": "the canonical",
+      "asst": 112,
+      "user": 22,
+      "asst_rate": 15.77,
+      "user_rate": 5.97,
+      "ratio": 2.6
+    },
+    {
+      "term": "here's the thing",
+      "asst": 5,
+      "user": 1,
+      "asst_rate": 0.7,
+      "user_rate": 0.27,
+      "ratio": 2.6
+    },
+    {
+      "term": "blast radius",
+      "asst": 18,
+      "user": 4,
+      "asst_rate": 2.53,
+      "user_rate": 1.09,
+      "ratio": 2.3
+    },
+    {
+      "term": "in (exactly) one place",
+      "asst": 9,
+      "user": 2,
+      "asst_rate": 1.27,
+      "user_rate": 0.54,
+      "ratio": 2.3
+    },
+    {
+      "term": "lives in",
+      "asst": 104,
+      "user": 26,
+      "asst_rate": 14.64,
+      "user_rate": 7.06,
+      "ratio": 2.1
+    },
+    {
+      "term": "same three lines",
+      "asst": 648,
+      "user": 220,
+      "asst_rate": 91.23,
+      "user_rate": 59.74,
+      "ratio": 1.5
+    },
+    {
+      "term": "source of truth",
+      "asst": 31,
+      "user": 12,
+      "asst_rate": 4.36,
+      "user_rate": 3.26,
+      "ratio": 1.3
+    },
+    {
+      "term": "wire up/in/it",
+      "asst": 28,
+      "user": 11,
+      "asst_rate": 3.94,
+      "user_rate": 2.99,
+      "ratio": 1.3
+    },
+    {
+      "term": "let me be honest",
+      "asst": 2,
+      "user": 1,
+      "asst_rate": 0.28,
+      "user_rate": 0.27,
+      "ratio": 1.0
+    },
+    {
+      "term": "no-op",
+      "asst": 84,
+      "user": 53,
+      "asst_rate": 11.83,
+      "user_rate": 14.39,
+      "ratio": 0.8
+    },
+    {
+      "term": "to be honest",
+      "asst": 1,
+      "user": 1,
+      "asst_rate": 0.14,
+      "user_rate": 0.27,
+      "ratio": 0.5
+    },
+    {
+      "term": "to be clear",
+      "asst": 1,
+      "user": 1,
+      "asst_rate": 0.14,
+      "user_rate": 0.27,
+      "ratio": 0.5
+    }
+  ],
+  "letme_top": [
+    [
+      "check",
+      772
+    ],
+    [
+      "read",
+      712
+    ],
+    [
+      "verify",
+      605
+    ],
+    [
+      "confirm",
+      387
+    ],
+    [
+      "look",
+      216
+    ],
+    [
+      "also",
+      211
+    ],
+    [
+      "start",
+      176
+    ],
+    [
+      "do",
+      147
+    ],
+    [
+      "run",
+      145
+    ],
+    [
+      "fetch",
+      125
+    ],
+    [
+      "find",
+      113
+    ],
+    [
+      "get",
+      103
+    ],
+    [
+      "see",
+      81
+    ],
+    [
+      "write",
+      71
+    ],
+    [
+      "re",
+      66
+    ],
+    [
+      "fix",
+      60
+    ],
+    [
+      "examine",
+      53
+    ],
+    [
+      "search",
+      53
+    ],
+    [
+      "pull",
+      49
+    ],
+    [
+      "compile",
+      49
+    ],
+    [
+      "apply",
+      48
+    ],
+    [
+      "now",
+      47
+    ],
+    [
+      "first",
+      47
+    ],
+    [
+      "make",
+      44
+    ],
+    [
+      "add",
+      40
+    ]
+  ],
+  "discovery_by_ratio": [
+    {
+      "word": "verdicts",
+      "asst": 90,
+      "user": 0,
+      "asst_rate": 12.67,
+      "ratio": "inf"
+    },
+    {
+      "word": "annos",
+      "asst": 63,
+      "user": 0,
+      "asst_rate": 8.87,
+      "ratio": "inf"
+    },
+    {
+      "word": "empirically",
+      "asst": 56,
+      "user": 0,
+      "asst_rate": 7.88,
+      "ratio": "inf"
+    },
+    {
+      "word": "deserialization",
+      "asst": 53,
+      "user": 0,
+      "asst_rate": 7.46,
+      "ratio": "inf"
+    },
+    {
+      "word": "influenceable",
+      "asst": 53,
+      "user": 0,
+      "asst_rate": 7.46,
+      "ratio": "inf"
+    },
+    {
+      "word": "watcher",
+      "asst": 44,
+      "user": 0,
+      "asst_rate": 6.19,
+      "ratio": "inf"
+    },
+    {
+      "word": "regex",
+      "asst": 43,
+      "user": 0,
+      "asst_rate": 6.05,
+      "ratio": "inf"
+    },
+    {
+      "word": "piece",
+      "asst": 40,
+      "user": 0,
+      "asst_rate": 5.63,
+      "ratio": "inf"
+    },
+    {
+      "word": "labs",
+      "asst": 128,
+      "user": 1,
+      "asst_rate": 18.02,
+      "ratio": 66.4
+    },
+    {
+      "word": "sinks",
+      "asst": 208,
+      "user": 2,
+      "asst_rate": 29.28,
+      "ratio": 53.9
+    },
+    {
+      "word": "allowlist",
+      "asst": 85,
+      "user": 1,
+      "asst_rate": 11.97,
+      "ratio": 44.1
+    },
+    {
+      "word": "excellent",
+      "asst": 80,
+      "user": 1,
+      "asst_rate": 11.26,
+      "ratio": 41.5
+    },
+    {
+      "word": "notification",
+      "asst": 523,
+      "user": 7,
+      "asst_rate": 73.63,
+      "ratio": 38.7
+    },
+    {
+      "word": "staging",
+      "asst": 61,
+      "user": 1,
+      "asst_rate": 8.59,
+      "ratio": 31.6
+    },
+    {
+      "word": "troubleshooting",
+      "asst": 60,
+      "user": 1,
+      "asst_rate": 8.45,
+      "ratio": 31.1
+    },
+    {
+      "word": "wikipedia",
+      "asst": 58,
+      "user": 1,
+      "asst_rate": 8.17,
+      "ratio": 30.1
+    },
+    {
+      "word": "flagging",
+      "asst": 109,
+      "user": 2,
+      "asst_rate": 15.35,
+      "ratio": 28.3
+    },
+    {
+      "word": "picture",
+      "asst": 213,
+      "user": 4,
+      "asst_rate": 29.99,
+      "ratio": 27.6
+    },
+    {
+      "word": "notably",
+      "asst": 49,
+      "user": 1,
+      "asst_rate": 6.9,
+      "ratio": 25.4
+    },
+    {
+      "word": "cycle",
+      "asst": 49,
+      "user": 1,
+      "asst_rate": 6.9,
+      "ratio": 25.4
+    },
+    {
+      "word": "climbing",
+      "asst": 45,
+      "user": 1,
+      "asst_rate": 6.34,
+      "ratio": 23.3
+    },
+    {
+      "word": "inconsistency",
+      "asst": 43,
+      "user": 1,
+      "asst_rate": 6.05,
+      "ratio": 22.3
+    },
+    {
+      "word": "wording",
+      "asst": 42,
+      "user": 1,
+      "asst_rate": 5.91,
+      "ratio": 21.8
+    },
+    {
+      "word": "fired",
+      "asst": 42,
+      "user": 1,
+      "asst_rate": 5.91,
+      "ratio": 21.8
+    },
+    {
+      "word": "cleanest",
+      "asst": 82,
+      "user": 2,
+      "asst_rate": 11.54,
+      "ratio": 21.3
+    },
+    {
+      "word": "confirmed",
+      "asst": 886,
+      "user": 22,
+      "asst_rate": 124.74,
+      "ratio": 20.9
+    },
+    {
+      "word": "developer",
+      "asst": 79,
+      "user": 2,
+      "asst_rate": 11.12,
+      "ratio": 20.5
+    },
+    {
+      "word": "examine",
+      "asst": 73,
+      "user": 2,
+      "asst_rate": 10.28,
+      "ratio": 18.9
+    },
+    {
+      "word": "trust",
+      "asst": 109,
+      "user": 3,
+      "asst_rate": 15.35,
+      "ratio": 18.8
+    },
+    {
+      "word": "waiting",
+      "asst": 622,
+      "user": 18,
+      "asst_rate": 87.57,
+      "ratio": 17.9
+    },
+    {
+      "word": "intact",
+      "asst": 68,
+      "user": 2,
+      "asst_rate": 9.57,
+      "ratio": 17.6
+    },
+    {
+      "word": "confirming",
+      "asst": 96,
+      "user": 3,
+      "asst_rate": 13.52,
+      "ratio": 16.6
+    },
+    {
+      "word": "harmless",
+      "asst": 64,
+      "user": 2,
+      "asst_rate": 9.01,
+      "ratio": 16.6
+    },
+    {
+      "word": "carefully",
+      "asst": 60,
+      "user": 2,
+      "asst_rate": 8.45,
+      "ratio": 15.6
+    },
+    {
+      "word": "trap",
+      "asst": 60,
+      "user": 2,
+      "asst_rate": 8.45,
+      "ratio": 15.6
+    },
+    {
+      "word": "starts",
+      "asst": 58,
+      "user": 2,
+      "asst_rate": 8.17,
+      "ratio": 15.0
+    },
+    {
+      "word": "confirms",
+      "asst": 227,
+      "user": 8,
+      "asst_rate": 31.96,
+      "ratio": 14.7
+    },
+    {
+      "word": "holding",
+      "asst": 84,
+      "user": 3,
+      "asst_rate": 11.83,
+      "ratio": 14.5
+    },
+    {
+      "word": "didn",
+      "asst": 138,
+      "user": 5,
+      "asst_rate": 19.43,
+      "ratio": 14.3
+    },
+    {
+      "word": "cites",
+      "asst": 55,
+      "user": 2,
+      "asst_rate": 7.74,
+      "ratio": 14.3
+    },
+    {
+      "word": "purely",
+      "asst": 107,
+      "user": 4,
+      "asst_rate": 15.06,
+      "ratio": 13.9
+    },
+    {
+      "word": "four",
+      "asst": 338,
+      "user": 13,
+      "asst_rate": 47.59,
+      "ratio": 13.5
+    },
+    {
+      "word": "couple",
+      "asst": 78,
+      "user": 3,
+      "asst_rate": 10.98,
+      "ratio": 13.5
+    },
+    {
+      "word": "impact",
+      "asst": 52,
+      "user": 2,
+      "asst_rate": 7.32,
+      "ratio": 13.5
+    },
+    {
+      "word": "acknowledgement",
+      "asst": 51,
+      "user": 2,
+      "asst_rate": 7.18,
+      "ratio": 13.2
+    },
+    {
+      "word": "broken",
+      "asst": 69,
+      "user": 3,
+      "asst_rate": 9.71,
+      "ratio": 11.9
+    },
+    {
+      "word": "becomes",
+      "asst": 91,
+      "user": 4,
+      "asst_rate": 12.81,
+      "ratio": 11.8
+    },
+    {
+      "word": "cosmetic",
+      "asst": 66,
+      "user": 3,
+      "asst_rate": 9.29,
+      "ratio": 11.4
+    },
+    {
+      "word": "poll",
+      "asst": 457,
+      "user": 21,
+      "asst_rate": 64.34,
+      "ratio": 11.3
+    },
+    {
+      "word": "comprehensive",
+      "asst": 108,
+      "user": 5,
+      "asst_rate": 15.21,
+      "ratio": 11.2
+    },
+    {
+      "word": "lanes",
+      "asst": 43,
+      "user": 2,
+      "asst_rate": 6.05,
+      "ratio": 11.1
+    },
+    {
+      "word": "defensible",
+      "asst": 42,
+      "user": 2,
+      "asst_rate": 5.91,
+      "ratio": 10.9
+    },
+    {
+      "word": "notifications",
+      "asst": 42,
+      "user": 2,
+      "asst_rate": 5.91,
+      "ratio": 10.9
+    },
+    {
+      "word": "continuing",
+      "asst": 82,
+      "user": 4,
+      "asst_rate": 11.54,
+      "ratio": 10.6
+    },
+    {
+      "word": "spine",
+      "asst": 41,
+      "user": 2,
+      "asst_rate": 5.77,
+      "ratio": 10.6
+    },
+    {
+      "word": "news",
+      "asst": 40,
+      "user": 2,
+      "asst_rate": 5.63,
+      "ratio": 10.4
+    },
+    {
+      "word": "controlled",
+      "asst": 113,
+      "user": 6,
+      "asst_rate": 15.91,
+      "ratio": 9.8
+    },
+    {
+      "word": "sink",
+      "asst": 169,
+      "user": 9,
+      "asst_rate": 23.79,
+      "ratio": 9.7
+    },
+    {
+      "word": "flows",
+      "asst": 73,
+      "user": 4,
+      "asst_rate": 10.28,
+      "ratio": 9.5
+    },
+    {
+      "word": "concern",
+      "asst": 182,
+      "user": 10,
+      "asst_rate": 25.62,
+      "ratio": 9.4
+    },
+    {
+      "word": "committing",
+      "asst": 214,
+      "user": 12,
+      "asst_rate": 30.13,
+      "ratio": 9.2
+    },
+    {
+      "word": "probe",
+      "asst": 53,
+      "user": 3,
+      "asst_rate": 7.46,
+      "ratio": 9.2
+    },
+    {
+      "word": "touching",
+      "asst": 53,
+      "user": 3,
+      "asst_rate": 7.46,
+      "ratio": 9.2
+    },
+    {
+      "word": "completes",
+      "asst": 49,
+      "user": 3,
+      "asst_rate": 6.9,
+      "ratio": 8.5
+    },
+    {
+      "word": "landed",
+      "asst": 114,
+      "user": 7,
+      "asst_rate": 16.05,
+      "ratio": 8.4
+    },
+    {
+      "word": "sites",
+      "asst": 80,
+      "user": 5,
+      "asst_rate": 11.26,
+      "ratio": 8.3
+    },
+    {
+      "word": "narrowing",
+      "asst": 64,
+      "user": 4,
+      "asst_rate": 9.01,
+      "ratio": 8.3
+    },
+    {
+      "word": "regenerate",
+      "asst": 48,
+      "user": 3,
+      "asst_rate": 6.76,
+      "ratio": 8.3
+    },
+    {
+      "word": "trusted",
+      "asst": 48,
+      "user": 3,
+      "asst_rate": 6.76,
+      "ratio": 8.3
+    },
+    {
+      "word": "clusters",
+      "asst": 95,
+      "user": 6,
+      "asst_rate": 13.38,
+      "ratio": 8.2
+    },
+    {
+      "word": "understanding",
+      "asst": 63,
+      "user": 4,
+      "asst_rate": 8.87,
+      "ratio": 8.2
+    },
+    {
+      "word": "slightly",
+      "asst": 77,
+      "user": 5,
+      "asst_rate": 10.84,
+      "ratio": 8.0
+    },
+    {
+      "word": "swap",
+      "asst": 46,
+      "user": 3,
+      "asst_rate": 6.48,
+      "ratio": 8.0
+    },
+    {
+      "word": "subtle",
+      "asst": 61,
+      "user": 4,
+      "asst_rate": 8.59,
+      "ratio": 7.9
+    },
+    {
+      "word": "automated",
+      "asst": 61,
+      "user": 4,
+      "asst_rate": 8.59,
+      "ratio": 7.9
+    },
+    {
+      "word": "literally",
+      "asst": 45,
+      "user": 3,
+      "asst_rate": 6.34,
+      "ratio": 7.8
+    },
+    {
+      "word": "tier",
+      "asst": 45,
+      "user": 3,
+      "asst_rate": 6.34,
+      "ratio": 7.8
+    },
+    {
+      "word": "pointer",
+      "asst": 45,
+      "user": 3,
+      "asst_rate": 6.34,
+      "ratio": 7.8
+    },
+    {
+      "word": "background",
+      "asst": 701,
+      "user": 47,
+      "asst_rate": 98.69,
+      "ratio": 7.7
+    },
+    {
+      "word": "cached",
+      "asst": 74,
+      "user": 5,
+      "asst_rate": 10.42,
+      "ratio": 7.7
+    },
+    {
+      "word": "vocabulary",
+      "asst": 44,
+      "user": 3,
+      "asst_rate": 6.19,
+      "ratio": 7.6
+    },
+    {
+      "word": "shows",
+      "asst": 204,
+      "user": 15,
+      "asst_rate": 28.72,
+      "ratio": 7.1
+    },
+    {
+      "word": "miss",
+      "asst": 53,
+      "user": 4,
+      "asst_rate": 7.46,
+      "ratio": 6.9
+    },
+    {
+      "word": "strong",
+      "asst": 104,
+      "user": 8,
+      "asst_rate": 14.64,
+      "ratio": 6.7
+    },
+    {
+      "word": "stale",
+      "asst": 317,
+      "user": 25,
+      "asst_rate": 44.63,
+      "ratio": 6.6
+    },
+    {
+      "word": "headline",
+      "asst": 114,
+      "user": 9,
+      "asst_rate": 16.05,
+      "ratio": 6.6
+    },
+    {
+      "word": "removes",
+      "asst": 89,
+      "user": 7,
+      "asst_rate": 12.53,
+      "ratio": 6.6
+    },
+    {
+      "word": "untested",
+      "asst": 64,
+      "user": 5,
+      "asst_rate": 9.01,
+      "ratio": 6.6
+    },
+    {
+      "word": "rendered",
+      "asst": 51,
+      "user": 4,
+      "asst_rate": 7.18,
+      "ratio": 6.6
+    },
+    {
+      "word": "five",
+      "asst": 137,
+      "user": 11,
+      "asst_rate": 19.29,
+      "ratio": 6.5
+    },
+    {
+      "word": "reading",
+      "asst": 295,
+      "user": 24,
+      "asst_rate": 41.53,
+      "ratio": 6.4
+    },
+    {
+      "word": "consumer",
+      "asst": 74,
+      "user": 6,
+      "asst_rate": 10.42,
+      "ratio": 6.4
+    },
+    {
+      "word": "since",
+      "asst": 586,
+      "user": 48,
+      "asst_rate": 82.5,
+      "ratio": 6.3
+    },
+    {
+      "word": "green",
+      "asst": 327,
+      "user": 27,
+      "asst_rate": 46.04,
+      "ratio": 6.3
+    },
+    {
+      "word": "annotation",
+      "asst": 268,
+      "user": 22,
+      "asst_rate": 37.73,
+      "ratio": 6.3
+    },
+    {
+      "word": "thing",
+      "asst": 243,
+      "user": 20,
+      "asst_rate": 34.21,
+      "ratio": 6.3
+    },
+    {
+      "word": "alias",
+      "asst": 73,
+      "user": 6,
+      "asst_rate": 10.28,
+      "ratio": 6.3
+    },
+    {
+      "word": "tracked",
+      "asst": 61,
+      "user": 5,
+      "asst_rate": 8.59,
+      "ratio": 6.3
+    },
+    {
+      "word": "though",
+      "asst": 84,
+      "user": 7,
+      "asst_rate": 11.83,
+      "ratio": 6.2
+    },
+    {
+      "word": "moment",
+      "asst": 60,
+      "user": 5,
+      "asst_rate": 8.45,
+      "ratio": 6.2
+    },
+    {
+      "word": "standing",
+      "asst": 59,
+      "user": 5,
+      "asst_rate": 8.31,
+      "ratio": 6.1
+    },
+    {
+      "word": "neutral",
+      "asst": 59,
+      "user": 5,
+      "asst_rate": 8.31,
+      "ratio": 6.1
+    },
+    {
+      "word": "bump",
+      "asst": 47,
+      "user": 4,
+      "asst_rate": 6.62,
+      "ratio": 6.1
+    },
+    {
+      "word": "completion",
+      "asst": 535,
+      "user": 46,
+      "asst_rate": 75.32,
+      "ratio": 6.0
+    },
+    {
+      "word": "attacker",
+      "asst": 138,
+      "user": 12,
+      "asst_rate": 19.43,
+      "ratio": 6.0
+    },
+    {
+      "word": "toward",
+      "asst": 46,
+      "user": 4,
+      "asst_rate": 6.48,
+      "ratio": 6.0
+    },
+    {
+      "word": "minor",
+      "asst": 172,
+      "user": 15,
+      "asst_rate": 24.22,
+      "ratio": 5.9
+    },
+    {
+      "word": "appears",
+      "asst": 103,
+      "user": 9,
+      "asst_rate": 14.5,
+      "ratio": 5.9
+    },
+    {
+      "word": "events",
+      "asst": 212,
+      "user": 19,
+      "asst_rate": 29.85,
+      "ratio": 5.8
+    },
+    {
+      "word": "ready",
+      "asst": 134,
+      "user": 12,
+      "asst_rate": 18.87,
+      "ratio": 5.8
+    },
+    {
+      "word": "caveat",
+      "asst": 123,
+      "user": 11,
+      "asst_rate": 17.32,
+      "ratio": 5.8
+    },
+    {
+      "word": "regions",
+      "asst": 45,
+      "user": 4,
+      "asst_rate": 6.34,
+      "ratio": 5.8
+    },
+    {
+      "word": "itself",
+      "asst": 273,
+      "user": 25,
+      "asst_rate": 38.44,
+      "ratio": 5.7
+    },
+    {
+      "word": "cleanup",
+      "asst": 133,
+      "user": 12,
+      "asst_rate": 18.73,
+      "ratio": 5.7
+    },
+    {
+      "word": "composes",
+      "asst": 88,
+      "user": 8,
+      "asst_rate": 12.39,
+      "ratio": 5.7
+    },
+    {
+      "word": "unverified",
+      "asst": 66,
+      "user": 6,
+      "asst_rate": 9.29,
+      "ratio": 5.7
+    },
+    {
+      "word": "guards",
+      "asst": 66,
+      "user": 6,
+      "asst_rate": 9.29,
+      "ratio": 5.7
+    },
+    {
+      "word": "worked",
+      "asst": 55,
+      "user": 5,
+      "asst_rate": 7.74,
+      "ratio": 5.7
+    },
+    {
+      "word": "inherits",
+      "asst": 55,
+      "user": 5,
+      "asst_rate": 7.74,
+      "ratio": 5.7
+    },
+    {
+      "word": "mechanics",
+      "asst": 44,
+      "user": 4,
+      "asst_rate": 6.19,
+      "ratio": 5.7
+    }
+  ]
+}

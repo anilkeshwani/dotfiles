@@ -26,8 +26,8 @@ lone instances, and states this openly.
 |---|---|---|
 | **em-dashes** | **[A] confirmed — the #1 tell** | Most-cited single marker across all sources. OpenAI shipped a setting to suppress it. Mechanism (per Goedecke): training on digitized ~1900 print books that used ~30% more em-dashes. Note the backlash — many editors call the em-dash "the most human mark" and the panic overblown; it's strong *in density*, weak as a lone signal. |
 | **contrastive phrasing** ("not X, it's Y") | **[A] confirmed — the #1 *structural* tell** | Called "negative parallelism." "One in a piece can be effective; ten is an insult to the reader. Before LLMs, people did not write like this at scale." |
-| **"seam"** | **[A] CONFIRMED — code-architecture register** *(corrected — first pass was wrong)* | A real term (Feathers, *Working Effectively with Legacy Code*: a "seam" is a place to change behavior without editing in place) that Claude over-reaches to mean *any* interface/boundary/integration point. Invisible to prose-detection blogs because it's software-engineering register, not essay/SEO slop — which is why Pass 1 wrongly dismissed it. ("seamless" is *also* a separate prose tell, but you meant the code word, and you were right.) See **§9A**. |
-| **"cutover"** | **[A] CONFIRMED — code-architecture register** *(corrected — first pass was wrong)* | A systems/migration term (the moment you switch from the old system to the new). Same register as "seam" — a real word Claude reaches for by default. It is **not** a mis-transcription of "cutting-edge"; that dismissal failed for the same corpus-blindness reason. See **§9A**. |
+| **"seam"** | **[A] CONFIRMED — code-architecture register** *(corrected — first pass was wrong)* | A real term (Feathers, *Working Effectively with Legacy Code*: a "seam" is a place to change behavior without editing in place) that Claude over-reaches to mean *any* interface/boundary/integration point. Invisible to prose-detection blogs because it's software-engineering register, not essay/SEO slop — which is why Pass 1 wrongly dismissed it. **Empirically: Claude used it 238× across the transcripts, 2.5× the user's own rate, in ~12% of sessions** (§9A). ("seamless" is *also* a separate prose tell, but you meant the code word, and you were right.) |
+| **"cutover"** | **[A] CONFIRMED — code-architecture register** *(corrected — first pass was wrong)* | A systems/migration term (the moment you switch from the old system to the new). Same register as "seam" — a real word Claude reaches for by default. **Empirically: 17× in the transcripts, 4.4× the user's rate** (§9A). It is **not** a mis-transcription of "cutting-edge"; that dismissal failed for the same corpus-blindness reason. |
 | **"bites"** | **[?] still unverified — left open** | No corroboration in any register. Possibly a dictation artifact, or a code-register word not yet pinned. Held open rather than dismissed, given the two misses above. |
 
 ---
@@ -193,15 +193,72 @@ migrations, and refactors. That register is invisible to AI-detection blogs, so 
 was just blind to them. This is the single most relevant category to the user's stated goal
 (improving the text/comments/docs Claude writes *for codebases*).
 
-**Evidence:** [B] — direct observation of high-volume Claude Code output (the user's, and a live
-sample), not blog-attested. Harder to measure than prose tells precisely because detection tooling
-ignores technical register; the rigorous version needs empirical transcript mining (see below).
+**Evidence: [A] — empirically measured.** Mined **416 local Claude Code sessions** (710k words of
+Claude prose vs 368k words of the *user's own* prose about the same codebases). Method: rate of
+each term in Claude's output ÷ its rate in the user's writing — holding the *domain* constant
+(same projects, same jargon) isolates the *register* (Claude's phrasing habit). **ratio > 1 = Claude
+over-uses it relative to the human working on the same code.** Script + raw findings committed
+beside this file (`mine_claude_code_register.py`, `claude_code_register_findings.json`).
 
 **Critical nuance — these are Tier-2, not Tier-1.** Most are *legitimate, useful* engineering
 terms (a "seam" is a genuine design concept; "hot path" is precise). The tell is **over-reach and
 density** — reaching for the structural metaphor by default when a plain word ("interface",
 "boundary", "the switch-over") would do, and doing it repeatedly. Flag in clusters, never hard-ban
 — especially here, where the surrounding context is code and some uses are correct.
+
+**Measured — your flagged words and the seeds, ranked by over-representation (× vs user):**
+
+| term / phrase | Claude uses | ratio ×user | in % of sessions |
+|---|---|---|---|
+| "want me to (a…/b…)?" (offer-closer) | 180 | **46.7×** | — |
+| tighten | 50 | 13.0× | 7% |
+| converge(s) | 62 | 10.7× | 5% |
+| "the honest …" | 54 | 9.3× | — |
+| "bottom line" / "net:" | 65 | ~5× | — |
+| stale | 317 | 6.6× | 18% |
+| honest(ly) | 157 | 5.4× | 8% |
+| the live (consumer/…) | 131 | 4.5× | — |
+| **cutover** | 17 | **4.4×** | — |
+| fold (into) | 161 | 4.2× | 10% |
+| plumb | 54 | 4.0× | 6% |
+| cleanly | 318 | 3.5× | 20% |
+| genuinely | 285 | 3.1× | **26%** |
+| load-bearing | 101 | 2.8× | 13% |
+| **seam** | 238 | **2.5×** | 12% |
+| collapse | 153 | 2.5× | 11% |
+| blast radius | 18 | 2.3× | — |
+| surface (n./v.) | 428 | 2.0× | **33%** |
+| wire (up/in) | 448 | 1.9× | 26% |
+| canonical | 204 | 1.5× | 19% |
+| first-class / holistic | 27 | ∞ (user: 0) | — |
+| "you're (absolutely) right" | 20 | ∞ (sycophancy) | — |
+
+So **"seam" and "cutover" are confirmed** — Claude reaches for them 2.5× and 4.4× more than the
+human on the same projects; "seam" surfaces in ~1 of every 8 sessions. Your instinct was right.
+
+**Newly discovered this pass** (curated from ratio-ranked words Claude over-uses vs the user;
+these were *not* in the seed list): **confirmed/confirms/confirming** (886+, ~21×; Claude narrates
+its own verification), **empirically** (∞), **the picture / full picture** (27×), **wording**
+(22×), **trust/trusted** (19×), **intact** ("leaves X intact", 18×), **trap** ("the X trap", 16×),
+**harmless / cosmetic** (risk-triage vocab, ~12–17×), **purely** ("purely mechanical/cosmetic",
+14×), **couple** ("a couple of things", 14×), **defensible** (11×), **lanes** (11×), **spine**
+(11×), **slightly / subtle / literally** (~8×), **caveat** (6×), **neutral** (6×), **headline**
+("the headline is…", 7×), **composes / inherits** (~6×). Discourse openers: **"Let me [verb]…"** is
+pervasive (check 772 · read 712 · verify 605 · confirm 387 · look 216) — the single most frequent
+narration tic; and the **"Want me to (a)… or (b)…?"** offer-closer (46.7×).
+
+**Honest negatives** (seeds that did *not* over-index against this user — drop or demote): crisp/
+crisply (0.4× — the user uses it *more*), envelope (0.8×), leverage (0.9×), orthogonal (0.9×),
+concretely (1.0×); thread/upstream/footprint/downstream only mildly (~1.2–1.4×). These are either
+shared domain vocabulary or this user's own register, not Claude tells here.
+
+**Caveats on the method (stated plainly, having over-claimed once already):** the baseline is *this
+user's* prose, not general English — a strong control for domain but a small, noisier sample (some
+of it is Claude text the user pasted). The raw discovery list was polluted by (a) background-task/
+harness words (notification, poll, waiting, background, completion), (b) security-review vocab
+(source/sink, attacker, allowlist), and (c) *this very session's* research words (wikipedia,
+vocabulary, clusters, verdicts, tier) — all hand-filtered out. Treat ratios as directional, not
+exact; the *ranking* is robust, the decimal isn't.
 
 **Structural-metaphor nouns:** seam · surface (n., "the API surface / public surface / surface
 area") · home / **canonical home** ("X lives in Y, the canonical home") · blast radius · source of
@@ -224,12 +281,13 @@ answer is…" · "the live consumer" · YAGNI / "YAGNI trim" · "the right amoun
 minimum needed" (Anthropic's own phrasing) · staccato decision framing ("Decision you need to
 make:", "Want me to (a)… or (b)…?").
 
-**How to research this properly (the pass that was never run):** the right corpus is *empirical* —
-mine actual Claude Code transcripts (the user has many) for over-represented technical vocabulary,
-plus HN/GitHub threads specifically about Claude Code's *explanatory* style (not essay-detection
-blogs). A frequency analysis against a human-written engineering-prose baseline (commit messages,
-design docs, RFCs) would give the density thresholds this register needs. **This is an open TODO,
-not a finished list.**
+**Reproducing / extending this:** `mine_claude_code_register.py` (committed beside this file) globs
+`~/.claude/projects/**/*.jsonl`, extracts assistant vs user prose (stripping code fences and
+harness-injected blocks), and ranks terms by the user-baseline ratio. Re-run with `uv run --script`
+to refresh as the corpus grows, or add candidate terms to its `SINGLE`/`PHRASE` dicts. A stronger
+future baseline would be external human engineering prose (curated commit messages, design docs,
+RFCs) rather than one user — that would turn the directional ratios here into absolute density
+thresholds. Findings snapshot: `claude_code_register_findings.json`.
 
 ---
 
