@@ -223,6 +223,7 @@
       ]
     }
   },
+  "deniedMcpServers": [{ "serverName": "Company-Brain" }],
   "effortLevel": "xhigh",
   "autoUpdatesChannel": "latest",
   "minimumVersion": "2.1.85",
