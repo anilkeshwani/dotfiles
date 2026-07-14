@@ -244,3 +244,7 @@ compinit
 # End of Docker CLI completions
 
 fpath+=~/.zfunc; autoload -Uz compinit; compinit
+
+# mise — polyglot version manager (Node etc.). Activated last so its PATH edits
+# take precedence over NVM/Volta from .env on hosts where those are installed.
+command -v mise >/dev/null 2>&1 && eval "$(mise activate zsh)"
