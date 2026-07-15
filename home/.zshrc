@@ -239,7 +239,7 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 # For SkyPilot shell completion
-. ~/.sky/.sky-complete.zsh
+[ -f "${HOME}/.sky/.sky-complete.zsh" ] && . "${HOME}/.sky/.sky-complete.zsh"
 # The following lines have been added by Docker Desktop to enable Docker CLI completions.
 fpath=(/Users/anilkeshwani/.docker/completions $fpath)
 autoload -Uz compinit
