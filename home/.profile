@@ -32,6 +32,8 @@ fi
 # Machine-specific login-shell extras
 if [ "$(uname)" = "Darwin" ]; then
     [ -f "${HOME}/.profile_macos" ] && . "${HOME}/.profile_macos"
+elif [ "$(uname)" = "Linux" ]; then
+    [ -f "${HOME}/.profile_linux" ] && . "${HOME}/.profile_linux"
 fi
 
 # Cargo (Rust)

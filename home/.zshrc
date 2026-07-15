@@ -32,6 +32,8 @@ bindkey '^[[Z' undo                               # shift + tab undo last action
 # Homebrew completions must be on fpath before compinit (for non-login shells e.g. tmux)
 if [[ -d /opt/homebrew/share/zsh/site-functions ]]; then
     fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+elif [[ -d /home/linuxbrew/.linuxbrew/share/zsh/site-functions ]]; then
+    fpath=(/home/linuxbrew/.linuxbrew/share/zsh/site-functions $fpath)
 fi
 
 # enable completion features
@@ -175,6 +177,7 @@ case "$(uname -s)" in
         ;;
     Linux)
         [ -f "${HOME}/.aliases_linux" ] && . "${HOME}/.aliases_linux"
+        [ -f "${HOME}/.env_linux" ]     && . "${HOME}/.env_linux"
         if [[ "$(uname -n)" =~ ^(artemis|poseidon|dionysus|hades)$ ]]; then
             [ -f /etc/profile.d/02-lmod.sh ] && . /etc/profile.d/02-lmod.sh
             [ -f "${HOME}/.aliases_sardine" ] && . "${HOME}/.aliases_sardine"

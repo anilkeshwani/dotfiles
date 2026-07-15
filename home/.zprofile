@@ -10,4 +10,7 @@ case "$(uname -s)" in
     Darwin)
         [ -f "${HOME}/.profile_macos" ] && . "${HOME}/.profile_macos"
         ;;
+    Linux)
+        [ -f "${HOME}/.profile_linux" ] && . "${HOME}/.profile_linux"
+        ;;
 esac

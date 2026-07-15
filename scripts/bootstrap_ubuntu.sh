@@ -58,6 +58,7 @@ install_apt_packages() {
     $SUDO apt-get update -qq
     $SUDO apt-get install -y -qq \
         build-essential \
+        bubblewrap \
         curl \
         wget \
         unzip \

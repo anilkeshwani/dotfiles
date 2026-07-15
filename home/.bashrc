@@ -92,6 +92,7 @@ case "$(uname -s)" in
         ;;
     Linux)
         [ -f "${HOME}/.aliases_linux" ] && . "${HOME}/.aliases_linux"
+        [ -f "${HOME}/.env_linux" ]     && . "${HOME}/.env_linux"
         if [[ "$(uname -n)" =~ ^(artemis|poseidon|dionysus|hades)$ ]]; then
             [ -f "${HOME}/.aliases_sardine" ] && . "${HOME}/.aliases_sardine"
             [ -f "${HOME}/.env_sardine" ]     && . "${HOME}/.env_sardine"
