@@ -193,7 +193,8 @@
     "explanatory-output-style@claude-plugins-official": true,
     "slack@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
-    "skypilot@skypilot": true
+    "skypilot@skypilot": true,
+    "posthog@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "obsidian-skills": {
