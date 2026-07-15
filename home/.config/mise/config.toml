@@ -1,4 +1,5 @@
 [tools]
 node = "24"
 "npm:@openai/codex" = "latest"
+"npm:@posthog/cli" = "latest"
 pnpm = "latest"
