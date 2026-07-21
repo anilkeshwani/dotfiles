@@ -36,7 +36,8 @@ Prefer **deleting** over rewriting. The best fix for a bad comment is usually no
 
 - **Commit:** one imperative subject line, why-focused, under ~70 chars. Body only if the why isn't obvious; never a restatement of the diff. Verbs: add (feature), update (enhancement), fix (bug).
 - **PR body:** a 1–3 bullet Summary plus a Test plan of what was *actually run*. Kill "This PR does the following:", per-file diff narration, and filler bullets ("improves readability", "ensures backward compatibility").
-- **No dramatic-alignment intensifiers** in commit/PR/ticket prose: "exactly where deployment fails", "precisely the case that matters", "the very regime we care about". Perfect-correspondence claims read as hyperbole. State the relationship plainly ("failures concentrate on confusable voices; training rarely presents them") and let the facts carry the emphasis.
+- **No dramatic-alignment intensifiers** in commit/PR/ticket prose: "exactly where deployment fails", "precisely the case that matters", "the very regime we care about". Perfect-correspondence claims read as hyperbole. State the relationship plainly and let the facts carry the emphasis.
+- **No echo restatements.** Don't close a point by re-asserting a fact established a sentence earlier ("the eval set measures this case; training rarely produces it" after opening with training rarely producing it). Every sentence must add information; the reader holds the previous one. Cut the echo.
 
 ## Code-architecture register vocabulary (Tier-2 — flag in clusters, never hard-ban)
 
