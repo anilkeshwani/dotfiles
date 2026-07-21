@@ -1,7 +1,9 @@
 # ~/.profile_macos — macOS login-shell extras, sourced from ~/.profile on Darwin.
 
-# Homebrew (guarded: Intel Macs install under /usr/local, not /opt/homebrew)
-if [ -x /opt/homebrew/bin/brew ]; then
+# Homebrew (guarded: Intel Macs install under /usr/local, not /opt/homebrew).
+# An interactive bash login sources .bashrc first, so .env_macos may already
+# have initialized Homebrew by the time this profile is reached.
+if [ -x /opt/homebrew/bin/brew ] && [ -z "${HOMEBREW_PREFIX:-}" ]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
