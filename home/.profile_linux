@@ -1,6 +1,8 @@
 # ~/.profile_linux — Linux login-shell extras, sourced from ~/.profile / ~/.zprofile on Linux.
 
-# Homebrew — not all Linux hosts have it (e.g. HPC clusters), hence the guard
-if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+# Homebrew — not all Linux hosts have it (e.g. HPC clusters), hence the guard.
+# An interactive bash login sources .bashrc first, so .env_linux may already
+# have initialized Homebrew by the time this profile is reached.
+if [ -x /home/linuxbrew/.linuxbrew/bin/brew ] && [ -z "${HOMEBREW_PREFIX:-}" ]; then
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
