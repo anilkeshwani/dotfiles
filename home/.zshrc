@@ -42,7 +42,8 @@ fi
 
 # enable completion features
 autoload -Uz compinit
-compinit -d ~/.cache/zcompdump
+mkdir -p "${HOME}/.cache"
+compinit -d "${HOME}/.cache/zcompdump"
 zstyle ':completion:*:*:*:*:*' menu select
 zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' completer _expand _complete
