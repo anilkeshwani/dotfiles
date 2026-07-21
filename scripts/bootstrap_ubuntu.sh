@@ -90,9 +90,17 @@ install_apt_packages() {
 setup_apt_symlinks() {
     echo "--- Setting up binary symlinks ---"
     mkdir -p "${HOME}/.local/bin"
-    [ ! -e "${HOME}/.local/bin/bat" ] && ln -s "$(command -v batcat)" "${HOME}/.local/bin/bat" || true
-    [ ! -e "${HOME}/.local/bin/fd" ]  && ln -s "$(command -v fdfind)" "${HOME}/.local/bin/fd"  || true
-    echo "Symlinks created in ~/.local/bin."
+    local pair name target
+    for pair in bat:batcat fd:fdfind; do
+        name="${pair%%:*}"
+        target="$(command -v "${pair#*:}" || true)"
+        if [ -z "${target}" ]; then
+            echo "WARNING: ${pair#*:} not found on PATH, skipping ${name} symlink" >&2
+        elif [ ! -e "${HOME}/.local/bin/${name}" ]; then
+            ln -s "${target}" "${HOME}/.local/bin/${name}"
+            echo "Linked ~/.local/bin/${name} -> ${target}"
+        fi
+    done
 }
 
 # ---------------------------------------------------------------------------
@@ -160,7 +168,9 @@ install_system_packages() {
 
 set_default_shell_zsh() {
     local zsh_path
-    zsh_path="$(command -v zsh)"
+    # `|| true`: under set -e a missing zsh would abort the whole script here,
+    # making the graceful-skip branch below unreachable
+    zsh_path="$(command -v zsh || true)"
     if [ -z "${zsh_path}" ]; then
         echo "--- zsh not found, skipping default shell change ---"
         return
