@@ -116,18 +116,19 @@ def _ensure_gh_authenticated() -> None:
 
 
 def gh_pr_view_json(fields: str) -> dict[str, Any]:
-    # fields is a comma-separated list like: "number,headRepositoryOwner,headRepository"
+    # fields is a comma-separated list like: "number,url"
     return _run_json(["gh", "pr", "view", "--json", fields])
 
 
 def get_current_pr_ref() -> tuple[str, str, int]:
     """
     Resolve the PR for the current branch (whatever gh considers associated).
-    Works for cross-repo PRs too, by reading head repository owner/name.
+    PR numbers belong to the base repository, so take owner/repo from the PR URL
+    (https://github.com/OWNER/REPO/pull/N) — headRepository would be the fork on
+    cross-repo PRs, where the same number is a different (or missing) PR.
     """
-    pr = gh_pr_view_json("number,headRepositoryOwner,headRepository")
-    owner = pr["headRepositoryOwner"]["login"]
-    repo = pr["headRepository"]["name"]
+    pr = gh_pr_view_json("number,url")
+    owner, repo = pr["url"].split("/")[3:5]
     number = int(pr["number"])
     return owner, repo, number
 
@@ -176,6 +177,12 @@ def fetch_all(owner: str, repo: str, number: int) -> dict[str, Any]:
     reviews_cursor: str | None = None
     threads_cursor: str | None = None
 
+    # Collections exhaust at different points; once one is done, later pages of the
+    # others must not re-collect it (its cursor would reset and refetch page 1).
+    comments_done = False
+    reviews_done = False
+    threads_done = False
+
     pr_meta: dict[str, Any] | None = None
 
     while True:
@@ -206,15 +213,22 @@ def fetch_all(owner: str, repo: str, number: int) -> dict[str, Any]:
         r = pr["reviews"]
         t = pr["reviewThreads"]
 
-        conversation_comments.extend(c.get("nodes") or [])
-        reviews.extend(r.get("nodes") or [])
-        review_threads.extend(t.get("nodes") or [])
+        if not comments_done:
+            conversation_comments.extend(c.get("nodes") or [])
+            comments_done = not c["pageInfo"]["hasNextPage"]
+            # keep the final endCursor when done, so later requests return an empty
+            # page after it instead of page 1 again
+            comments_cursor = c["pageInfo"]["endCursor"]
+        if not reviews_done:
+            reviews.extend(r.get("nodes") or [])
+            reviews_done = not r["pageInfo"]["hasNextPage"]
+            reviews_cursor = r["pageInfo"]["endCursor"]
+        if not threads_done:
+            review_threads.extend(t.get("nodes") or [])
+            threads_done = not t["pageInfo"]["hasNextPage"]
+            threads_cursor = t["pageInfo"]["endCursor"]
 
-        comments_cursor = c["pageInfo"]["endCursor"] if c["pageInfo"]["hasNextPage"] else None
-        reviews_cursor = r["pageInfo"]["endCursor"] if r["pageInfo"]["hasNextPage"] else None
-        threads_cursor = t["pageInfo"]["endCursor"] if t["pageInfo"]["hasNextPage"] else None
-
-        if not (comments_cursor or reviews_cursor or threads_cursor):
+        if comments_done and reviews_done and threads_done:
             break
 
     assert pr_meta is not None
