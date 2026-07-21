@@ -36,6 +36,10 @@ elif [[ -d /home/linuxbrew/.linuxbrew/share/zsh/site-functions ]]; then
     fpath=(/home/linuxbrew/.linuxbrew/share/zsh/site-functions $fpath)
 fi
 
+# Docker Desktop CLI completions (macOS) and user functions — also before compinit
+[[ -d "${HOME}/.docker/completions" ]] && fpath=("${HOME}/.docker/completions" $fpath)
+[[ -d "${HOME}/.zfunc" ]] && fpath+=("${HOME}/.zfunc")
+
 # enable completion features
 autoload -Uz compinit
 compinit -d ~/.cache/zcompdump
@@ -210,7 +214,10 @@ fi
 [ -f "${HOME}/.prompt" ] && . "${HOME}/.prompt"
 
 autoload -Uz vcs_info
-zstyle ':vcs_info:git:*' formats $' \ue0a0 %b'   # U+E0A0 Powerline branch icon + branch name
+# Literal U+E0A0 Powerline branch icon + branch name. Kept as a raw UTF-8 char, not
+# $'\ue0a0': the escape is converted via the locale charmap and aborts with
+# "character not in range" under C/POSIX locales (e.g. SSH without locale forwarding).
+zstyle ':vcs_info:git:*' formats ' \ue0a0 %b'
 zstyle ':vcs_info:*' enable git
 setopt PROMPT_SUBST
 
@@ -234,19 +241,14 @@ PROMPT='%F{green}%n@%m%f %F{blue}%~%f%F{magenta}${vcs_info_msg_0_}%f%F{yellow}$(
 # bun completions
 [ -s "${HOME}/.bun/_bun" ] && source "${HOME}/.bun/_bun"
 
-# bun
+# bun — only when installed, and don't re-prepend in nested shells
 export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
+if [[ -d "$BUN_INSTALL/bin" && ":$PATH:" != *":$BUN_INSTALL/bin:"* ]]; then
+    export PATH="$BUN_INSTALL/bin:$PATH"
+fi
 
 # For SkyPilot shell completion
 [ -f "${HOME}/.sky/.sky-complete.zsh" ] && . "${HOME}/.sky/.sky-complete.zsh"
-# The following lines have been added by Docker Desktop to enable Docker CLI completions.
-fpath=(/Users/anilkeshwani/.docker/completions $fpath)
-autoload -Uz compinit
-compinit
-# End of Docker CLI completions
-
-fpath+=~/.zfunc; autoload -Uz compinit; compinit
 
 # mise — polyglot version manager (Node etc.). Activated last so its PATH edits
 # take precedence over NVM/Volta from .env on hosts where those are installed.

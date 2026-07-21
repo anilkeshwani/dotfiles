@@ -94,6 +94,7 @@ case "$(uname -s)" in
         [ -f "${HOME}/.aliases_linux" ] && . "${HOME}/.aliases_linux"
         [ -f "${HOME}/.env_linux" ]     && . "${HOME}/.env_linux"
         if [[ "$(uname -n)" =~ ^(artemis|poseidon|dionysus|hades)$ ]]; then
+            [ -f /etc/profile.d/02-lmod.sh ] && . /etc/profile.d/02-lmod.sh
             [ -f "${HOME}/.aliases_sardine" ] && . "${HOME}/.aliases_sardine"
             [ -f "${HOME}/.env_sardine" ]     && . "${HOME}/.env_sardine"
         fi
@@ -131,7 +132,7 @@ _bashrc_prompt_cmd() {
 }
 PROMPT_COMMAND=_bashrc_prompt_cmd
 
-source '/home/anilkeshwani/.bash_completions/hf.sh'
+[ -f "${HOME}/.bash_completions/hf.sh" ] && . "${HOME}/.bash_completions/hf.sh"
 
 # Cargo (Rust)
 [ -f "${HOME}/.cargo/env" ] && . "${HOME}/.cargo/env"
