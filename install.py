@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import logging
 import os
+import shutil
 from datetime import datetime
 from pathlib import Path
 
@@ -83,9 +84,13 @@ def install(source: Path, dry_run: bool) -> None:
                 LOGGER.info("WOULD LINK:   %s -> %s", dst, src)
         return
 
-    # Collect targets that already exist so we can create one backup dir up front.
+    # Collect targets that will actually be replaced (exist and are not already the
+    # correct symlink) so we can create one backup dir up front. Reruns where everything
+    # is already linked must not create empty backup dirs.
     existing_targets = [
-        dst for _, dst in installs if dst.exists() or dst.is_symlink()
+        dst
+        for src, dst in installs
+        if (dst.exists() or dst.is_symlink()) and not is_same_symlink_target(dst, src)
     ]
 
     backup_dir: Path | None = None
@@ -110,7 +115,9 @@ def install(source: Path, dry_run: bool) -> None:
                 backup_dir.mkdir(parents=True, exist_ok=False)
             bk = unique_path(backup_dir / dst.relative_to(Path.home()))
             bk.parent.mkdir(parents=True, exist_ok=True)
-            dst.rename(bk)
+            # shutil.move (unlike Path.rename) survives XDG_STATE_HOME on another
+            # filesystem, and recreates symlinks rather than following them
+            shutil.move(dst, bk)
             LOGGER.info("Backed up %s -> %s", dst, bk)
 
         dst.symlink_to(src)
