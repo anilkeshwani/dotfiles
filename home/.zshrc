@@ -218,7 +218,7 @@ autoload -Uz vcs_info
 # Literal U+E0A0 Powerline branch icon + branch name. Kept as a raw UTF-8 char, not
 # $'\ue0a0': the escape is converted via the locale charmap and aborts with
 # "character not in range" under C/POSIX locales (e.g. SSH without locale forwarding).
-zstyle ':vcs_info:git:*' formats ' \ue0a0 %b'
+zstyle ':vcs_info:git:*' formats '  %b'
 zstyle ':vcs_info:*' enable git
 setopt PROMPT_SUBST
 
