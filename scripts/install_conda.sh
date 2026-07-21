@@ -32,7 +32,11 @@ bash "${tmpdir}/miniconda.sh" -b -u -p "${INSTALL_DIR}"
 "${INSTALL_DIR}/bin/conda" init bash
 export PATH="${INSTALL_DIR}/bin:${PATH}"
 
-echo "Creating 'main' environment (clone of base) ..."
-conda create --name main --clone base --copy -y
+if conda env list | grep -qE '^main[[:space:]]'; then
+    echo "'main' environment already exists, skipping clone."
+else
+    echo "Creating 'main' environment (clone of base) ..."
+    conda create --name main --clone base --copy -y
+fi
 
 echo "Done. Run 'exec bash' or open a new shell to activate conda."
