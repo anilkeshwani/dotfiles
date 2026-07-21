@@ -4,7 +4,7 @@
 _prompt_git_branch() {
     local branch
     branch=$(git branch --show-current 2>/dev/null) || return
-    [ -n "$branch" ] && printf $' \ue0a0 %s' "$branch"  # U+E0A0 Powerline branch icon
+    [ -n "$branch" ] && printf '  %s' "$branch"  # raw U+E0A0 Powerline branch icon; not $'\ue0a0', which aborts under C/POSIX locales
 }
 
 # Helper: emit active virtualenv name in parens, or nothing.
