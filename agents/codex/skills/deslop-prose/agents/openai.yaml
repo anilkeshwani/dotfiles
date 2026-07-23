@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deslop Prose"
+  short_description: "Remove AI tells from general prose"
+  default_prompt: "Use $deslop-prose to make this writing sound natural and concise."

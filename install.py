@@ -24,10 +24,31 @@ REPO_ROOT = Path(__file__).resolve().parent
 SOURCE_DIR = REPO_ROOT / "home"
 BACKUP_ROOT = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state")) / "dotfiles-backups"
 
+CODEX_SKILLS_DIR = REPO_ROOT / "agents" / "codex" / "skills"
+
+# Install only maintained personal skills. Other directories in CODEX_SKILLS_DIR
+# may be vendored system skills or unfinished drafts.
+INSTALLED_CODEX_SKILLS = ("deslop-code", "deslop-prose")
+
 
 def discover_dotfiles(source: Path) -> list[str]:
-    """Walk SOURCE_DIR and return all file paths relative to it."""
+    """Walk source and return all file paths relative to it."""
     return sorted(str(p.relative_to(source)) for p in source.rglob("*") if p.is_file())
+
+
+def build_install_plan(source: Path, home: Path) -> list[tuple[Path, Path]]:
+    """Return the source and destination paths managed by the installer."""
+    installs = [(source / rel, home / rel) for rel in discover_dotfiles(source)]
+
+    codex_skills = home / ".agents" / "skills"
+    for skill_name in INSTALLED_CODEX_SKILLS:
+        skill_source = CODEX_SKILLS_DIR / skill_name
+        if not skill_source.is_dir():
+            LOGGER.warning("Codex skill not found, skipping: %s", skill_source)
+            continue
+        installs.append((skill_source, codex_skills / skill_name))
+
+    return sorted(installs, key=lambda install: str(install[1]))
 
 
 def parse_args() -> argparse.Namespace:
@@ -67,8 +88,7 @@ def is_same_symlink_target(link: Path, target: Path) -> bool:
 
 def install(source: Path, dry_run: bool) -> None:
     source = source.resolve()
-    dotfiles = discover_dotfiles(source)
-    installs = [(source / rel, Path.home() / rel) for rel in dotfiles]
+    installs = build_install_plan(source, Path.home())
 
     if not installs:
         LOGGER.warning("No dotfiles found in %s. Nothing to install.", source)

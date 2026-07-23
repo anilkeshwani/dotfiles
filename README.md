@@ -2,6 +2,11 @@
 
 Dotfiles live in `home/` and are installed as symlinks into `$HOME` via `install.py`. Existing files are backed up to `~/.local/state/dotfiles-backups/` before being replaced.
 
+Codex-facing skills live under `agents/codex/skills`. The installer links the
+maintained personal skills into `~/.agents/skills`; Claude Code skills remain
+separate under `home/.claude/skills`. Files under `home/.codex/agents` are custom
+subagent profiles, not skills.
+
 ```bash
 uv run --script install.py [-h] [--source SOURCE] [--dry-run]
 ```
