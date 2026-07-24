@@ -26,6 +26,12 @@ Rationale: keeps branch history linear and the eventual squash-merge clean; avoi
 
 When a rebase has conflicts, resolve them, `git add`, and `git rebase --continue` — do NOT abort and fall back to `git merge`.
 
+## Git: never amend pushed commits
+
+Never amend a commit that has been pushed to any remote. This is a hard ban: do not use `git commit --amend` on a pushed commit, do not rewrite it through a rebase, and do not force-push a replacement. `--force-with-lease` does not make this acceptable. Put every correction or follow-up in a new commit instead.
+
+Before amending any commit, verify that it has never been pushed. If that cannot be established conclusively, treat it as pushed and create a new commit.
+
 ## File naming: think globally, not just locally
 
 When creating new files (especially reports, analyses, docs, scripts), pick a name that's clear *outside* the current task. The parent directory makes the context obvious to you right now, but the file gets linked from PR descriptions, referenced in other docs months later, surfaced in `grep` results, attached to memory entries, or moved between repos — and its name is what travels.
