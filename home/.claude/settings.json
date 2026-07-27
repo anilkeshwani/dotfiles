@@ -234,7 +234,9 @@
   "minimumVersion": "2.1.85",
   "skipDangerousModePermissionPrompt": true,
   "theme": "auto",
+  "editorMode": "normal",
   "remoteControlAtStartup": true,
+  "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
   "voiceEnabled": true
