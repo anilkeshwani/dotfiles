@@ -29,7 +29,7 @@ Mined from 416 local Claude Code sessions: 710k words of Claude prose vs 368k of
 
 | term / phrase | ratio ×user | note |
 |---|---|---|
-| "want me to (a…/b…)?" | 46.7× | offer-closer; just do the obvious thing or ask one plain question |
+| "want me to (a…/b…)?" | 46.7× | offer-closer; act when the call is yours, else bullet each decision naming the file/flag/rule it turns on (`deslop-prose` §4) |
 | tighten | 13.0× | |
 | converge(s) | 10.7× | |
 | "the honest …" | 9.3× | faux-candor leaking into code talk |
