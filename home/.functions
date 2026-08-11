@@ -51,6 +51,26 @@ git_first_commit_date() {
     echo "First commit date for ${file_path}: ${first_commit} (${iso_date})"
 }
 
+claude_with_config_dir() {
+    local config_dir="$1"
+    shift
+    if [ -z "$config_dir" ]; then
+        echo "claude_with_config_dir: no config dir given; is the CLAUDE_CONFIG_DIR_* var set?" >&2
+        return 2
+    fi
+    if [ ! -d "$config_dir" ]; then
+        echo "claude_with_config_dir: ${config_dir} not found; run 'uv run --script ${HOME}/dotfiles/install.py'" >&2
+        return 1
+    fi
+    # The assignment prefix puts CLAUDE_CONFIG_DIR into claude's own environment, so
+    # everything it spawns — hooks, the daemon, subagents — resolves the same account.
+    CLAUDE_CONFIG_DIR="$config_dir" command claude "$@"
+}
+
+claude-personal() { claude_with_config_dir "${CLAUDE_CONFIG_DIR_PERSONAL}" "$@"; }
+
+claude-work-extra() { claude_with_config_dir "${CLAUDE_CONFIG_DIR_WORK_EXTRA}" "$@"; }
+
 set-gpu() {
     if [ -z "$1" ]; then
         echo "Enter the GPU ID(s) comma-separated for multiple GPUs, e.g., 0,1:"

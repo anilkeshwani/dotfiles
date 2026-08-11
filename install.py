@@ -30,15 +30,48 @@ CODEX_SKILLS_DIR = REPO_ROOT / "agents" / "codex" / "skills"
 # may be vendored system skills or unfinished drafts.
 INSTALLED_CODEX_SKILLS = ("deslop-code", "deslop-prose")
 
+# Claude Code reads its whole config tree from $CLAUDE_CONFIG_DIR, defaulting to
+# ~/.claude. That tree includes .claude.json, which carries oauthAccount — so a second
+# config dir is a second login, and several subscriptions can run concurrently. These env
+# vars name the extra dirs; set them per host in .env / .env_linux / .env_macos.
+CLAUDE_CONFIG_SUBDIR = ".claude"
+EXTRA_CLAUDE_CONFIG_DIR_VARS = ("CLAUDE_CONFIG_DIR_PERSONAL", "CLAUDE_CONFIG_DIR_WORK_EXTRA")
+
+# Shared across accounts but not tracked in the repo: marketplace clones are bulky and the
+# enabled plugin set is already pinned by the shared settings.json, so one copy serves all.
+# Anything account-specific (.claude.json, .credentials.json, projects/, history.jsonl,
+# sessions/) is deliberately absent — Claude Code creates it per config dir.
+SHARED_CLAUDE_LOCAL_STATE = ("plugins",)
+
 
 def discover_dotfiles(source: Path) -> list[str]:
     """Walk source and return all file paths relative to it."""
     return sorted(str(p.relative_to(source)) for p in source.rglob("*") if p.is_file())
 
 
+def extra_claude_config_dirs(home: Path) -> list[Path]:
+    """Return the additional Claude Code config dirs named by the environment."""
+    default_dir = (home / CLAUDE_CONFIG_SUBDIR).resolve()
+    config_dirs = []
+
+    for var in EXTRA_CLAUDE_CONFIG_DIR_VARS:
+        value = os.environ.get(var)
+        if not value:
+            LOGGER.debug("%s unset, skipping", var)
+            continue
+        config_dir = Path(value).expanduser()
+        if config_dir.resolve() == default_dir:
+            LOGGER.warning("%s points at the default config dir %s, skipping", var, default_dir)
+            continue
+        config_dirs.append(config_dir)
+
+    return config_dirs
+
+
 def build_install_plan(source: Path, home: Path) -> list[tuple[Path, Path]]:
     """Return the source and destination paths managed by the installer."""
-    installs = [(source / rel, home / rel) for rel in discover_dotfiles(source)]
+    dotfiles = discover_dotfiles(source)
+    installs = [(source / rel, home / rel) for rel in dotfiles]
 
     codex_skills = home / ".agents" / "skills"
     for skill_name in INSTALLED_CODEX_SKILLS:
@@ -47,6 +80,17 @@ def build_install_plan(source: Path, home: Path) -> list[tuple[Path, Path]]:
             LOGGER.warning("Codex skill not found, skipping: %s", skill_source)
             continue
         installs.append((skill_source, codex_skills / skill_name))
+
+    claude_rels = [Path(rel) for rel in dotfiles if Path(rel).parts[0] == CLAUDE_CONFIG_SUBDIR]
+    for config_dir in extra_claude_config_dirs(home):
+        for rel in claude_rels:
+            installs.append((source / rel, config_dir / rel.relative_to(CLAUDE_CONFIG_SUBDIR)))
+        for name in SHARED_CLAUDE_LOCAL_STATE:
+            shared = home / CLAUDE_CONFIG_SUBDIR / name
+            if not shared.exists():
+                LOGGER.warning("Shared Claude state not found, skipping: %s", shared)
+                continue
+            installs.append((shared, config_dir / name))
 
     return sorted(installs, key=lambda install: str(install[1]))
 
