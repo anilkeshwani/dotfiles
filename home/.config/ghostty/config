@@ -48,7 +48,7 @@
 # # Just for example:
 # resize-overlay-duration = 4s 200ms
 
-keybind = global:shift+escape=toggle_quick_terminal
+keybind = global:command+shift+i=toggle_quick_terminal
 # macos-hidden = always
 
 # Appearance
