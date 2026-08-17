@@ -48,3 +48,9 @@ When commenting on a Linear ticket, ground the comment in the ticket's stated ai
 Write comments and new-ticket descriptions for the readers, not the author. A teammate without the immediate project context must be able to follow them: expand or anchor internal shorthand (config names, node shapes, metric keys) on first use.
 
 Where possible, take context on the team — colleagues' roles, backgrounds, and profiles — and let that shape what each reader can be assumed to know. Notes on colleagues live in `~/journal/ai-coustics/`.
+
+## Linear: never cite a ticket by its code alone
+
+Always name a Linear ticket as its code followed by its title, the whole thing in double quotes: "ML-1535 Plot WER vs Speaker Similarity", never bare `ML-1535`. This applies everywhere — chat replies, docs, commit messages, PR bodies, Linear comments themselves — and to every ticket mentioned, not just the one under discussion. Retrieve the title if you do not have it rather than citing the code on its own.
+
+**Why:** a bare code carries no information for anyone who has not just read that ticket, including me weeks later. It forces a lookup to understand a sentence that could have carried its own meaning.
