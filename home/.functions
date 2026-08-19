@@ -51,6 +51,22 @@ git_first_commit_date() {
     echo "First commit date for ${file_path}: ${first_commit} (${iso_date})"
 }
 
+# This dotfiles repo is public, but Claude Code's autoMode block — org name, source
+# control, internal services, sensitive data locations — is read only from the user
+# settings file, managed settings, or --settings, never from project settings. So it
+# lives in an untracked settings.private.json inside the config dir and is layered in
+# here. Ours goes first so an explicit --settings on the command line still wins: the
+# last flag wins and repeating it replaces rather than merges.
+claude() {
+    local private_settings="${CLAUDE_CONFIG_DIR:-${HOME}/.claude}/settings.private.json"
+    if [ ! -r "$private_settings" ]; then
+        echo "claude: ${private_settings} not found; running without the autoMode org context" >&2
+        command claude "$@"
+        return
+    fi
+    command claude --settings "$private_settings" "$@"
+}
+
 claude_with_config_dir() {
     local config_dir="$1"
     shift
@@ -62,9 +78,11 @@ claude_with_config_dir() {
         echo "claude_with_config_dir: ${config_dir} not found; run 'uv run --script ${HOME}/dotfiles/install.py'" >&2
         return 1
     fi
-    # The assignment prefix puts CLAUDE_CONFIG_DIR into claude's own environment, so
-    # everything it spawns — hooks, the daemon, subagents — resolves the same account.
-    CLAUDE_CONFIG_DIR="$config_dir" command claude "$@"
+    # The export inside the subshell puts CLAUDE_CONFIG_DIR into claude's own
+    # environment, so everything it spawns — hooks, the daemon, subagents — resolves the
+    # same account, without leaking the var into this shell. Calling the claude function
+    # rather than the binary picks up that account's settings.private.json.
+    (export CLAUDE_CONFIG_DIR="$config_dir"; claude "$@")
 }
 
 claude-personal() { claude_with_config_dir "${CLAUDE_CONFIG_DIR_PERSONAL}" "$@"; }
