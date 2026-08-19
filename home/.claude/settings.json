@@ -82,7 +82,6 @@
       "Bash(touch *)",
       "Bash(cp *)",
       "Bash(mv *)",
-      "Bash(rm *)",
       "Bash(diff *)",
       "Bash(file *)",
       "Bash(stat *)",
@@ -233,7 +232,7 @@
       ]
     }
   },
-  "effortLevel": "high",
+  "effortLevel": "medium",
   "autoUpdatesChannel": "latest",
   "minimumVersion": "2.1.85",
   "skipDangerousModePermissionPrompt": true,
