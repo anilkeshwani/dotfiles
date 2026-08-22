@@ -53,7 +53,15 @@ Mined from 416 local Claude Code sessions: 710k words of Claude prose vs 368k of
 
 **Hard-ban (overrides the Tier-2 "never hard-ban" default): `load-bearing`.** It reads as pure Claude. Always replace it rather than merely flagging: name what actually depends on the thing, or use "critical"/"essential".
 
-**Discovered discourse tics (not in the original seed list):** "confirmed/confirms/confirming" (~21×, narrating one's own verification) · "the picture / full picture" (27×) · "wording" (22×) · "trust/intact" (~18×) · "trap" ("the X trap", 16×) · "harmless/cosmetic/purely" (risk-triage, ~12–17×) · "couple", "defensible", "lanes", "spine", "caveat", "neutral", "slightly/subtle/literally". And the pervasive **"Let me [verb]…"** opener (check/read/verify/confirm/look).
+**Discovered discourse tics (not in the original seed list):** "confirmed/confirms/confirming" (~21×, narrating one's own verification) · "the picture / full picture" (27×) · "wording" (22×) · "trust/intact" (~18×) · "trap" ("the X trap", 16×) · "harmless/cosmetic/purely" (risk-triage, ~12–17×) · "couple", "defensible", "lanes", "spine", "caveat", "neutral", "slightly/subtle/literally" · "empirically" (∞) · "headline" ("the headline is…", 7×) · "composes / inherits" (~6×). And the pervasive **"Let me [verb]…"** opener (check/read/verify/confirm/look).
+
+**Structural-metaphor nouns beyond the table:** canonical home ("X lives in Y, the canonical home") · source of truth / single source of truth · hot path · escape hatch · guardrail.
+
+**Move/change verbs beyond the table:** repoint · land ("once this lands", "land it on main") · carve out · rip out · paper over · bake in / baked in · entrench ("entrenching a misnomer").
+
+**Framing adjectives/adverbs beyond the table:** mild misnomer · gnarly / hairy · spurious · "in exactly one place" / "one X in one home".
+
+**Discourse tics in technical explanation:** "Net:" / "Bottom line:" · "The honest answer is…" · "the live consumer" · YAGNI / "YAGNI trim" · "the right amount of complexity is the minimum needed" · staccato decision framing ("Decision you need to make:").
 
 **Honest negatives — do NOT flag these** (they did not over-index against the user; some the user uses *more*): crisp/crisply (0.4×), envelope (0.8×), leverage (0.9×), orthogonal (0.9×), concretely (1.0×). thread/upstream/downstream/footprint only mild (~1.2–1.4×).
 

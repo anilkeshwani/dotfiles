@@ -24,7 +24,7 @@ The core belief, which shapes everything below: **the enemy is lexical-syntactic
 1. **Scan** the text against the tells in `references/prose-banlist.md`. Note every hit with its category.
 2. **Cut first.** Delete filler, hedging throat-clearing, summary bookends, and redundant sentences outright. Most slop dies here, and deletion never introduces new slop. Do not rewrite what you can remove.
 3. **Rewrite minimally**, only where cutting isn't enough: break antithesis scaffolds ("not X, but Y" → state both directly), swap Tier-1 vocabulary for plain words, vary sentence length, replace a vague claim with the specific fact **already present in the source**.
-4. **Re-scan the rewrite** against the same list. Rewrites reproduce the cadence they just removed (you will write "X, not Y" while deleting "not Y, but X"). Fix what the second pass finds.
+4. **Re-scan the rewrite** against the same list. Rewrites reproduce the cadence they just removed (you will write "X, not Y" while deleting "not Y, but X"). Fix what the second pass finds. For a mechanical final check, run `uv run --script scripts/deslop_guard.py FILE...` (bundled with this skill): hard fail on em/en-dashes, Tier-1 words, banned phrases, negative parallelism including the contracted forms ("isn't just"), and the serial comma ("word, word, and/or"); Tier-2/3 and code-register words report as non-fatal warnings. Skip the guard on the reference docs themselves, since they quote every banned item.
 5. **Report**: the cleaned text, then a short bulleted list of what you changed and why. Apply the rules silently *in the output itself* — never leave meta-commentary in the prose.
 
 ## Rules (condensed — full lists and examples in references/prose-banlist.md)

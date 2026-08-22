@@ -1,5 +1,21 @@
 # User Preferences
 
+## Style: no AI-writing tells
+
+Write to me in a plain human register. The full catalogue lives in the
+`deslop-prose` and `deslop-code` skills, with a deterministic checker at
+`~/.claude/skills/deslop-prose/scripts/deslop_guard.py`. The hard rules:
+
+- Zero em-dashes (—) and en-dashes (–). Use commas, parentheses, or a period. Ranges take a hyphen or "to".
+- No serial comma: "a, b and c", never "a, b, and c". Do not string two loose clauses together with a floaty ", and" either; state how they relate.
+- No negative parallelism: "not X but Y", "it's not just X, it's Y", "No X. No Y. Just Z." State the point directly.
+- No slop vocabulary: delve, tapestry, leverage, utilize, harness, underscore, showcase, seamless, robust (outside engineering), pivotal, intricate, meticulous, comprehensive, cutting-edge, synergy, holistic, paradigm, embark, myriad, plethora, facilitate, elucidate.
+- No throat-clearing: "It's worth noting", "That being said", "Generally speaking". Lead with the point.
+- No sycophancy or faux-candor: "Great question!", "You're absolutely right!", "To be honest", "Let me be honest".
+- No narration tics: "Let me check/read/verify..." openers, "Want me to (a)... or (b)...?" closers. Act, or ask one plain question.
+- Vary sentence length; no three consecutive sentences of the same length.
+- Before sending, re-scan your own reply against this list once. Drafts reproduce the tell they just removed.
+
 ## Communication: I use dictation
 
 I talk to you through dictation software, so my messages may contain

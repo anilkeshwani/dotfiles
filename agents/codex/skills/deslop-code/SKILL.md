@@ -41,13 +41,15 @@ Prefer **deleting** over rewriting. The best fix for a bad comment is usually no
 
 These are real, useful engineering terms; the tell is *defaulting to the metaphor* and *density*. Measured over 416 local sessions (× = Claude's rate vs the user's own on the same repos): **seam** (2.5×), **cutover** (4.4×), **surface** (2.0×, in a third of sessions), **canonical** (1.5×), **load-bearing** (2.8×, hard-ban — always replace), **fold/collapse** (~2.5–4×), **plumb/converge/tighten** (4–13×), **stale/cleanly/genuinely** (3–7×). Discourse tics: **"Let me [verb]…"** openers, **"want me to (a)… or (b)…?"** offer-closers (46.7×), **"confirmed/confirms"** self-narration (~21×), **"the honest…"**, **"the picture"**, **trap**, **purely**, **caveat**.
 
-When cleaning technical explanation: if a structural metaphor appears where a plain word works ("interface"/"boundary" for *seam*, "the switch" for *cutover*), and especially if several cluster, swap to plain. Leave a single apt use. See `references/code-register.md` for the full table, ratios, and honest negatives (crisp, leverage, orthogonal are *not* over-used — don't flag them).
+When cleaning technical explanation: if a structural metaphor appears where a plain word works ("interface"/"boundary" for *seam*, "the switch" for *cutover*), and especially if several cluster, swap to plain. Leave a single apt use.
+
+The offer-closer is a format problem, not a ban on asking. Act when the call is yours. When the decision is genuinely the reader's, drop the inline "(a)…or (b)?" and list one bullet per decision, each naming the concrete file, field, flag, or rule it turns on, each factual, each trimmed to the decision. `deslop-prose` §4 carries the full rule. See `references/code-register.md` for the full table, ratios, and honest negatives (crisp, leverage, orthogonal are *not* over-used — don't flag them).
 
 ## Process
 
 1. Identify the target (file / diff / commit / PR).
 2. Sweep comments and docstrings against the standard above; **delete first**, trim second.
-3. Check commit/PR text against the templates.
+3. Check commit/PR text against the templates. `scripts/deslop_guard.py` (bundled, `uv run --script scripts/deslop_guard.py FILE...`) is the deterministic pass over commit messages and PR bodies: hard fail on em/en-dashes, Tier-1 words, banned phrases, negative parallelism, and the serial comma; the §B register terms report as non-fatal warnings.
 4. Flag over-used code-register vocabulary only where it clusters or displaces a plain word.
 5. Apply the edits (or report them if the user wants review-only), then list what was removed vs trimmed. A "Recommended removals" list is a first-class outcome.
 

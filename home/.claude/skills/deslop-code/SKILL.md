@@ -51,7 +51,7 @@ The offer-closer is a format problem, not a ban on asking. Act when the call is 
 
 1. Identify the target (file / diff / commit / PR).
 2. Sweep comments and docstrings against the standard above; **delete first**, trim second.
-3. Check commit/PR text against the templates.
+3. Check commit/PR text against the templates. `scripts/deslop_guard.py` (bundled, `uv run --script scripts/deslop_guard.py FILE...`) is the deterministic pass over commit messages and PR bodies: hard fail on em/en-dashes, Tier-1 words, banned phrases, negative parallelism, and the serial comma; the §B register terms report as non-fatal warnings.
 4. Flag over-used code-register vocabulary only where it clusters or displaces a plain word.
 5. Apply the edits (or report them if the user wants review-only), then list what was removed vs trimmed. A "Recommended removals" list is a first-class outcome.
 
