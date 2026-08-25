@@ -1,0 +1,32 @@
+# ~/.config/ripgrep/ripgreprc — default flags for every rg invocation.
+# Read only when $RIPGREP_CONFIG_PATH points here; rg does no auto-discovery.
+# Format: one shell argument per line. Comments must be on their own line —
+# a trailing "# ..." after a flag is parsed as part of the argument.
+# Override any flag per-invocation by passing its negation (e.g. --no-hidden).
+
+# Search dotfiles and dotdirs, which rg skips by default. Essential in a
+# dotfiles repo, where nearly every interesting file starts with a dot.
+# .gitignore still applies, so --hidden alone does not resurface .git/.
+--hidden
+
+# --- Deliberately left off ---
+
+# Case-insensitive unless the pattern contains an uppercase letter. Convenient,
+# but it makes case sensitivity depend on the pattern, so an all-lowercase
+# search silently widens. Pass -i or -S explicitly instead.
+# --smart-case
+
+# Ignore .gitignore, .ignore and friends. Off because most searches want the
+# tracked tree; reach for --no-ignore when hunting build output or vendored deps.
+# --no-ignore
+
+# Skip .git/ even when ignore files are disabled. Only useful alongside
+# --no-ignore, which is off above.
+# --glob=!.git/
+
+# Group matches under a filename heading rather than prefixing every line.
+# Off because it breaks line-oriented piping into cut, awk and editors.
+# --heading
+
+# Sort results by path. Off because it forces single-threaded search.
+# --sort=path
