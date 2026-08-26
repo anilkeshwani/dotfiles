@@ -41,12 +41,9 @@
             "source.organizeImports.ruff": "always"
         }
     },
-    // ty Python LSP
+    // ty owns Python language services and diagnostics
     "python.languageServer": "None",
-    // Disable Pylance/pylint since ty owns diagnostics
-    "python.analysis.ignore": [
-        "*"
-    ],
+    "python.analysis.typeCheckingMode": "off",
     "pylint.enabled": false,
     // ty settings
     "ty.importStrategy": "fromEnvironment", // use uv venv, not bundled ty

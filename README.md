@@ -2,6 +2,8 @@
 
 Dotfiles live in `home/` and are installed as symlinks into `$HOME` via `install.py`. Existing files are backed up to `~/.local/state/dotfiles-backups/` before being replaced.
 
+On macOS, the installer also links `apps/vscode/settings.json` to VS Code's user settings path under `~/Library/Application Support/Code/User/`.
+
 Codex-facing skills live under `agents/codex/skills`. The installer links the
 maintained personal skills into `~/.agents/skills`; Claude Code skills remain
 separate under `home/.claude/skills`. Files under `home/.codex/agents` are custom

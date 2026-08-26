@@ -10,6 +10,7 @@ import argparse
 import logging
 import os
 import shutil
+import sys
 from datetime import datetime
 from pathlib import Path
 
@@ -23,6 +24,10 @@ LOGGER = logging.getLogger(__file__)
 REPO_ROOT = Path(__file__).resolve().parent
 SOURCE_DIR = REPO_ROOT / "home"
 BACKUP_ROOT = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state")) / "dotfiles-backups"
+VSCODE_SETTINGS_SOURCE = REPO_ROOT / "apps" / "vscode" / "settings.json"
+MACOS_VSCODE_SETTINGS_DESTINATION = Path(
+    "Library/Application Support/Code/User/settings.json"
+)
 
 CODEX_SKILLS_DIR = REPO_ROOT / "agents" / "codex" / "skills"
 
@@ -72,6 +77,11 @@ def build_install_plan(source: Path, home: Path) -> list[tuple[Path, Path]]:
     """Return the source and destination paths managed by the installer."""
     dotfiles = discover_dotfiles(source)
     installs = [(source / rel, home / rel) for rel in dotfiles]
+
+    if sys.platform == "darwin":
+        installs.append(
+            (VSCODE_SETTINGS_SOURCE, home / MACOS_VSCODE_SETTINGS_DESTINATION)
+        )
 
     codex_skills = home / ".agents" / "skills"
     for skill_name in INSTALLED_CODEX_SKILLS:
