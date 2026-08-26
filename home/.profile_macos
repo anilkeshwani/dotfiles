@@ -11,8 +11,7 @@ fi
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
 # Global project paths
-export GARDEN="${HOME}/Desktop/garden-builder"
-export JOURNAL="${HOME}/Desktop/journal"
+export JOURNAL="${HOME}/journal"
 
 # Cargo (Rust)
 [ -f "${HOME}/.cargo/env" ] && . "${HOME}/.cargo/env"
