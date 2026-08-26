@@ -9,9 +9,27 @@ maintained personal skills into `~/.agents/skills`; Claude Code skills remain
 separate under `home/.claude/skills`. Files under `home/.codex/agents` are custom
 subagent profiles, not skills.
 
+The installer also maintains a small policy inside `~/.codex/config.toml`. It
+disables imports from other coding agents and removes the known unwanted
+`explanatory-output-style`, `security-guidance` and `posthog` plugins. When an
+existing config still has external import sync enabled, the first installer run
+also removes plugins and marketplaces imported from Anthropic or SkyPilot.
+Third-party plugins added later are retained. All unrelated Codex settings stay
+in the machine-local config, including MCP servers, notifications and trusted
+projects.
+
+The Codex `AGENTS.md` file is tracked separately at `home/.codex/AGENTS.md` so
+Claude Code configuration is never used as its installation source. Changed
+Codex files are backed up under `~/.local/state/dotfiles-backups/` before the
+installer updates them. Restore a config by copying the corresponding
+`.codex/config.toml` backup into `~/.codex/config.toml`.
+
 ```bash
-uv run --script install.py [-h] [--source SOURCE] [--dry-run]
+uv run --script install.py [-h] [--source SOURCE] [--dry-run] [--codex-only]
 ```
+
+Use `--codex-only` to repair or refresh Codex without changing any Claude Code
+path, VS Code setting or general shell dotfile.
 
 ## Multiple Claude Code accounts
 
