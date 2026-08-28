@@ -158,3 +158,18 @@ alias dog='pygmentize -g' # requires pygmentize from the python package python-p
 
 # GPU / CUDA
 alias get-gpu='export -p | grep CUDA_VISIBLE_DEVICES' # NOTE set-gpu is a function (i.e. in .functions)
+
+# Machine-specific aliases
+case "$(uname -s)" in
+    Darwin)
+        [ -f "${HOME}/.aliases_macos" ] && . "${HOME}/.aliases_macos"
+        ;;
+    Linux)
+        [ -f "${HOME}/.aliases_linux" ] && . "${HOME}/.aliases_linux"
+        case "$(uname -n)" in
+            artemis|poseidon|dionysus|hades)
+                [ -f "${HOME}/.aliases_sardine" ] && . "${HOME}/.aliases_sardine"
+                ;;
+        esac
+        ;;
+esac
