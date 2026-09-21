@@ -74,3 +74,102 @@ bash scripts/bootstrap_ubuntu.sh
 Hints:
 - [Reload the tmux config mid-session](https://superuser.com/questions/580992/how-do-i-reload-tmux-configuration) with `(ctrl + B), :` then `source-file ~/.tmux.conf`
 - Always handy: `exec zsh` 
+
+## Using these skills and configs on your own machine
+
+This section is for anyone who is not me. It assumes you want the skills and
+maybe the agent profiles, without adopting my shell, git or editor config.
+
+### What is shareable
+
+| Path | What it is | Applies to |
+|---|---|---|
+| `home/.claude/skills/` | Personal Claude Code skills: `deslop-prose`, `deslop-code`, `excalidraw`, `journal` | Claude Code (CLI, desktop, IDE) |
+| `home/.claude/agents/` | Subagent profiles: `architect-reviewer`, `senior-mle-reviewer`, `researcher-reviewer`, `journal-scribe` | Claude Code |
+| `home/.claude/output-styles/` | Output styles, including `deslop` | Claude Code |
+| `home/.claude/settings.json` | Permission allow/deny lists, enabled plugins, sandbox rules | Claude Code |
+| `home/.claude/CLAUDE.md` | My personal preferences. Read it for ideas, do not install it verbatim | Claude Code |
+| `agents/codex/skills/` | Codex skills: `deslop-prose`, `deslop-code`, `gh-fix-ci`, `gh-address-comments`, `pdf`, `git-commit-staged` | Codex (CLI, IDE extension, ChatGPT desktop) |
+| `home/.codex/AGENTS.md`, `home/.codex/agents/` | Codex instructions and subagent profiles | Codex |
+| `docs/` | Research behind the deslop skills: the Claudeisms catalogue and register findings | Background reading |
+
+Prerequisites: [Claude Code](https://code.claude.com/docs/en/quickstart)
+(`curl -fsSL https://claude.ai/install.sh | bash`), and/or
+[Codex](https://learn.chatgpt.com/docs/codex/cli)
+(`curl -fsSL https://chatgpt.com/codex/install.sh | sh`). The skill scripts run
+under [uv](https://docs.astral.sh/uv/), so install that too.
+
+### Take only the skills
+
+Clone anywhere, then symlink the skills you want. Symlinks mean `git pull`
+updates them in place.
+
+```bash
+git clone git@github.com:anilkeshwani/dotfiles.git ~/src/anilkeshwani-dotfiles
+DOTFILES=~/src/anilkeshwani-dotfiles
+```
+
+Claude Code reads personal skills from `~/.claude/skills/<name>/SKILL.md`:
+
+```bash
+mkdir -p ~/.claude/skills
+for skill in deslop-prose deslop-code excalidraw; do
+    ln -sfn "${DOTFILES}/home/.claude/skills/${skill}" ~/.claude/skills/"${skill}"
+done
+```
+
+Codex reads user skills from `~/.agents/skills/<name>/SKILL.md`:
+
+```bash
+mkdir -p ~/.agents/skills
+for skill in deslop-prose deslop-code gh-fix-ci gh-address-comments pdf; do
+    ln -sfn "${DOTFILES}/agents/codex/skills/${skill}" ~/.agents/skills/"${skill}"
+done
+```
+
+Subagents and output styles work the same way, from
+`home/.claude/agents/` into `~/.claude/agents/` and `home/.claude/output-styles/`
+into `~/.claude/output-styles/`.
+
+Two skills have dependencies you may not have. `journal` targets an Obsidian
+vault at `~/journal` (`~/Desktop/journal` on macOS) and dispatches the
+`journal-scribe` agent, so install both or neither. `excalidraw` shells out to
+`uv run --script`.
+
+### Using them
+
+In Claude Code, run `/skills` to confirm they loaded. Claude picks a skill up on
+its own when a task matches the description, or you can force it by typing
+`/deslop-prose`. Edits to a `SKILL.md` are picked up live, without restarting
+the session.
+
+In Codex, reference a skill with `$deslop-prose` in the CLI and IDE extension,
+or `@deslop-prose` in ChatGPT. Implicit selection by description works the same
+as in Claude Code.
+
+### Terminal or desktop app
+
+Claude Code's desktop app (download from [claude.com/download](https://claude.com/download),
+then open the **Code** tab) runs the same engine as the CLI and reads the same
+`~/.claude` tree, so skills, agents, output styles, `settings.json` and
+`CLAUDE.md` all apply with no extra setup. One caveat: personal skills load in
+local and SSH sessions only, so Cowork and cloud sessions will not see them. You
+can hand a session across with `/desktop` from the CLI, or `/resume` in the
+desktop app.
+
+The same holds on the Codex side. The CLI, the IDE extension and the ChatGPT
+desktop app all read `~/.agents/skills`, so one symlink covers all three.
+
+### Or install everything
+
+If you actually want my whole setup, including zsh, git, tmux and nvim config:
+
+```bash
+uv run --script install.py --dry-run   # inspect the plan first
+uv run --script install.py
+```
+
+Everything under `home/` is symlinked into `$HOME`. Anything it would replace is
+moved to `~/.local/state/dotfiles-backups/<timestamp>/` first, so the run is
+reversible. `--codex-only` restricts it to Codex instructions, agent profiles
+and skills.
