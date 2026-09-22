@@ -80,5 +80,6 @@
     "claudeCode.useTerminal": true,
     "redhat.telemetry.enabled": false,
     "window.zoomLevel": -1,
-    "editor.accessibilitySupport": "off"
+    "editor.accessibilitySupport": "off",
+    "workbench.preferredLightColorTheme": "Light+"
 }

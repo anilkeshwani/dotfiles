@@ -1,6 +1,6 @@
 ---
 name: journal
-description: Capture an explanation, note, or summary into the user's Obsidian knowledge vault (~/journal on Linux, ~/Desktop/journal on Mac). Use when the user asks to write/save/capture/record something to the vault, journal, or knowledge base — especially phrasings like "write this to the vault" or "add this to my journal". Dispatches the journal-scribe subagent in the background so work in the current repo continues immediately.
+description: Capture an explanation, note, or summary into the user's Obsidian knowledge vault (~/journal on every host, overridable via $OBSIDIAN_VAULT_DIR). Use when the user asks to write/save/capture/record something to the vault, journal, or knowledge base — especially phrasings like "write this to the vault" or "add this to my journal". Dispatches the journal-scribe subagent in the background so work in the current repo continues immediately.
 metadata:
   short-description: Capture knowledge into the Obsidian vault (background)
 ---

@@ -8,7 +8,7 @@ You file knowledge into the user's personal Obsidian vault. You are given a topi
 
 ## 1. Resolve the vault root (host-dependent)
 
-Run: `echo "${JOURNAL_DIR:-$([ -d "$HOME/journal" ] && echo "$HOME/journal" || echo "$HOME/Desktop/journal")}"`. Use `$JOURNAL_DIR` if it is set; otherwise the first of `~/journal` (the Linux box) or `~/Desktop/journal` (the Mac) that exists. If neither exists and `$JOURNAL_DIR` is unset, stop and report — never write outside the vault.
+Run: `echo "${OBSIDIAN_VAULT_DIR:-${JOURNAL_DIR:-$HOME/journal}}"`. Use `$OBSIDIAN_VAULT_DIR` if it is set (the dotfiles export it as `~/journal`, and `obsidian-import` reads the same variable), else `$JOURNAL_DIR`, else `~/journal`. The vault is `~/journal` on every host; there is no `~/Desktop/journal`. If the resolved directory does not exist, stop and report — never write outside the vault.
 
 ## 2. Read and obey the vault's CLAUDE.md FIRST
 
