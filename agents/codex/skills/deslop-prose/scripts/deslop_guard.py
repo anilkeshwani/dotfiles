@@ -10,6 +10,10 @@ whether a given use is the slop sense.
 Sources: deslop-prose/references/prose-banlist.md,
 deslop-code/references/code-register.md.
 
+Quoted material is exempt: text inside double quotes on a single line is
+removed before scanning, because a quotation must keep its source's exact
+characters.
+
 Usage:  uv run --script deslop_guard.py FILE...
 Exit 0 if every file passes, 1 on any HARD violation, 2 on usage error.
 """
@@ -125,10 +129,17 @@ def strip_code(text, suffix):
         text = re.sub(r"`[^`\n]*`", " ", text)
     return text
 
+def strip_quotes(text):
+    """Remove single-line double-quoted spans (straight or curly). Quotations
+    are verbatim, so their dashes and wording are not the author's to fix."""
+    text = re.sub(r'"[^"\n]*"', " ", text)
+    text = re.sub(r"\u201c[^\u201d\n]*\u201d", " ", text)
+    return text
+
 def scan(path):
     path = pathlib.Path(path)
     raw = path.read_text(encoding="utf-8")
-    text = strip_code(raw, path.suffix.lower())
+    text = strip_quotes(strip_code(raw, path.suffix.lower()))
     low = text.lower()
     hard, warns = [], []
 
