@@ -39,6 +39,7 @@ The core belief, which shapes everything below: **the enemy is lexical-syntactic
 - **Tone** (general prose only). Cut sycophancy ("Great question!", "You're absolutely right!"), performative enthusiasm, servile closers, and **faux-candor** ("Let me be honest", "To be honest", "Honestly," "The honest truth is") — the candor belongs in the content, not the announcement.
 - **Concrete over vague** (§9, applies even to technical text). Name the mechanism instead of gesturing at it ("sits behind several checks" → which checks, which flags, which default), and don't string two vague clauses together with a floaty ", and" — state how they relate. Each sentence should read standalone.
 - **Formatting.** No mechanical bolding, no "Bold lead-in: explanation" bullets, no title-case headings, no emoji headers.
+- **Spelling.** Write and rewrite in American English (en-US): -ize/-yze, -or, -er, -og (normalize, behavior, center, catalog). When editing someone else's text, convert British spellings to en-US unless the user asks to keep them. Never respell inside quotations.
 - **Rhythm.** Vary sentence length: at least one short (<10 words) and one long (>20) per few sentences. Uniform length is the most measurable machine signal.
 
 ## Hard guards

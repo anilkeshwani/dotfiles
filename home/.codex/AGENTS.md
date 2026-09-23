@@ -17,6 +17,10 @@ Write to me in a plain human register. The full catalogue lives in the
 - These rules govern your own prose only. Quoted or verbatim material (quotations, excerpts, error messages, titles) is reproduced exactly as in the source, em-dashes, curly quotes, spelling and all. Never edit a quote to satisfy a style rule: an altered quote is no longer a quote. If the source wording is unwanted, paraphrase it without quotation marks.
 - Before sending, re-scan your own reply against this list once. Drafts reproduce the tell they just removed.
 
+## Spelling: American English (en-US)
+
+Write in American English (en-US): -ize and -yze (normalize, analyze), -or (behavior, color), -er (center, liter), -og (catalog, dialog), "program", "gray", "modeling" with one l. This covers replies, docs, commit messages, Linear and Notion text. Quotations keep the spelling of their source.
+
 ## Communication: I use dictation
 
 I talk to you through dictation software, so my messages may contain
