@@ -216,11 +216,3 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
-
-# Claude Code private settings
-#   Claude Code reads the `autoMode` block only from the user settings file, managed
-#   settings, or --settings — never from project settings — so the org context it needs
-#   (company name, source control, internal services, sensitive data locations) cannot be
-#   scoped away from this public repo by file placement. It lives here instead, untracked,
-#   and .functions layers it in via `claude --settings`.
-home/.claude/settings.private.json
