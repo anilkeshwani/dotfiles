@@ -17,3 +17,7 @@ case "$(uname -s)" in
         [ -f "${HOME}/.profile_linux" ] && . "${HOME}/.profile_linux"
         ;;
 esac
+
+# mise shims, so non-interactive shells (scripts, agent commands) get
+# mise-managed tools; .zshrc adds the prompt hook for interactive shells
+command -v mise >/dev/null 2>&1 && eval "$(mise activate zsh --shims)"
