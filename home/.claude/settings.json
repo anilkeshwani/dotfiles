@@ -2,6 +2,15 @@
   "permissions": {
     "allow": [
       "Bash(rsync -a atlas-models:*)",
+      "Bash(ssh bigboss-md72-hb2-00 *)",
+      "Bash(scp * bigboss-md72-hb2-00:*)",
+      "Bash(scp bigboss-md72-hb2-00:* *)",
+      "Bash(rsync * bigboss-md72-hb2-00:*)",
+      "Bash(rsync bigboss-md72-hb2-00:* *)",
+      "Bash(git tag -a *)",
+      "Bash(git tag -l*)",
+      "Bash(git tag --list*)",
+      "Bash(git tag)",
       "Read",
       "Edit",
       "Write",
@@ -162,8 +171,14 @@
       "Bash(git push origin :*)",
       "Bash(git push -u origin :*)",
       "Bash(git remote *)",
-      "Bash(git tag *)",
-      "Bash(git tag)",
+      "Bash(git tag -d*)",
+      "Bash(git tag * -d*)",
+      "Bash(git tag --delete*)",
+      "Bash(git tag * --delete*)",
+      "Bash(git tag -f*)",
+      "Bash(git tag * -f*)",
+      "Bash(git tag --force*)",
+      "Bash(git tag * --force*)",
       "Bash(git reset --hard *)",
       "Bash(git reset --hard)",
       "Bash(git clean *)",
@@ -230,6 +245,13 @@
   },
   "sandbox": {
     "enabled": true,
+    "excludedCommands": [
+      "ssh bigboss-md72-hb2-00 *",
+      "scp * bigboss-md72-hb2-00:*",
+      "scp bigboss-md72-hb2-00:* *",
+      "rsync * bigboss-md72-hb2-00:*",
+      "rsync bigboss-md72-hb2-00:* *"
+    ],
     "filesystem": {
       "allowWrite": [
         "~/.cache/uv"
