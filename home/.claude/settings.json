@@ -192,9 +192,7 @@
       "Bash(git restore -s master *)",
       "Bash(gh pr merge *)",
       "Bash(gh pr close *)",
-      "Bash(sudo *)",
-      "Bash(ssh *)",
-      "Bash(scp *)"
+      "Bash(sudo *)"
     ],
     "defaultMode": "auto"
   },
