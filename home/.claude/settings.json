@@ -1,6 +1,7 @@
 {
   "permissions": {
     "allow": [
+      "Bash(rsync -a atlas-models:*)",
       "Read",
       "Edit",
       "Write",
@@ -178,8 +179,7 @@
       "Bash(gh pr close *)",
       "Bash(sudo *)",
       "Bash(ssh *)",
-      "Bash(scp *)",
-      "Bash(rsync *)"
+      "Bash(scp *)"
     ],
     "defaultMode": "auto"
   },
