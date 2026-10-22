@@ -239,11 +239,11 @@
   "sandbox": {
     "enabled": true,
     "excludedCommands": [
-      "ssh bigboss-md72-hb2-00 *",
-      "scp * bigboss-md72-hb2-00*",
-      "scp bigboss-md72-hb2-00* *",
-      "rsync * bigboss-md72-hb2-00*",
-      "rsync bigboss-md72-hb2-00* *"
+      "ssh bigboss*",
+      "scp * bigboss*",
+      "scp bigboss* *",
+      "rsync * bigboss*",
+      "rsync bigboss* *"
     ],
     "filesystem": {
       "allowWrite": [
