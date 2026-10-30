@@ -24,6 +24,17 @@ uv run --script install.py [-h] [--source SOURCE] [--dry-run] [--codex-only]
 Use `--codex-only` to repair or refresh Codex without changing any Claude Code
 path, VS Code setting or general shell dotfile.
 
+## Antigravity CLI (agy) with Gemini 4 Argon
+
+| Tracked file | Installed at | How |
+|---|---|---|
+| `home/.gemini/AGENTS.md` | `~/.gemini/AGENTS.md` | Symlink. In the repo it points at `home/.codex/AGENTS.md`, so Codex and agy share one copy of the global rules. agy loads `~/.gemini/AGENTS.md` in every workspace. |
+| `home/.gemini/antigravity-cli/settings.json` | `~/.gemini/antigravity-cli/settings.json` | Merged, not linked. agy rewrites this file on every start (it re-sorts the keys and replaces the file), which would turn a symlink into a detached copy. The installer writes the tracked keys over the installed file and keeps keys agy owns, such as `trustedWorkspaces`. Rerun the installer after changing the tracked file. |
+
+The settings start agy in `auto` mode with the terminal sandbox on, default to `gemini-4-argon` (resolved to `gemini-4-argon-medium`) and mirror the Claude Code deny list: no `sudo`, force pushes, branch or tag deletion, `git remote` changes, `git reset --hard`, `git clean`, switching to or restoring from `main`/`master`, or `gh pr merge`/`close`. `git push` and `rm -rf` ask first. Reasoning effort has no settings key; the `argon` launcher in [antigravity-argon-gcp](https://github.com/anilkeshwani/antigravity-argon-gcp) passes `--effort medium` and signs in with GCP ADC.
+
+On Linux, auto mode needs unprivileged user namespaces for the sandbox. Ubuntu's default `kernel.apparmor_restrict_unprivileged_userns = 1` blocks them, and agy then starts in default mode.
+
 ## Multiple Claude Code accounts
 
 Claude Code reads its entire config tree from `$CLAUDE_CONFIG_DIR`, defaulting to `~/.claude`. That tree includes `.claude.json`, which stores `oauthAccount` — so pointing the variable at a second directory gives a second, independent login, and the subscriptions can run at the same time in different terminals.

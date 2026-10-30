@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import os
 import shutil
@@ -29,6 +30,12 @@ MACOS_VSCODE_SETTINGS_DESTINATION = Path(
 )
 
 CODEX_SKILLS_DIR = REPO_ROOT / "agents" / "codex" / "skills"
+
+# JSON settings files that their app rewrites on every start (agy re-sorts its keys and
+# replaces the file, which turns a symlink into a detached copy). These are merged instead of
+# linked: tracked top-level keys overwrite the installed file's, and keys the app owns, such
+# as agy's trustedWorkspaces, are kept.
+MERGED_JSON_SETTINGS = (".gemini/antigravity-cli/settings.json",)
 
 # Install only maintained personal skills. Other directories in CODEX_SKILLS_DIR
 # may be vendored system skills or unfinished drafts.
@@ -155,6 +162,36 @@ def is_same_symlink_target(link: Path, target: Path) -> bool:
     return resolved == target.resolve()
 
 
+def merged_json(src: Path, dst: Path) -> tuple[dict, dict | None]:
+    """Return (merged settings, current installed settings or None) for a merged JSON file."""
+    tracked = json.loads(src.read_text())
+    current = json.loads(dst.read_text()) if dst.is_file() else None
+    return {**(current or {}), **tracked}, current
+
+
+def install_merged_json(
+    src: Path, dst: Path, dry_run: bool, home: Path, backup_root: Path
+) -> None:
+    merged, current = merged_json(src, dst)
+    if current == merged and not dst.is_symlink():
+        LOGGER.info("OK (settings match): %s", dst)
+        return
+    if dry_run:
+        LOGGER.info("WOULD MERGE:  %s <- %s", dst, src)
+        return
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    if dst.exists() or dst.is_symlink():
+        stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        bk = unique_path(backup_root / stamp / dst.relative_to(home))
+        bk.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(dst, bk, follow_symlinks=True)
+        LOGGER.info("Backed up %s -> %s", dst, bk)
+        if dst.is_symlink():
+            dst.unlink()
+    dst.write_text(json.dumps(merged, indent=2) + "\n")
+    LOGGER.info("Merged %s <- %s", dst, src)
+
+
 def install(
     source: Path,
     dry_run: bool,
@@ -166,6 +203,12 @@ def install(
     home = Path.home() if home is None else home
     backup_root = BACKUP_ROOT if backup_root is None else backup_root
     installs = build_install_plan(source, home, codex_only=codex_only)
+
+    merged_targets = {home / rel for rel in MERGED_JSON_SETTINGS}
+    for src, dst in installs:
+        if dst in merged_targets:
+            install_merged_json(src, dst, dry_run, home, backup_root)
+    installs = [(src, dst) for src, dst in installs if dst not in merged_targets]
 
     if not installs:
         LOGGER.warning("No dotfiles found in %s.", source)
