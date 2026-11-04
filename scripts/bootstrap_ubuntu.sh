@@ -10,6 +10,13 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 export DEBIAN_FRONTEND=noninteractive
 
+# Prebuilt binaries installed from GitHub releases into ~/.local/bin.
+# Columns: OWNER/REPO, binary name, release tag ("latest" or an exact tag to pin).
+GITHUB_RELEASE_BINARIES=(
+    "dandavison/delta delta latest"
+    "alexpasmantier/television tv latest"
+)
+
 # ---------------------------------------------------------------------------
 # Privilege detection
 #   can_sudo: returns 0 if we are root or have passwordless sudo.
@@ -139,7 +146,6 @@ install_brew_packages() {
         jq \
         ncdu \
         htop \
-        television \
         zsh
     git lfs install
     echo "Homebrew packages installed."
@@ -231,22 +237,6 @@ install_rust() {
 }
 
 # ---------------------------------------------------------------------------
-# television (`tv` fuzzy finder, https://github.com/alexpasmantier/television)
-#   Not packaged in Ubuntu's apt repos, so build it with cargo. The Homebrew
-#   path already installed it, in which case this is a no-op.
-# ---------------------------------------------------------------------------
-
-install_television() {
-    if command -v tv >/dev/null 2>&1; then
-        echo "--- television already installed, skipping ---"
-        return
-    fi
-    echo "--- Installing television via cargo ---"
-    cargo install --locked television
-    echo "television installed."
-}
-
-# ---------------------------------------------------------------------------
 # UV (Python package manager)
 # ---------------------------------------------------------------------------
 
@@ -278,12 +268,16 @@ install_python_tools() {
 }
 
 # ---------------------------------------------------------------------------
-# Delta (git pager with syntax highlighting)
-#   Delegates to the standalone install_delta.sh script.
+# Prebuilt release binaries (GITHUB_RELEASE_BINARIES at the top of this file)
 # ---------------------------------------------------------------------------
 
-install_delta() {
-    bash "${SCRIPT_DIR}/install_delta.sh"
+install_github_release_binaries() {
+    echo "--- Installing binaries from GitHub releases ---"
+    local entry repo binary tag
+    for entry in "${GITHUB_RELEASE_BINARIES[@]}"; do
+        read -r repo binary tag <<<"${entry}"
+        bash "${SCRIPT_DIR}/install_github_release.sh" "${repo}" "${binary}" "${tag}"
+    done
 }
 
 # ---------------------------------------------------------------------------
@@ -325,10 +319,9 @@ main() {
     set_default_shell_zsh
     install_ghostty_terminfo
     install_rust
-    install_television
     install_uv
     install_python_tools
-    install_delta
+    install_github_release_binaries
     install_nvm
     install_claude
 
