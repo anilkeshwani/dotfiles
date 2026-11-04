@@ -61,7 +61,7 @@ Bootstrap and install scripts live in `scripts/`:
 
 | Script | Purpose |
 |---|---|
-| `bootstrap_ubuntu.sh` | Full Ubuntu instance setup (apt packages, Rust, uv, delta, NVM, Claude Code) |
+| `bootstrap_ubuntu.sh` | Full Ubuntu instance setup (apt packages, Rust, television, uv, Python CLI tools, delta, NVM, Claude Code) |
 | `install_conda.sh` | Install Miniconda and create a clean `main` environment |
 | `install_delta.sh` | Install delta (git diff pager) |
 

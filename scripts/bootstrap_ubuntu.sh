@@ -74,6 +74,7 @@ install_apt_packages() {
         jq \
         ncdu \
         htop \
+        procps \
         zsh \
         >/dev/null
     git lfs install
@@ -138,6 +139,7 @@ install_brew_packages() {
         jq \
         ncdu \
         htop \
+        television \
         zsh
     git lfs install
     echo "Homebrew packages installed."
@@ -229,6 +231,22 @@ install_rust() {
 }
 
 # ---------------------------------------------------------------------------
+# television (`tv` fuzzy finder, https://github.com/alexpasmantier/television)
+#   Not packaged in Ubuntu's apt repos, so build it with cargo. The Homebrew
+#   path already installed it, in which case this is a no-op.
+# ---------------------------------------------------------------------------
+
+install_television() {
+    if command -v tv >/dev/null 2>&1; then
+        echo "--- television already installed, skipping ---"
+        return
+    fi
+    echo "--- Installing television via cargo ---"
+    cargo install --locked television
+    echo "television installed."
+}
+
+# ---------------------------------------------------------------------------
 # UV (Python package manager)
 # ---------------------------------------------------------------------------
 
@@ -239,7 +257,24 @@ install_uv() {
     fi
     echo "--- Installing uv ---"
     curl -LsSf https://astral.sh/uv/install.sh | sh
+    # Make uv available for the rest of this script
+    . "${HOME}/.local/bin/env"
     echo "uv installed."
+}
+
+# ---------------------------------------------------------------------------
+# Python CLI tools wrapped by aliases in home/.aliases (black, isort, dog)
+#   Installed as isolated uv tools into ~/.local/bin. An activated project
+#   venv still takes precedence on PATH.
+# ---------------------------------------------------------------------------
+
+install_python_tools() {
+    echo "--- Installing Python CLI tools via uv ---"
+    local tool
+    for tool in black isort pygments; do
+        uv tool install --quiet "${tool}"
+    done
+    echo "Python CLI tools installed."
 }
 
 # ---------------------------------------------------------------------------
@@ -290,7 +325,9 @@ main() {
     set_default_shell_zsh
     install_ghostty_terminfo
     install_rust
+    install_television
     install_uv
+    install_python_tools
     install_delta
     install_nvm
     install_claude
