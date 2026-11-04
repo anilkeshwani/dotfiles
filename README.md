@@ -61,9 +61,16 @@ Bootstrap and install scripts live in `scripts/`:
 
 | Script | Purpose |
 |---|---|
-| `bootstrap_ubuntu.sh` | Full Ubuntu instance setup (apt packages, Rust, television, uv, Python CLI tools, delta, NVM, Claude Code) |
+| `bootstrap_ubuntu.sh` | Full Ubuntu instance setup (apt packages, Rust, uv, Python CLI tools, GitHub release binaries, NVM, Claude Code) |
 | `install_conda.sh` | Install Miniconda and create a clean `main` environment |
-| `install_delta.sh` | Install delta (git diff pager) |
+| `install_github_release.sh` | Install a prebuilt binary from a GitHub release into `~/.local/bin`, verified against GitHub's sha256 digest |
+
+`bootstrap_ubuntu.sh` installs the binaries listed in `GITHUB_RELEASE_BINARIES` at its top (currently delta and television). Each entry tracks `latest` unless you give an exact tag to pin it. To add a tool, append a line there, or run the script on its own:
+
+```bash
+bash scripts/install_github_release.sh dandavison/delta delta          # latest
+bash scripts/install_github_release.sh dandavison/delta delta 0.19.2   # pinned
+```
 
 Bootstrap a fresh cloud instance:
 
