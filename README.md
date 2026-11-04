@@ -61,16 +61,8 @@ Bootstrap and install scripts live in `scripts/`:
 
 | Script | Purpose |
 |---|---|
-| `bootstrap_ubuntu.sh` | Full Ubuntu instance setup (apt packages, Rust, uv, Python CLI tools, GitHub release binaries, NVM, Claude Code) |
+| `bootstrap_ubuntu.sh` | Full Ubuntu instance setup (apt packages, Rust, uv, Python CLI tools, mise, Claude Code) |
 | `install_conda.sh` | Install Miniconda and create a clean `main` environment |
-| `install_github_release.sh` | Install a prebuilt binary from a GitHub release into `~/.local/bin`, verified against GitHub's sha256 digest |
-
-`bootstrap_ubuntu.sh` installs the binaries listed in `GITHUB_RELEASE_BINARIES` at its top (currently delta and television). Each entry tracks `latest` unless you give an exact tag to pin it. To add a tool, append a line there, or run the script on its own:
-
-```bash
-bash scripts/install_github_release.sh dandavison/delta delta          # latest
-bash scripts/install_github_release.sh dandavison/delta delta 0.19.2   # pinned
-```
 
 Bootstrap a fresh cloud instance:
 
@@ -81,6 +73,12 @@ bash scripts/bootstrap_ubuntu.sh
 Hints:
 - [Reload the tmux config mid-session](https://superuser.com/questions/580992/how-do-i-reload-tmux-configuration) with `(ctrl + B), :` then `source-file ~/.tmux.conf`
 - Always handy: `exec zsh` 
+
+### Tool versions
+
+Node and standalone CLIs such as delta and television are managed by [mise](https://mise.jdx.dev), configured in `home/.config/mise/config.toml`. To add a tool, add a line there and run `mise install`. A `latest` entry means the newest version at install time; `mise upgrade` moves installed tools forward.
+
+We use mise in place of nvm, which slows every shell start. Volta has been unmaintained since November 2025 and its maintainers recommend mise. Python stays with uv and Rust with rustup.
 
 ## Using these skills and configs on your own machine
 

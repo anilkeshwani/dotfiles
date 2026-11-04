@@ -38,3 +38,10 @@ fi
 
 # Cargo (Rust)
 [ -f "${HOME}/.cargo/env" ] && . "${HOME}/.cargo/env"
+
+# mise shims for non-interactive login shells (bash -lc ...), as .zprofile does for zsh.
+# Interactive bash gets the full `mise activate` from .bashrc instead.
+case $- in
+    *i*) ;;
+    *) command -v mise >/dev/null 2>&1 && eval "$(mise activate bash --shims)" ;;
+esac

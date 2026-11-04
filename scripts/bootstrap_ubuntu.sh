@@ -10,13 +10,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 export DEBIAN_FRONTEND=noninteractive
 
-# Prebuilt binaries installed from GitHub releases into ~/.local/bin.
-# Columns: OWNER/REPO, binary name, release tag ("latest" or an exact tag to pin).
-GITHUB_RELEASE_BINARIES=(
-    "dandavison/delta delta latest"
-    "alexpasmantier/television tv latest"
-)
-
 # ---------------------------------------------------------------------------
 # Privilege detection
 #   can_sudo: returns 0 if we are root or have passwordless sudo.
@@ -36,7 +29,7 @@ can_sudo() {
 # ---------------------------------------------------------------------------
 # Fix ownership of user directories
 #   On some Ubuntu images, ~/.config and ~/.local are created by root (e.g.
-#   via system pip). Many user-level tools (uv, delta, etc.) need to write
+#   via system pip). Many user-level tools (uv, mise, etc.) need to write
 #   here, so ensure the current user owns them.
 # ---------------------------------------------------------------------------
 
@@ -268,30 +261,26 @@ install_python_tools() {
 }
 
 # ---------------------------------------------------------------------------
-# Prebuilt release binaries (GITHUB_RELEASE_BINARIES at the top of this file)
+# mise: installs the Node and standalone CLI versions listed in
+#   home/.config/mise/config.toml (why mise: see "Tool versions" in README.md).
+#   Resolving "latest" calls the GitHub API, limited to 60 requests/hour
+#   without auth; export GITHUB_TOKEN first on a shared or busy IP.
 # ---------------------------------------------------------------------------
 
-install_github_release_binaries() {
-    echo "--- Installing binaries from GitHub releases ---"
-    local entry repo binary tag
-    for entry in "${GITHUB_RELEASE_BINARIES[@]}"; do
-        read -r repo binary tag <<<"${entry}"
-        bash "${SCRIPT_DIR}/install_github_release.sh" "${repo}" "${binary}" "${tag}"
-    done
-}
-
-# ---------------------------------------------------------------------------
-# NVM (Node Version Manager)
-# ---------------------------------------------------------------------------
-
-install_nvm() {
-    if [ -d "${HOME}/.nvm" ]; then
-        echo "--- NVM already installed, skipping ---"
-        return
+install_mise() {
+    if command -v mise >/dev/null 2>&1; then
+        echo "--- mise already installed ---"
+    else
+        echo "--- Installing mise ---"
+        curl -fsSL https://mise.run | sh
+        # The installer targets ~/.local/bin but cannot change this script's PATH
+        export PATH="${HOME}/.local/bin:${PATH}"
     fi
-    echo "--- Installing NVM ---"
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-    echo "NVM installed. Run 'nvm install --lts' to install Node."
+    echo "--- Installing tools from the dotfiles mise config ---"
+    # Read the config from the repo: install.py, which links it into
+    # ~/.config/mise, runs after this script
+    MISE_GLOBAL_CONFIG_FILE="${REPO_DIR}/home/.config/mise/config.toml" mise install --yes
+    echo "mise tools installed."
 }
 
 # ---------------------------------------------------------------------------
@@ -321,8 +310,7 @@ main() {
     install_rust
     install_uv
     install_python_tools
-    install_github_release_binaries
-    install_nvm
+    install_mise
     install_claude
 
     echo ""

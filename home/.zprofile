@@ -2,7 +2,7 @@
 # Sourced once per login session, before .zshrc.
 # Analogous to ~/.profile for bash.
 
-# Shell-agnostic env: PATH additions, NVM, Volta, Go
+# Shell-agnostic env: PATH additions, Go
 [ -f "${HOME}/.env" ] && . "${HOME}/.env"
 
 # Aliases for non-interactive login shells, including Codex shell mode

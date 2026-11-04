@@ -2,3 +2,5 @@
 node = "24"
 "npm:@posthog/cli" = "latest"
 pnpm = "latest"
+delta = "latest"
+television = "latest"

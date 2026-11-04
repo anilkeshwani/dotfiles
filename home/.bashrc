@@ -135,5 +135,5 @@ PROMPT_COMMAND=_bashrc_prompt_cmd
 [ -f "${HOME}/.cargo/env" ] && . "${HOME}/.cargo/env"
 
 # mise — polyglot version manager (Node etc.). Activated last so its PATH edits
-# take precedence over NVM/Volta from .env on hosts where those are installed.
+# take precedence over anything .env put on PATH.
 command -v mise >/dev/null 2>&1 && eval "$(mise activate bash)"
