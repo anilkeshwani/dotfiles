@@ -23,7 +23,9 @@ LOGGER = logging.getLogger(__file__)
 
 REPO_ROOT = Path(__file__).resolve().parent
 SOURCE_DIR = REPO_ROOT / "home"
-BACKUP_ROOT = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state")) / "dotfiles-backups"
+STATE_ROOT = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state"))
+BACKUP_ROOT = STATE_ROOT / "dotfiles-backups"
+MERGE_BASE_ROOT = STATE_ROOT / "dotfiles-merge-base"
 VSCODE_SETTINGS_SOURCE = REPO_ROOT / "apps" / "vscode" / "settings.json"
 MACOS_VSCODE_SETTINGS_DESTINATION = Path(
     "Library/Application Support/Code/User/settings.json"
@@ -33,8 +35,9 @@ CODEX_SKILLS_DIR = REPO_ROOT / "agents" / "codex" / "skills"
 
 # JSON settings files that their app rewrites on every start (agy re-sorts its keys and
 # replaces the file, which turns a symlink into a detached copy). These are merged instead of
-# linked: tracked top-level keys overwrite the installed file's, and keys the app owns, such
-# as agy's trustedWorkspaces, are kept.
+# linked, as a three-way merge against the tracked file applied last time (kept under
+# MERGE_BASE_ROOT). Tracked values win, entries the app added (such as agy's
+# trustedWorkspaces) are kept, and entries removed from the tracked file are removed.
 MERGED_JSON_SETTINGS = (".gemini/antigravity-cli/settings.json",)
 
 # Install only maintained personal skills. Other directories in CODEX_SKILLS_DIR
@@ -162,34 +165,84 @@ def is_same_symlink_target(link: Path, target: Path) -> bool:
     return resolved == target.resolve()
 
 
-def merged_json(src: Path, dst: Path) -> tuple[dict, dict | None]:
-    """Return (merged settings, current installed settings or None) for a merged JSON file."""
-    tracked = json.loads(src.read_text())
-    current = json.loads(dst.read_text()) if dst.is_file() else None
-    return {**(current or {}), **tracked}, current
+def three_way_merge(installed: object, tracked: object, base: object) -> object:
+    """Merge tracked settings into installed ones, using base (the tracked settings applied
+    last time) to tell the app's own additions from entries since dropped from the repo."""
+    if isinstance(tracked, dict) and isinstance(installed, dict):
+        base = base if isinstance(base, dict) else {}
+        merged = {
+            key: value
+            for key, value in installed.items()
+            if key not in tracked and key not in base
+        }
+        for key, value in tracked.items():
+            merged[key] = (
+                three_way_merge(installed[key], value, base.get(key))
+                if key in installed
+                else value
+            )
+        return merged
+    if isinstance(tracked, list) and isinstance(installed, list):
+        base = base if isinstance(base, list) else []
+        added_by_app = [x for x in installed if x not in tracked and x not in base]
+        return tracked + added_by_app
+    return tracked
+
+
+class LazyBackupDir:
+    """One timestamped backup directory per installer run, created on first use."""
+
+    def __init__(self, backup_root: Path, home: Path) -> None:
+        self.backup_root = backup_root
+        self.home = home
+        self.path: Path | None = None
+
+    def destination_for(self, dst: Path) -> Path:
+        if self.path is None:
+            self.backup_root.mkdir(parents=True, exist_ok=True)
+            self.path = unique_path(
+                self.backup_root / datetime.now().strftime("%Y%m%d-%H%M%S")
+            )
+            self.path.mkdir(parents=True, exist_ok=False)
+            LOGGER.info("Created backup directory at %s", self.path)
+        bk = unique_path(self.path / dst.relative_to(self.home))
+        bk.parent.mkdir(parents=True, exist_ok=True)
+        return bk
 
 
 def install_merged_json(
-    src: Path, dst: Path, dry_run: bool, home: Path, backup_root: Path
+    src: Path,
+    dst: Path,
+    dry_run: bool,
+    backups: LazyBackupDir,
+    base_file: Path,
 ) -> None:
-    merged, current = merged_json(src, dst)
+    tracked = json.loads(src.read_text())
+    # A dangling symlink (say, into a moved repo) counts as no installed settings.
+    current = json.loads(dst.read_text()) if dst.is_file() else None
+    base = json.loads(base_file.read_text()) if base_file.is_file() else tracked
+    merged = tracked if current is None else three_way_merge(current, tracked, base)
+
     if current == merged and not dst.is_symlink():
         LOGGER.info("OK (settings match): %s", dst)
-        return
-    if dry_run:
+    elif dry_run:
         LOGGER.info("WOULD MERGE:  %s <- %s", dst, src)
-        return
-    dst.parent.mkdir(parents=True, exist_ok=True)
-    if dst.exists() or dst.is_symlink():
-        stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-        bk = unique_path(backup_root / stamp / dst.relative_to(home))
-        bk.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(dst, bk, follow_symlinks=True)
-        LOGGER.info("Backed up %s -> %s", dst, bk)
-        if dst.is_symlink():
-            dst.unlink()
-    dst.write_text(json.dumps(merged, indent=2) + "\n")
-    LOGGER.info("Merged %s <- %s", dst, src)
+    else:
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        if dst.exists() or dst.is_symlink():
+            bk = backups.destination_for(dst)
+            # Copy rather than move so that writing in place keeps the file's mode; a
+            # symlink is copied as a link, which also works when it dangles.
+            shutil.copy2(dst, bk, follow_symlinks=False)
+            LOGGER.info("Backed up %s -> %s", dst, bk)
+            if dst.is_symlink():
+                dst.unlink()
+        dst.write_text(json.dumps(merged, indent=2) + "\n")
+        LOGGER.info("Merged %s <- %s", dst, src)
+
+    if not dry_run:
+        base_file.parent.mkdir(parents=True, exist_ok=True)
+        base_file.write_text(json.dumps(tracked, indent=2) + "\n")
 
 
 def install(
@@ -198,16 +251,20 @@ def install(
     home: Path | None = None,
     backup_root: Path | None = None,
     codex_only: bool = False,
+    merge_base_root: Path | None = None,
 ) -> None:
     source = source.resolve()
     home = Path.home() if home is None else home
     backup_root = BACKUP_ROOT if backup_root is None else backup_root
+    merge_base_root = MERGE_BASE_ROOT if merge_base_root is None else merge_base_root
+    backups = LazyBackupDir(backup_root, home)
     installs = build_install_plan(source, home, codex_only=codex_only)
 
     merged_targets = {home / rel for rel in MERGED_JSON_SETTINGS}
     for src, dst in installs:
         if dst in merged_targets:
-            install_merged_json(src, dst, dry_run, home, backup_root)
+            base_file = merge_base_root / dst.relative_to(home)
+            install_merged_json(src, dst, dry_run, backups, base_file)
     installs = [(src, dst) for src, dst in installs if dst not in merged_targets]
 
     if not installs:
@@ -223,25 +280,16 @@ def install(
                 LOGGER.info("WOULD LINK:   %s -> %s", dst, src)
         return
 
-    # Collect targets that will actually be replaced (exist and are not already the
-    # correct symlink) so we can create one backup dir up front. Reruns where everything
-    # is already linked must not create empty backup dirs.
     existing_targets = [
         dst
         for src, dst in installs
         if (dst.exists() or dst.is_symlink()) and not is_same_symlink_target(dst, src)
     ]
-
-    backup_dir: Path | None = None
     if existing_targets:
         LOGGER.info(
             "Existing files found:\n%s",
             "\n".join(str(p) for p in existing_targets),
         )
-        backup_root.mkdir(parents=True, exist_ok=True)
-        backup_dir = unique_path(backup_root / datetime.now().strftime("%Y%m%d-%H%M%S"))
-        backup_dir.mkdir(parents=True, exist_ok=False)
-        LOGGER.info("Created backup directory at %s", backup_dir)
 
     for src, dst in installs:
         dst.parent.mkdir(parents=True, exist_ok=True)
@@ -251,12 +299,7 @@ def install(
             continue
 
         if dst.exists() or dst.is_symlink():
-            if backup_dir is None:
-                backup_root.mkdir(parents=True, exist_ok=True)
-                backup_dir = unique_path(backup_root / datetime.now().strftime("%Y%m%d-%H%M%S"))
-                backup_dir.mkdir(parents=True, exist_ok=False)
-            bk = unique_path(backup_dir / dst.relative_to(home))
-            bk.parent.mkdir(parents=True, exist_ok=True)
+            bk = backups.destination_for(dst)
             # shutil.move (unlike Path.rename) survives XDG_STATE_HOME on another
             # filesystem, and recreates symlinks rather than following them
             shutil.move(dst, bk)

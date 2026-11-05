@@ -24,8 +24,6 @@
       "command(regex:git tag \\S+ (-d|--delete|-f|--force))",
       "command(git reset --hard)",
       "command(git clean)",
-      "command(git switch main)",
-      "command(git switch master)",
       "command(regex:git restore (--source|-s) (main|master))",
       "command(regex:git restore --source=(main|master))",
       "command(gh pr merge)",
