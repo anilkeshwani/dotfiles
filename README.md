@@ -70,6 +70,8 @@ Bootstrap a fresh cloud instance:
 bash scripts/bootstrap_ubuntu.sh
 ```
 
+System packages come from apt when the script can use sudo, and from Homebrew otherwise. If you are in the `sudo`, `admin` or `wheel` group and sudo needs a password, the script asks for it once at the start; a refused password falls back to Homebrew. Set `BOOTSTRAP_SUDO=yes` or `BOOTSTRAP_SUDO=no` to skip the detection.
+
 Hints:
 - [Reload the tmux config mid-session](https://superuser.com/questions/580992/how-do-i-reload-tmux-configuration) with `(ctrl + B), :` then `source-file ~/.tmux.conf`
 - Always handy: `exec zsh` 
