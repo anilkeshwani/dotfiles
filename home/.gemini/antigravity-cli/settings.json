@@ -1,0 +1,36 @@
+{
+  "agentMode": "auto",
+  "enableTerminalSandbox": true,
+  "toolPermission": "proceed-in-sandbox",
+  "artifactReviewPolicy": "agent-decides",
+  "model": "gemini-4-argon",
+  "notifications": true,
+  "pickerGrouping": "grouped",
+  "permissions": {
+    "deny": [
+      "command(sudo)",
+      "command(git push --force)",
+      "command(git push --force-with-lease)",
+      "command(git push -f)",
+      "command(git push --delete)",
+      "command(git push -d)",
+      "command(regex:git push(\\s+\\S+)*\\s+(--force\\S*|--delete|-[a-zA-Z]*[fd][a-zA-Z]*|\\+\\S+|:\\S*)(\\s.*)?)",
+      "command(git remote)",
+      "command(git tag -d)",
+      "command(git tag --delete)",
+      "command(git tag -f)",
+      "command(git tag --force)",
+      "command(regex:git tag(\\s+\\S+)*\\s+(--delete|--force|-[a-zA-Z]*[fd][a-zA-Z]*)(\\s.*)?)",
+      "command(git reset --hard)",
+      "command(git clean)",
+      "command(regex:git restore (--source|-s) (main|master))",
+      "command(regex:git restore --source=(main|master))",
+      "command(gh pr merge)",
+      "command(gh pr close)"
+    ],
+    "ask": [
+      "command(git push)",
+      "command(rm -rf)"
+    ]
+  }
+}
