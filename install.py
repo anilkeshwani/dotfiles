@@ -189,6 +189,21 @@ def three_way_merge(installed: object, tracked: object, base: object) -> object:
     return tracked
 
 
+def untracked_entries(installed: object, tracked: object, path: str = "") -> list[str]:
+    """List the keys and list items in installed settings that tracked ones lack."""
+    if isinstance(installed, dict) and isinstance(tracked, dict):
+        found = []
+        for key, value in installed.items():
+            if key not in tracked:
+                found.append(f"{path}{key}")
+            else:
+                found += untracked_entries(value, tracked[key], f"{path}{key}.")
+        return found
+    if isinstance(installed, list) and isinstance(tracked, list):
+        return [f"{path.rstrip('.')}: {x!r}" for x in installed if x not in tracked]
+    return []
+
+
 class LazyBackupDir:
     """One timestamped backup directory per installer run, created on first use."""
 
@@ -219,8 +234,25 @@ def install_merged_json(
 ) -> None:
     tracked = json.loads(src.read_text())
     # A dangling symlink (say, into a moved repo) counts as no installed settings.
-    current = json.loads(dst.read_text()) if dst.is_file() else None
-    base = json.loads(base_file.read_text()) if base_file.is_file() else tracked
+    current = None
+    if dst.is_file():
+        try:
+            current = json.loads(dst.read_text())
+        except json.JSONDecodeError as err:
+            LOGGER.warning("Invalid JSON in %s (%s); replacing it with %s", dst, err, src)
+    if base_file.is_file():
+        base = json.loads(base_file.read_text())
+    else:
+        # Without a record of the last run, nothing installed can be told apart from an
+        # app addition, so everything is kept. Report it, since some of it may be stale.
+        base = tracked
+        if current is not None:
+            for entry in untracked_entries(current, tracked):
+                LOGGER.warning(
+                    "No merge base for %s; keeping entry not in the tracked file: %s",
+                    dst,
+                    entry,
+                )
     merged = tracked if current is None else three_way_merge(current, tracked, base)
 
     if current == merged and not dst.is_symlink():
