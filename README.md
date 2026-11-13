@@ -53,6 +53,18 @@ Everything account-specific is left for Claude Code to create per dir and is nev
 
 Two caveats. User-scoped MCP servers added with `claude mcp add -s user` live in `.claude.json` and so do not carry across — re-add them per account, or use project scope. And because `plugins/` is shared, two instances installing or updating plugins concurrently can race; do plugin management from one account at a time.
 
+### Perplexity MCP servers
+
+`scripts/register_perplexity_mcp_servers.sh` registers Perplexity's three official remote MCP servers at user scope for every Claude Code account that has logged in, and for Codex. It skips servers that are already registered, so it is safe to rerun (for example after the first login to a new account).
+
+| Name | URL | Billing |
+|---|---|---|
+| `perplexity-computer` | `https://www.perplexity.ai/rest/computer/mcp` | Perplexity Computer agent; spends account Computer credits, which Max includes monthly |
+| `perplexity` | `https://api.perplexity.ai/mcp` | Search, ask, research and reason tools; bills the API organization chosen at sign-in |
+| `perplexity-docs` | `https://docs.perplexity.ai/mcp` | Perplexity's API docs; free, no sign-in |
+
+The first two sign in with OAuth: `/mcp` inside Claude Code, `codex mcp login <name>` for Codex. Both redirect the browser to a callback on `127.0.0.1`, so on a remote host forward that port over SSH or run the login from a local terminal.
+
 ## SSH Keys
 
 When spinning up a new machine, you need to set up SSH keys to authenticate with GitHub
