@@ -22,6 +22,9 @@ Commit the changes above as one or more atomic commits. Extra guidance from the 
 5. Write each message in the style of the recent commits above and follow any commit conventions in CLAUDE.md. Use an imperative subject line of about 72 characters or fewer. Add a body only when the reason for the change is not obvious from the subject.
 6. End each message with the attribution lines the session gives for commits, if any.
 7. Do not commit files that look like secrets, credentials or local machine state. List anything you skipped.
-8. Never amend, rebase, push or force-push. Do not touch commits that already exist.
+8. By default, do not amend, rebase, push or force-push, and do not touch commits that already exist. The user can lift this for a single run by asking for one of these in the guidance above, for example "amend the last commit", "rebase onto origin/main" or "push with --force-with-lease". Do only what the guidance names, and nothing more:
+   - Amend or rebase only the commits it covers. Run rebases non-interactively. On conflicts, resolve them and run `git rebase --continue`. Do not abort.
+   - Push only if it says to push. Force-push only with `--force-with-lease`, never plain `--force`, and only if it asks for a force-push.
+   - If the guidance is ambiguous about which of these it allows, ask before doing it.
 
 When done, reply with one line per commit (short hash and subject) and anything you left uncommitted.
