@@ -47,11 +47,13 @@ Rationale: keeps branch history linear and the eventual squash-merge clean; avoi
 
 When a rebase has conflicts, resolve them, `git add`, and `git rebase --continue` — do NOT abort and fall back to `git merge`.
 
-## Git: never amend pushed commits
+## Git: rewriting pushed commits
 
-Never amend a commit that has been pushed to any remote. This is a hard ban: do not use `git commit --amend` on a pushed commit, do not rewrite it through a rebase, and do not force-push a replacement. `--force-with-lease` does not make this acceptable. Put every correction or follow-up in a new commit instead.
+By default, put every correction or follow-up to a pushed commit in a new commit. Do not amend it, rebase it or force-push a replacement on your own initiative.
 
-Before amending any commit, verify that it has never been pushed. If that cannot be established conclusively, treat it as pushed and create a new commit.
+Rewriting pushed history is allowed when I ask for it, or when a command, skill or prompt I invoke calls for it. Amend or rebase only what was asked, then push with `--force-with-lease`. Never use plain `--force` or `-f`: unlike `--force-with-lease`, they overwrite commits on the remote that you have not seen.
+
+Before amending any commit, check whether it has been pushed. If it has, or you cannot tell, treat it as pushed and follow the default above.
 
 ## File naming: think globally, not just locally
 
