@@ -177,8 +177,6 @@
       "Bash(git reset --hard *)",
       "Bash(git reset --hard)",
       "Bash(git clean *)",
-      "Bash(git switch main)",
-      "Bash(git switch master)",
       "Bash(git restore --source main *)",
       "Bash(git restore --source=main *)",
       "Bash(git restore -s main *)",

@@ -3,6 +3,8 @@
 # Bootstrap a fresh Ubuntu/Linux instance for development.
 # Works with or without root — falls back to Homebrew when sudo is unavailable.
 # Run: bash scripts/bootstrap_ubuntu.sh
+#   BOOTSTRAP_SUDO=no bash scripts/bootstrap_ubuntu.sh   # force Homebrew
+#   BOOTSTRAP_SUDO=yes bash scripts/bootstrap_ubuntu.sh  # force apt via sudo
 
 set -euo pipefail
 
@@ -12,7 +14,11 @@ export DEBIAN_FRONTEND=noninteractive
 
 # ---------------------------------------------------------------------------
 # Privilege detection
-#   can_sudo: returns 0 if we are root or have passwordless sudo.
+#   Decided once, up front, so the password prompt (if any) comes first.
+#   We use sudo when we are root, have passwordless sudo, or belong to an
+#   admin group (sudo, admin, wheel) and enter the password at the prompt.
+#   Without a terminal to prompt on, or when the password is refused, we fall
+#   back to Homebrew. BOOTSTRAP_SUDO=yes|no overrides the detection.
 #   SUDO: prefix for commands that need root. Empty when already root,
 #         "sudo" otherwise. Only meaningful when can_sudo returns 0.
 # ---------------------------------------------------------------------------
@@ -22,8 +28,46 @@ if [ "$(id -u)" -ne 0 ]; then
     SUDO="sudo"
 fi
 
+detect_sudo() {
+    case "${BOOTSTRAP_SUDO:-auto}" in
+        yes)
+            if [ "$(id -u)" -ne 0 ] && ! sudo -v; then
+                echo "ERROR: BOOTSTRAP_SUDO=yes but sudo failed." >&2
+                exit 1
+            fi
+            return 0
+            ;;
+        no)
+            return 1
+            ;;
+        auto) ;;
+        *)
+            echo "ERROR: BOOTSTRAP_SUDO must be yes, no or auto, not '${BOOTSTRAP_SUDO}'." >&2
+            exit 1
+            ;;
+    esac
+    [ "$(id -u)" -eq 0 ] && return 0
+    command -v sudo >/dev/null 2>&1 || return 1
+    sudo -n true 2>/dev/null && return 0
+    # A password is needed. Only ask users in an admin group, so that HPC users
+    # without sudo rights are not prompted (and not reported to the admins).
+    id -nG | tr ' ' '\n' | grep -qxE 'sudo|admin|wheel' || return 1
+    [ -t 0 ] || return 1
+    echo "--- sudo needs your password to install apt packages ---"
+    echo "    (Ctrl+C and rerun with BOOTSTRAP_SUDO=no to use Homebrew instead)"
+    if ! sudo -v; then
+        echo "--- sudo failed, falling back to Homebrew ---"
+        return 1
+    fi
+}
+
+HAVE_SUDO=0
+if detect_sudo; then
+    HAVE_SUDO=1
+fi
+
 can_sudo() {
-    [ "$(id -u)" -eq 0 ] || sudo -n true 2>/dev/null
+    [ "${HAVE_SUDO}" -eq 1 ]
 }
 
 # ---------------------------------------------------------------------------
@@ -50,7 +94,7 @@ fix_dir_ownership "${HOME}/.config"
 fix_dir_ownership "${HOME}/.local"
 
 # ---------------------------------------------------------------------------
-# APT packages (requires root or passwordless sudo)
+# APT packages (requires root or sudo)
 # ---------------------------------------------------------------------------
 
 install_apt_packages() {
