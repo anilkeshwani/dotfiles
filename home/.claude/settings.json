@@ -268,5 +268,6 @@
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
   "voiceEnabled": true,
-  "tui": "fullscreen"
+  "tui": "fullscreen",
+  "model": "opus"
 }
