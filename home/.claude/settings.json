@@ -208,7 +208,6 @@
     "security-guidance@claude-plugins-official": true,
     "figma@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true,
-    "explanatory-output-style@claude-plugins-official": true,
     "slack@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
     "skypilot@skypilot": true,
