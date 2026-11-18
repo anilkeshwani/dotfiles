@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.10"
+# ///
 """deslop_guard.py -- hard binary gate against AI-slop tells in prose.
 
 Deterministic only. No judgement. A file PASSes only if it has zero HARD
@@ -7,10 +10,14 @@ register terms that also occur as legitimate vocabulary ("honest majority",
 "canonical identification", "stale block"), so a human or reviewer decides
 whether a given use is the slop sense.
 
-Sources: deslop-prose/references/prose-banlist.md,
-deslop-code/references/code-register.md.
+The lists mirror the "Writing" sections of the global instructions
+(agents/AGENTS.md in the dotfiles repo). Change both together.
 
-Usage:  uv run --script deslop_guard.py FILE...
+Quoted material is exempt: text inside double quotes on a single line is
+removed before scanning, because a quotation must keep its source's exact
+characters.
+
+Usage:  uv run --script deslop_guard.py FILE...   ("-" reads stdin)
 Exit 0 if every file passes, 1 on any HARD violation, 2 on usage error.
 """
 import re, sys, pathlib
@@ -33,9 +40,8 @@ TIER1_WORDS = [
     "seamless", "seamlessly", "pivotal", "intricate", "meticulous",
     "meticulously", "cutting-edge", "game-changer", "synergy", "holistic",
     "paradigm", "embark", "embarks", "endeavor", "myriad", "plethora",
-    "facilitate", "facilitates", "elucidate",
-    # code-register hard bans (deslop-code): always replace
-    "load-bearing", "seam", "seams", "cutover",
+    "facilitate", "facilitates", "elucidate", "crucial", "foster", "fosters",
+    "fostering", "streamline", "streamlines", "multifaceted",
 ]
 
 # Banned multi-word phrases (case-insensitive substring on lowercased text).
@@ -61,13 +67,24 @@ BANNED_PHRASES = [
     "let me know if you would like", "as an ai", "i hope this email finds you",
     # faux-candor
     "to be honest", "let me be honest", "i'll be honest", "in all honesty",
-    "the honest truth", "the honest answer", "the honest name",
+    "the honest truth", "the honest answer",
     # openers / closers / signposting
     "let's dive in", "let's unpack", "let's explore", "let us dive in",
     "in conclusion", "to summarize", "in summary",
-    # offer-closer and self-narration tics (code register, 46.7x / 21x)
+    # offer-closer and self-narration tics
     "want me to", "let me check", "let me verify", "let me confirm",
     "let me look", "let me read",
+    # inflated copulas and vague attribution
+    "serves as", "stands as", "experts say", "experts agree", "studies show",
+    "research shows",
+    # PR template
+    "this pr does the following",
+]
+
+# Trailing significance clauses: ", ensuring...", ", highlighting...".
+TRAILING_CLAUSES = [
+    r",\s+(?:ensuring|highlighting|underscoring|emphasizing|reflecting|"
+    r"showcasing|marking|cementing|solidifying)\b",
 ]
 
 # Negative parallelism: the top structural tell. Regex on lowercased text.
@@ -96,21 +113,12 @@ OXFORD_COMMA = [
 # --- WARNINGS: register terms that may be legitimate vocabulary. -----------
 # Reported, never fatal. Reviewer decides if the use is the slop sense.
 WARN_WORDS = [
-    # code register (deslop-code/references/code-register.md): tier-2
-    "canonical", "stale", "surface", "robust", "comprehensive", "honest",
-    "confirmed", "confirms", "purely", "trap", "caveat", "genuinely",
-    "cleanly", "tighten", "converge", "fold", "plumb", "wire", "blast radius",
-    "first-class", "empirically", "the picture", "full picture", "wording",
-    "intact", "headline", "lanes", "spine", "defensible", "spurious",
-    "entrench", "escape hatch", "guardrail", "hot path", "source of truth",
-    "bottom line", "net:", "mild misnomer", "gnarly",
-    # prose tier-2/3 (deslop-prose/references/prose-banlist.md)
-    "nuanced", "crucial", "foster", "bolster", "garner", "unleash",
+    "robust", "comprehensive", "nuanced", "bolster", "garner", "unleash",
     "spearhead", "resonate", "revolutionize", "ecosystem", "cultivate",
-    "illuminate", "catalyze", "galvanize", "streamline", "empower", "elevate",
-    "transformative", "multifaceted", "profound", "vibrant", "bustling",
-    "significant", "innovative", "dynamic", "scalable", "compelling",
-    "remarkable", "sophisticated",
+    "illuminate", "catalyze", "galvanize", "empower", "elevate",
+    "transformative", "profound", "vibrant", "bustling", "significant",
+    "innovative", "dynamic", "scalable", "compelling", "remarkable",
+    "sophisticated", "notably", "additionally", "landscape",
 ]
 
 def strip_code(text, suffix):
@@ -125,10 +133,21 @@ def strip_code(text, suffix):
         text = re.sub(r"`[^`\n]*`", " ", text)
     return text
 
+def strip_quotes(text):
+    """Remove single-line double-quoted spans (straight or curly). Quotations
+    are verbatim, so their dashes and wording are not the author's to fix."""
+    text = re.sub(r'"[^"\n]*"', " ", text)
+    text = re.sub(r"\u201c[^\u201d\n]*\u201d", " ", text)
+    return text
+
 def scan(path):
-    path = pathlib.Path(path)
-    raw = path.read_text(encoding="utf-8")
-    text = strip_code(raw, path.suffix.lower())
+    if path == "-":
+        raw = sys.stdin.read()
+        path = pathlib.Path("stdin.md")
+    else:
+        path = pathlib.Path(path)
+        raw = path.read_text(encoding="utf-8")
+    text = strip_quotes(strip_code(raw, path.suffix.lower()))
     low = text.lower()
     hard, warns = [], []
 
@@ -149,6 +168,11 @@ def scan(path):
         m = re.search(pat, low)
         if m:
             hard.append("negative parallelism: %r" % m.group(0))
+
+    for pat in TRAILING_CLAUSES:
+        m = re.search(pat, low)
+        if m:
+            hard.append("trailing significance clause: %r" % m.group(0))
 
     for pat in OXFORD_COMMA:
         for m in re.finditer(pat, low):

@@ -4,17 +4,26 @@ Dotfiles live in `home/` and are installed as symlinks into `$HOME` via `install
 
 On macOS, the installer also links `apps/vscode/settings.json` to VS Code's user settings path under `~/Library/Application Support/Code/User/`.
 
-Codex-facing skills live under `agents/codex/skills`. The installer links the
-maintained personal skills into `~/.agents/skills`; Claude Code skills remain
-separate under `home/.claude/skills`. Files under `home/.codex/agents` are custom
-subagent profiles, not skills.
+## Agent instructions and writing style
+
+`agents/AGENTS.md` holds the global instructions for every coding agent: the writing style first, then working preferences (dictation, Python, git, file naming). Claude Code, Codex and agy each load it through a symlink:
+
+| Agent | Loads | Tracked as |
+|---|---|---|
+| Claude Code | `~/.claude/CLAUDE.md` | `home/.claude/CLAUDE.md`, a symlink to `agents/AGENTS.md` |
+| Codex | `~/.codex/AGENTS.md` | `home/.codex/AGENTS.md`, a symlink to `agents/AGENTS.md` |
+| agy | `~/.gemini/AGENTS.md` | `home/.gemini/AGENTS.md`, a symlink to `agents/AGENTS.md` |
+
+Claude Code has no user-level `AGENTS.md`, hence the `CLAUDE.md` name on its side. Codex reads one global file and can't import another, which is why the writing rules live in this file and not in a separate one.
+
+Skills shared by all agents live under `agents/skills`. The installer links each one into `~/.agents/skills` (Codex), `~/.gemini/config/skills` (agy) and the `skills/` dir of every Claude Code config dir. `deslop` is the cleanup pass for existing text; its `scripts/deslop_guard.py` checks a file or stdin against the mechanical rules (dashes, banned words and phrases, negative parallelism, serial comma). Its word lists mirror `agents/AGENTS.md`, so change both together.
+
+Claude Code-only skills stay under `home/.claude/skills`. `agents/codex/skills` holds Codex system and vendored skills, which the installer does not link. Files under `home/.codex/agents` are custom subagent profiles, not skills.
 
 Codex configuration is machine-local. The installer does not read, modify or
 link `~/.codex/config.toml`.
 
-The Codex `AGENTS.md` file is tracked separately at `home/.codex/AGENTS.md` so
-Claude Code configuration is never used as its installation source. Changed
-Codex files are backed up under `~/.local/state/dotfiles-backups/` before the
+Changed Codex files are backed up under `~/.local/state/dotfiles-backups/` before the
 installer updates them.
 
 ```bash
@@ -28,7 +37,7 @@ path, VS Code setting or general shell dotfile.
 
 | Tracked file | Installed at | How |
 |---|---|---|
-| `home/.gemini/AGENTS.md` | `~/.gemini/AGENTS.md` | Symlink. In the repo it points at `home/.codex/AGENTS.md`, so Codex and agy share one copy of the global rules. agy loads `~/.gemini/AGENTS.md` in every workspace. |
+| `home/.gemini/AGENTS.md` | `~/.gemini/AGENTS.md` | Symlink. In the repo it points at `agents/AGENTS.md`, the global instructions shared with Claude Code and Codex. agy loads `~/.gemini/AGENTS.md` in every workspace. |
 | `home/.gemini/antigravity-cli/settings.json` | `~/.gemini/antigravity-cli/settings.json` | Merged, not linked. agy rewrites this file on every start (it re-sorts the keys and replaces the file), which would turn a symlink into a detached copy. The installer does a three-way merge against the tracked file it applied last time, kept under `~/.local/state/dotfiles-merge-base/`. Tracked values win, entries agy added (such as `trustedWorkspaces` or extra permission rules) are kept, and entries deleted from the tracked file are deleted from the installed one. A run backs the installed file up only when the merge changes it, into the same timestamped directory under `~/.local/state/dotfiles-backups/` as the run's other backups. Rerun the installer after changing the tracked file. |
 
 The settings start agy in `auto` mode with the terminal sandbox on, default to `gemini-4-argon` (resolved to `gemini-4-argon-medium`) and mirror the Claude Code deny list: no `sudo`, force pushes, branch or tag deletion, `git remote` changes, `git reset --hard`, `git clean`, restoring files from `main`/`master`, or `gh pr merge`/`close`. `git switch` is allowed, as it is for Claude Code and Codex. `git push` and `rm -rf` ask first. Reasoning effort has no settings key; the `argon` launcher in [antigravity-argon-gcp](https://github.com/anilkeshwani/antigravity-argon-gcp) passes `--effort medium` and signs in with GCP ADC.
@@ -102,14 +111,14 @@ maybe the agent profiles, without adopting my shell, git or editor config.
 
 | Path | What it is | Applies to |
 |---|---|---|
-| `home/.claude/skills/` | Personal Claude Code skills: `deslop-prose`, `deslop-code`, `excalidraw`, `journal` | Claude Code (CLI, desktop, IDE) |
+| `agents/AGENTS.md` | My global instructions, including the writing style. Read it for ideas, do not install it verbatim | Claude Code, Codex, agy |
+| `agents/skills/` | Skills for every agent: `deslop` | Claude Code, Codex, agy |
+| `home/.claude/skills/` | Claude Code skills: `excalidraw`, `journal` | Claude Code (CLI, desktop, IDE) |
 | `home/.claude/agents/` | Subagent profiles: `architect-reviewer`, `senior-mle-reviewer`, `researcher-reviewer`, `journal-scribe` | Claude Code |
-| `home/.claude/output-styles/` | Output styles, including `deslop` | Claude Code |
+| `home/.claude/output-styles/` | Output styles | Claude Code |
 | `home/.claude/settings.json` | Permission allow/deny lists, enabled plugins, sandbox rules | Claude Code |
-| `home/.claude/CLAUDE.md` | My personal preferences. Read it for ideas, do not install it verbatim | Claude Code |
-| `agents/codex/skills/` | Codex skills: `deslop-prose`, `deslop-code`, `gh-fix-ci`, `gh-address-comments`, `pdf`, `git-commit-staged` | Codex (CLI, IDE extension, ChatGPT desktop) |
-| `home/.codex/AGENTS.md`, `home/.codex/agents/` | Codex instructions and subagent profiles | Codex |
-| `docs/` | Research behind the deslop skills: the Claudeisms catalogue and register findings | Background reading |
+| `agents/codex/skills/` | Codex skills: `gh-fix-ci`, `gh-address-comments`, `pdf`, `git-commit-staged` | Codex (CLI, IDE extension, ChatGPT desktop) |
+| `home/.codex/agents/` | Codex subagent profiles | Codex |
 
 Prerequisites: [Claude Code](https://code.claude.com/docs/en/quickstart)
 (`curl -fsSL https://claude.ai/install.sh | bash`), and/or
@@ -131,7 +140,8 @@ Claude Code reads personal skills from `~/.claude/skills/<name>/SKILL.md`:
 
 ```bash
 mkdir -p ~/.claude/skills
-for skill in deslop-prose deslop-code excalidraw; do
+ln -sfn "${DOTFILES}/agents/skills/deslop" ~/.claude/skills/deslop
+for skill in excalidraw journal; do
     ln -sfn "${DOTFILES}/home/.claude/skills/${skill}" ~/.claude/skills/"${skill}"
 done
 ```
@@ -140,7 +150,8 @@ Codex reads user skills from `~/.agents/skills/<name>/SKILL.md`:
 
 ```bash
 mkdir -p ~/.agents/skills
-for skill in deslop-prose deslop-code gh-fix-ci gh-address-comments pdf; do
+ln -sfn "${DOTFILES}/agents/skills/deslop" ~/.agents/skills/deslop
+for skill in gh-fix-ci gh-address-comments pdf; do
     ln -sfn "${DOTFILES}/agents/codex/skills/${skill}" ~/.agents/skills/"${skill}"
 done
 ```
@@ -158,11 +169,11 @@ vault at `~/journal` (`~/Desktop/journal` on macOS) and dispatches the
 
 In Claude Code, run `/skills` to confirm they loaded. Claude picks a skill up on
 its own when a task matches the description, or you can force it by typing
-`/deslop-prose`. Edits to a `SKILL.md` are picked up live, without restarting
+`/deslop`. Edits to a `SKILL.md` are picked up live, without restarting
 the session.
 
-In Codex, reference a skill with `$deslop-prose` in the CLI and IDE extension,
-or `@deslop-prose` in ChatGPT. Implicit selection by description works the same
+In Codex, reference a skill with `$deslop` in the CLI and IDE extension,
+or `@deslop` in ChatGPT. Implicit selection by description works the same
 as in Claude Code.
 
 ### Terminal or desktop app

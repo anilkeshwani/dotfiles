@@ -31,7 +31,13 @@ MACOS_VSCODE_SETTINGS_DESTINATION = Path(
     "Library/Application Support/Code/User/settings.json"
 )
 
-CODEX_SKILLS_DIR = REPO_ROOT / "agents" / "codex" / "skills"
+# Skills shared by every agent. Each is linked into the user skills directory of each
+# agent: Codex reads ~/.agents/skills, agy reads ~/.gemini/config/skills and Claude Code
+# reads the skills/ dir of each of its config dirs.
+SHARED_SKILLS_DIR = REPO_ROOT / "agents" / "skills"
+SHARED_SKILLS = ("deslop",)
+CODEX_SKILLS_SUBDIR = Path(".agents/skills")
+AGY_SKILLS_SUBDIR = Path(".gemini/config/skills")
 
 # JSON settings files that their app rewrites on every start (agy re-sorts its keys and
 # replaces the file, which turns a symlink into a detached copy). These are merged instead of
@@ -39,10 +45,6 @@ CODEX_SKILLS_DIR = REPO_ROOT / "agents" / "codex" / "skills"
 # MERGE_BASE_ROOT). Tracked values win, entries the app added (such as agy's
 # trustedWorkspaces) are kept, and entries removed from the tracked file are removed.
 MERGED_JSON_SETTINGS = (".gemini/antigravity-cli/settings.json",)
-
-# Install only maintained personal skills. Other directories in CODEX_SKILLS_DIR
-# may be vendored system skills or unfinished drafts.
-INSTALLED_CODEX_SKILLS = ("deslop-code", "deslop-prose")
 
 # Claude Code reads its whole config tree from $CLAUDE_CONFIG_DIR, defaulting to
 # ~/.claude. That tree includes .claude.json, which carries oauthAccount — so a second
@@ -98,13 +100,17 @@ def build_install_plan(
             (VSCODE_SETTINGS_SOURCE, home / MACOS_VSCODE_SETTINGS_DESTINATION)
         )
 
-    codex_skills = home / ".agents" / "skills"
-    for skill_name in INSTALLED_CODEX_SKILLS:
-        skill_source = CODEX_SKILLS_DIR / skill_name
+    skill_dirs = [home / CODEX_SKILLS_SUBDIR]
+    if not codex_only:
+        skill_dirs.append(home / AGY_SKILLS_SUBDIR)
+        skill_dirs.append(home / CLAUDE_CONFIG_SUBDIR / "skills")
+        skill_dirs.extend(config_dir / "skills" for config_dir in extra_claude_config_dirs(home))
+    for skill_name in SHARED_SKILLS:
+        skill_source = SHARED_SKILLS_DIR / skill_name
         if not skill_source.is_dir():
-            LOGGER.warning("Codex skill not found, skipping: %s", skill_source)
+            LOGGER.warning("Shared skill not found, skipping: %s", skill_source)
             continue
-        installs.append((skill_source, codex_skills / skill_name))
+        installs.extend((skill_source, skill_dir / skill_name) for skill_dir in skill_dirs)
 
     if not codex_only:
         claude_rels = [
