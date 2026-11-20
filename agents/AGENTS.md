@@ -91,6 +91,21 @@ I talk to you through dictation software, so my messages may contain transcripti
 
 Run Python scripts with `uv run --script path/to/script.py`, not by `chmod +x` and executing them.
 
+### Subagents: match the model to the task
+
+A subagent inherits the session's model unless told otherwise, so a session on the top model runs every subagent on it. Set the model explicitly on each subagent (and on each agent in a workflow) and pick the cheapest tier that can do the job well. With Claude models:
+
+- **Haiku**: mechanical work with a known target, such as file and symbol searches, counting, fetching a page or running a command and reporting its output.
+- **Sonnet**: the default for delegated work. Implementing a well-specified module, writing tests, fixing bugs from a concrete findings list, data and build scripts, content written to a clear brief.
+- **Opus**: work where judgment carries the result, such as architecture, subtle concurrency or protocol logic, code review and debugging without a reproduction.
+- **Fable** (or whichever model is the top tier): only when a weaker model is likely to fail or need a redo.
+
+Other agents apply the same rule with their own model tiers.
+
+The orchestrating session keeps the hard thinking: it writes the contracts and the brief, then hands execution to cheaper models. If a subagent's result falls short, escalate that one task a tier instead of starting everything at the top. When a task fans out to several subagents, say in one line which model each is on before launching.
+
+Why: on 2026-11-20 a session built a whole project with nine subagents that all inherited Fable and used most of a 5-hour allowance. Most of that work was Sonnet-level.
+
 ### Git: rebase, never merge
 
 When integrating upstream changes ("merge in main", "sync with main", "update from main"), use `git rebase`, never `git merge`. This keeps the branch history linear, keeps `git log --oneline main..HEAD` showing only the branch's own work and makes the eventual squash-merge clean. On conflicts, resolve them, `git add` and `git rebase --continue`; don't abort and fall back to a merge.
