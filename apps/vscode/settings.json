@@ -79,7 +79,7 @@
     "chat.tools.terminal.preventShellHistory": false,
     "claudeCode.useTerminal": true,
     "redhat.telemetry.enabled": false,
-    "window.zoomLevel": -1,
     "editor.accessibilitySupport": "off",
-    "workbench.preferredLightColorTheme": "Light+"
+    "workbench.preferredLightColorTheme": "Light+",
+    "window.zoomLevel": -1
 }
