@@ -289,5 +289,10 @@
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
   "voiceEnabled": true,
-  "model": "fable"
+  "model": "fable",
+  "modelSettings": {
+    "claude-fable-5-2": {
+      "effortLevel": "medium"
+    }
+  }
 }
