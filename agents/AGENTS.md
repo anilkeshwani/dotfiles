@@ -87,6 +87,10 @@ American English: -ize and -yze, -or, -er, -og, "program", "gray", "modeling". Q
 
 I talk to you through dictation software, so my messages may contain transcription artifacts: homophones, mis-split or run-together words, dropped punctuation, and proper nouns or code identifiers rendered phonetically ("Onyx" for `ONNX`, "worktrips" for "worktrees"). When a term looks off but a nearby technical word fits the context, prefer that reading. If a likely mis-transcription changes what I'm asking, check the code before acting.
 
+### Sessions on two machines
+
+My Claude Code sessions, repos and experiment outputs are split between my laptop and the `bigboss` server (`ssh bigboss`, with transcripts under `~/.claude/projects/` on each), so when looking for earlier work, check both machines before concluding it does not exist.
+
 ### Running Python scripts
 
 Run Python scripts with `uv run --script path/to/script.py`, not by `chmod +x` and executing them.
