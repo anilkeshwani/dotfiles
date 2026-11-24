@@ -69,7 +69,7 @@ claude_with_config_dir() {
 
 claude-personal() { claude_with_config_dir "${CLAUDE_CONFIG_DIR_PERSONAL}" "$@"; }
 
-# Second ai-coustics seat: anil.agent@ai-coustics.com
+# Second ai-coustics seat
 claude-extra() { claude_with_config_dir "${CLAUDE_CONFIG_DIR_EXTRA}" "$@"; }
 
 set-gpu() {

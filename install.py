@@ -60,9 +60,9 @@ EXTRA_CLAUDE_CONFIG_DIR_VARS = ("CLAUDE_CONFIG_DIR_PERSONAL", "CLAUDE_CONFIG_DIR
 SHARED_CLAUDE_LOCAL_STATE = ("plugins",)
 
 # Session state shared only with profiles that are a second seat in the same org (extra is
-# the anil.agent@ai-coustics.com seat). projects/ holds auto-memory and transcripts, so
-# memory and `claude --resume` carry across seats; file-history/ and plans/ back rewind and
-# plan mode on those sessions. None of it touches login or billing.
+# the second ai-coustics seat). projects/ holds auto-memory and transcripts, so memory and
+# `claude --resume` carry across seats; file-history/ and plans/ back rewind and plan mode
+# on those sessions. None of it touches login or billing.
 PROFILE_SHARED_CLAUDE_LOCAL_STATE = {
     "CLAUDE_CONFIG_DIR_EXTRA": ("projects", "file-history", "plans"),
 }

@@ -53,7 +53,7 @@ Claude Code reads its entire config tree from `$CLAUDE_CONFIG_DIR`, defaulting t
 | Variable | Default | Command |
 |---|---|---|
 | `CLAUDE_CONFIG_DIR_WORK` | `~/.claude` | `claude` |
-| `CLAUDE_CONFIG_DIR_EXTRA` | `~/.claude-extra` | `claude-extra`, the second ai-coustics seat (`anil.agent@ai-coustics.com`) |
+| `CLAUDE_CONFIG_DIR_EXTRA` | `~/.claude-extra` | `claude-extra`, the second ai-coustics seat |
 | `CLAUDE_CONFIG_DIR_PERSONAL` | `~/.claude-personal` | `claude-personal`, reserved for a personal account |
 
 The commands are shell functions in `home/.functions` that run `claude` with `CLAUDE_CONFIG_DIR` set.
