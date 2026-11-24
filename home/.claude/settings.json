@@ -141,11 +141,11 @@
       "Bash([ *)",
       "Bash(true)",
       "Bash(false)",
-      "mcp__notion__notion-search",
-      "mcp__notion__notion-fetch",
-      "mcp__notion__notion-get-comments",
-      "mcp__notion__notion-get-teams",
-      "mcp__notion__notion-get-users",
+      "mcp__claude_ai_Notion__notion-search",
+      "mcp__claude_ai_Notion__notion-fetch",
+      "mcp__claude_ai_Notion__notion-get-comments",
+      "mcp__claude_ai_Notion__notion-get-teams",
+      "mcp__claude_ai_Notion__notion-get-users",
       "mcp__plugin_slack_slack__slack_search_public",
       "mcp__plugin_slack_slack__slack_search_public_and_private",
       "mcp__plugin_slack_slack__slack_search_channels",
@@ -189,12 +189,25 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "fable",
   "deniedMcpServers": [
     {
-      "serverName": "Company-Brain"
+      "serverName": "claude.ai Company-Brain"
     }
   ],
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run --script ~/.claude/hooks/claude_config_healthcheck.py --hook",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  },
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/statusline-command.sh"
@@ -207,37 +220,37 @@
     "commit-commands@claude-plugins-official": true,
     "pr-review-toolkit@claude-plugins-official": true,
     "security-guidance@claude-plugins-official": true,
-    "figma@claude-plugins-official": true,
+    "figma@claude-plugins-official": false,
     "claude-md-management@claude-plugins-official": true,
     "slack@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
     "skypilot@skypilot": true,
-    "posthog@claude-plugins-official": true,
+    "posthog@claude-plugins-official": false,
     "livekit@livekit": true
   },
   "extraKnownMarketplaces": {
-    "obsidian-skills": {
-      "source": {
-        "source": "github",
-        "repo": "kepano/obsidian-skills"
-      }
-    },
     "skypilot": {
       "source": {
         "source": "github",
         "repo": "skypilot-org/skypilot"
       }
     },
-    "dagster": {
-      "source": {
-        "source": "github",
-        "repo": "dagster-io/skills"
-      }
-    },
     "livekit": {
       "source": {
         "source": "github",
         "repo": "livekit/agent-skills"
+      }
+    },
+    "obsidian-skills": {
+      "source": {
+        "source": "github",
+        "repo": "kepano/obsidian-skills"
+      }
+    },
+    "dagster": {
+      "source": {
+        "source": "github",
+        "repo": "dagster-io/skills"
       }
     }
   },
@@ -275,5 +288,6 @@
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "model": "fable"
 }
