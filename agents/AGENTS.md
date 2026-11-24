@@ -91,13 +91,13 @@ I talk to you through dictation software, so my messages may contain transcripti
 
 My Claude Code sessions, repos and experiment outputs are split between my laptop and the `bigboss` server (`ssh bigboss`, with transcripts under `~/.claude/projects/` on each), so when looking for earlier work, check both machines before concluding it does not exist.
 
-### Claude Code: the "extra" seat
+### Claude Code: the extra seat
 
-I have two Claude Code seats in the ai-coustics org. The main seat is bare `claude` (config in `~/.claude`). The extra seat is `claude-extra`, and a session runs on it when `$CLAUDE_CONFIG_DIR` is `~/.claude-extra`. The extra seat exists only for more usage: it shares my config, plugins, memory and session transcripts with the main seat, but its account has no Slack, Gmail, Notion, Linear, Granola or other integrations of its own.
+I have two Claude Code seats. `claude` runs the main seat. `claude-extra` runs the extra seat, and its sessions have `CLAUDE_CONFIG_DIR=~/.claude-extra`. Both seats share config, memory and session transcripts. The extra seat exists only to add usage. Its account has no integrations: no Slack, Gmail, Notion, Linear or Granola.
 
-- On the extra seat, don't use MCP servers or claude.ai connectors to fetch information, even ones that appear to be connected. Work from the context you were given and the local files.
-- When an extra-seat task needs information from an integration, get it through the main seat. Message a running main-seat session with SendMessage if ListAgents lists one; otherwise run a one-off query with `env -u CLAUDE_CONFIG_DIR claude -p "..."`. Unsetting the variable selects the main seat; setting it to `~/.claude` does not, because the main seat's login is keyed to the unset default. The command needs to run outside the Bash sandbox.
-- On the main seat, when I hand work to the extra seat, gather the integration context first and pass it along in full.
+- On the extra seat, don't use MCP servers or claude.ai connectors. Some show as connected; ignore them.
+- On the extra seat, get integration data from the main seat. Message a main-seat session that ListAgents shows. Or run `env -u CLAUDE_CONFIG_DIR claude -p "..."` outside the sandbox. Setting the variable to `~/.claude` does not reach the main seat.
+- On the main seat, gather integration data before handing work to the extra seat, and pass all of it.
 
 ### Running Python scripts
 
