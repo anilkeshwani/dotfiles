@@ -73,6 +73,12 @@ DENIED_PREFIXES = (
 )
 # A tampered item could send real API keys to an attacker's server through these.
 DENIED_SUFFIXES = ("_PROXY", "_BASE_URL")
+# push and import upload only credential-shaped names, plus names listed in extra_names in
+# the config or passed with --allow-name, so a variable nobody meant to share stays local.
+CREDENTIAL_NAME_RE = re.compile(
+    r"(?:^|_)(?:API_KEY|TOKEN|SECRET|PASSWORD|LICENSE|LICENSE_KEY|SECRET_KEY|PRIVATE_KEY"
+    r"|ACCESS_KEY_ID|SECRET_ACCESS_KEY)$"
+)
 # The only variables bw sees, so NODE_OPTIONS or BW_RESPONSE in the shell cannot change it.
 BW_ENV_ALLOW = {
     "PATH", "HOME", "USER", "LOGNAME", "SHELL", "LANG", "TERM", "TMPDIR", "TZ",
@@ -172,6 +178,7 @@ class Config:
     machine_id: str
     folder: str
     backup_count: int
+    extra_names: frozenset[str] = frozenset()
 
 
 def machine_fingerprint() -> str:
@@ -236,7 +243,11 @@ def load_config(paths: Paths) -> Config:
         raise SecretsSyncError(f"{path}: folder must be a non-empty string")
     if not isinstance(backup_count, int) or not 1 <= backup_count <= 100:
         raise SecretsSyncError(f"{path}: backups must be an integer from 1 to 100")
-    return Config(machine=machine, machine_id=machine_id, folder=folder, backup_count=backup_count)
+    extra_names = data.get("extra_names", [])
+    if not isinstance(extra_names, list) or not all(isinstance(n, str) for n in extra_names):
+        raise SecretsSyncError(f"{path}: extra_names must be a list of variable names")
+    return Config(machine=machine, machine_id=machine_id, folder=folder, backup_count=backup_count,
+                  extra_names=frozenset(check_extra_names(extra_names, f"{path}: extra_names")))
 
 
 # ---------------------------------------------------------------------------
@@ -362,6 +373,17 @@ def parse_secrets(text: str) -> ParsedSecrets:
 
 def is_denied_name(name: str) -> bool:
     return name in DENIED_NAMES or name.startswith(DENIED_PREFIXES) or name.endswith(DENIED_SUFFIXES)
+
+
+def is_credential_name(name: str) -> bool:
+    return bool(CREDENTIAL_NAME_RE.search(name))
+
+
+def check_extra_names(names: list[str], where: str) -> list[str]:
+    for name in names:
+        if not NAME_RE.match(name) or is_denied_name(name) or name == MACHINES_FIELD:
+            raise SecretsSyncError(f"{where}: {name!r} cannot be allowed")
+    return names
 
 
 def check_value(name: str, value: str) -> None:
@@ -994,18 +1016,25 @@ def push_groups(groups: list[PushGroup], args: argparse.Namespace, paths: Paths)
     _, parsed = load_local(paths)
     local = parsed.managed_map()
     local_only = parsed.local_names()
+    allowed = config.extra_names | set(check_extra_names(args.allow_name, "--allow-name"))
 
     seen: set[str] = set()
+    skipped: list[str] = []
     for group in groups:
         parse_machines(group.machines, group.item)
         if not group.item.strip() or not group.item.isprintable():
             raise SecretsSyncError("item names must be printable and non-empty")
+        kept = []
         for name in group.names:
             if name in seen:
                 raise SecretsSyncError(f"{name} is listed twice")
             seen.add(name)
             if not NAME_RE.match(name) or is_denied_name(name) or name == MACHINES_FIELD:
                 raise SecretsSyncError(f"refusing to push {name!r}")
+            if not is_credential_name(name) and name not in allowed:
+                skipped.append(name)
+                continue
+            kept.append(name)
             if name in local_only:
                 raise SecretsSyncError(f"{name} is in the local-only block; move it out first if it should be shared")
             if name not in local:
@@ -1014,6 +1043,15 @@ def push_groups(groups: list[PushGroup], args: argparse.Namespace, paths: Paths)
             if value is None:
                 raise SecretsSyncError(f"{name} needs a shell to evaluate ($, backticks); set a literal value first")
             check_value(name, value)
+        group.names = kept
+    groups = [g for g in groups if g.names]
+
+    if skipped:
+        err(f"Skipped (not credential-shaped names): {names_line(skipped)}")
+        err("To push one deliberately, pass --allow-name NAME or add it to extra_names in "
+            f"{paths.config}.")
+    if not groups:
+        return 1
 
     pushed: list[str] = []
     with vault_session(interactive=True) as bw:
@@ -1032,7 +1070,7 @@ def push_groups(groups: list[PushGroup], args: argparse.Namespace, paths: Paths)
     out(f"Pushed: {names_line(pushed)}")
     if pushed:
         out("Review the items in the Bitwarden app, then run secrets-sync check.")
-    return 0
+    return 1 if skipped else 0
 
 
 def push_one_group(bw: Bitwarden, folder_id: str, items: list[dict], field_owner: dict,
@@ -1278,6 +1316,9 @@ def cmd_doctor(args: argparse.Namespace, paths: Paths) -> int:
 # Entry point
 
 
+ALLOW_NAME_HELP = "also push this name although it is not credential-shaped (repeatable)"
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="secrets-sync",
@@ -1306,12 +1347,14 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--item", required=True, help="Bitwarden item name, for example livekit")
     p.add_argument("--machines", required=True, help="all, or a comma list of machine tags")
     p.add_argument("--force", action="store_true", help="overwrite existing fields or retag the item")
+    p.add_argument("--allow-name", action="append", default=[], metavar="NAME", help=ALLOW_NAME_HELP)
     p.add_argument("names", nargs="+", metavar="NAME")
     p.set_defaults(func=cmd_push)
 
     p = sub.add_parser("import", help="push many variables following a TOML plan of names")
     p.add_argument("plan", help="TOML file: [item] machines = \"all\", vars = [\"NAME\", ...]")
     p.add_argument("--force", action="store_true", help="overwrite existing fields or retag items")
+    p.add_argument("--allow-name", action="append", default=[], metavar="NAME", help=ALLOW_NAME_HELP)
     p.set_defaults(func=cmd_import)
 
     p = sub.add_parser("doctor", help="report risky states; never unlocks the vault")

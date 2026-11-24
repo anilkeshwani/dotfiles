@@ -364,13 +364,13 @@ def test_check_clean(ss, env, monkeypatch, capsys):
 
 def test_push_sends_values_over_stdin_only(ss, env, monkeypatch, capsys):
     value = planted("push")
-    write_secrets(env.secrets, f"export NEW_KEY='{value}'\n")
+    write_secrets(env.secrets, f"export NEW_API_KEY='{value}'\n")
     monkeypatch.setattr("builtins.input", lambda: "y")
-    assert ss.main(["push", "--item", "group", "--machines", "mac,bigboss", "NEW_KEY"]) == 0
+    assert ss.main(["push", "--item", "group", "--machines", "mac,bigboss", "NEW_API_KEY"]) == 0
     state = env.load()
     created = next(i for i in state["items"] if i["name"] == "group")
     fields = {f["name"]: f for f in created["fields"]}
-    assert fields["NEW_KEY"] == {"name": "NEW_KEY", "value": value, "type": 1, "linkedId": None}
+    assert fields["NEW_API_KEY"] == {"name": "NEW_API_KEY", "value": value, "type": 1, "linkedId": None}
     assert fields["machines"]["value"] == "mac,bigboss"
     assert created["organizationId"] is None and created["folderId"] == "folder-1"
     for call in env.calls():
@@ -381,45 +381,113 @@ def test_push_sends_values_over_stdin_only(ss, env, monkeypatch, capsys):
 
 
 def test_push_refuses_to_overwrite_without_force(ss, env, monkeypatch):
-    write_secrets(env.secrets, "export K=newvalue123\n")
-    env.set_items(item("group", {"K": "oldvalue123"}))
+    write_secrets(env.secrets, "export SVC_TOKEN=newvalue123\n")
+    env.set_items(item("group", {"SVC_TOKEN": "oldvalue123"}))
     monkeypatch.setattr("builtins.input", lambda: "y")
-    assert ss.main(["push", "--item", "group", "--machines", "all", "K"]) == 2
+    assert ss.main(["push", "--item", "group", "--machines", "all", "SVC_TOKEN"]) == 2
     assert env.load()["items"][0]["fields"][0]["value"] == "oldvalue123"
-    assert ss.main(["push", "--item", "group", "--machines", "all", "--force", "K"]) == 0
+    assert ss.main(["push", "--item", "group", "--machines", "all", "--force", "SVC_TOKEN"]) == 0
     assert env.load()["items"][0]["fields"][0]["value"] == "newvalue123"
 
 
 def test_push_declined_writes_nothing(ss, env, monkeypatch):
-    write_secrets(env.secrets, "export K=newvalue123\n")
+    write_secrets(env.secrets, "export SVC_TOKEN=newvalue123\n")
     monkeypatch.setattr("builtins.input", lambda: "n")
-    assert ss.main(["push", "--item", "group", "--machines", "all", "K"]) == 0
+    assert ss.main(["push", "--item", "group", "--machines", "all", "SVC_TOKEN"]) == 0
     assert env.load()["items"] == []
     assert not any(c.startswith("create") for c in env.commands())
 
 
 def test_push_refuses_dynamic_and_local_only_values(ss, env, monkeypatch):
-    text = f'DYN="$(cat x)"\n{ss.LOCAL_BEGIN}\nexport LOC=abcdefgh123\n{ss.LOCAL_END}\n'
+    text = f'DYN_TOKEN="$(cat x)"\n{ss.LOCAL_BEGIN}\nexport LOC_TOKEN=abcdefgh123\n{ss.LOCAL_END}\n'
     write_secrets(env.secrets, text)
     monkeypatch.setattr("builtins.input", lambda: "y")
-    assert ss.main(["push", "--item", "g", "--machines", "all", "DYN"]) == 2
-    assert ss.main(["push", "--item", "g", "--machines", "all", "LOC"]) == 2
+    assert ss.main(["push", "--item", "g", "--machines", "all", "DYN_TOKEN"]) == 2
+    assert ss.main(["push", "--item", "g", "--machines", "all", "LOC_TOKEN"]) == 2
     assert env.commands() == []
 
 
 def test_import_plan_creates_folder_and_items(ss, env, monkeypatch, tmp_path):
     env.state["folders"] = []
     env.save()
-    write_secrets(env.secrets, "A_KEY=aaaaaaaaaa1\nB_KEY=bbbbbbbbbb2\nC_KEY=cccccccccc3\n")
+    write_secrets(env.secrets, "A_TOKEN=aaaaaaaaaa1\nB_TOKEN=bbbbbbbbbb2\nC_TOKEN=cccccccccc3\n")
     plan = tmp_path / "plan.toml"
-    plan.write_text('[first]\nmachines = "all"\nvars = ["A_KEY", "B_KEY"]\n[second]\nmachines = "mac"\nvars = ["C_KEY"]\n')
+    plan.write_text('[first]\nmachines = "all"\nvars = ["A_TOKEN", "B_TOKEN"]\n[second]\nmachines = "mac"\nvars = ["C_TOKEN"]\n')
     monkeypatch.setattr("builtins.input", lambda: "y")
     assert ss.main(["import", str(plan)]) == 0
     state = env.load()
     assert [f["name"] for f in state["folders"]] == ["secrets-sync"]
     assert sorted(i["name"] for i in state["items"]) == ["first", "second"]
     assert ss.main(["pull"]) == 0
-    assert {a.name for a in ss.parse_secrets(env.secrets.read_text()).assignments} == {"A_KEY", "B_KEY", "C_KEY"}
+    assert {a.name for a in ss.parse_secrets(env.secrets.read_text()).assignments} == {"A_TOKEN", "B_TOKEN", "C_TOKEN"}
+
+
+@pytest.mark.parametrize("name,allowed", [
+    ("OPENAI_API_KEY", True), ("HF_TOKEN", True), ("GITHUB_TOKEN", True), ("LIVEKIT_API_SECRET", True),
+    ("DB_PASSWORD", True), ("TOOL_LICENSE", True), ("R2_ACCESS_KEY_ID", True), ("R2_SECRET_ACCESS_KEY", True),
+    ("STRIPE_SECRET_KEY", True), ("API_KEY", True),
+    ("LIVEKIT_URL", False), ("PROJECT_ID", False), ("EDITOR_THEME", False), ("TOKENIZER", False),
+    ("SORT_KEY", False),
+])
+def test_credential_name_allowlist(ss, name, allowed):
+    assert ss.is_credential_name(name) is allowed
+
+
+def stored_names(env) -> set[str]:
+    return {f["name"] for i in env.load()["items"] for f in i["fields"]} - {"machines"}
+
+
+def test_push_skips_names_outside_the_allowlist_and_reports_them(ss, env, monkeypatch, capsys):
+    key, url = planted("key"), planted("url")
+    write_secrets(env.secrets, f"export SVC_API_KEY='{key}'\nexport SVC_URL='{url}'\n")
+    monkeypatch.setattr("builtins.input", lambda: "y")
+    assert ss.main(["push", "--item", "svc", "--machines", "all", "SVC_API_KEY", "SVC_URL"]) == 1
+    assert stored_names(env) == {"SVC_API_KEY"}
+    output = "".join(capsys.readouterr())
+    assert "Skipped" in output and "SVC_URL" in output.split("Skipped")[1]
+    assert key not in output and url not in output
+
+
+def test_push_with_only_skipped_names_never_unlocks(ss, env, monkeypatch):
+    write_secrets(env.secrets, "export SVC_URL=https://example.invalid\n")
+    monkeypatch.setattr("builtins.input", lambda: "y")
+    assert ss.main(["push", "--item", "svc", "--machines", "all", "SVC_URL"]) == 1
+    assert env.commands() == []
+
+
+def test_allow_name_flag_pushes_an_extra_name(ss, env, monkeypatch):
+    write_secrets(env.secrets, "export SVC_URL=https://example.invalid\n")
+    monkeypatch.setattr("builtins.input", lambda: "y")
+    assert ss.main(["push", "--item", "svc", "--machines", "all", "--allow-name", "SVC_URL", "SVC_URL"]) == 0
+    assert stored_names(env) == {"SVC_URL"}
+
+
+def test_config_extra_names_extend_the_allowlist(ss, env, monkeypatch, tmp_path):
+    config = env.home / ".config" / "secrets-sync" / "config.toml"
+    config.write_text(config.read_text() + 'extra_names = ["SVC_URL"]\n')
+    write_secrets(env.secrets, "export SVC_URL=https://example.invalid\nexport SVC_TOKEN=abcdefgh123\n")
+    plan = tmp_path / "plan.toml"
+    plan.write_text('[svc]\nmachines = "all"\nvars = ["SVC_URL", "SVC_TOKEN"]\n')
+    monkeypatch.setattr("builtins.input", lambda: "y")
+    assert ss.main(["import", str(plan)]) == 0
+    assert stored_names(env) == {"SVC_URL", "SVC_TOKEN"}
+
+
+@pytest.mark.parametrize("extra", ['["PATH"]', '"SVC_URL"', '["lower"]'])
+def test_bad_extra_names_in_config_refuse(ss, env, monkeypatch, extra):
+    config = env.home / ".config" / "secrets-sync" / "config.toml"
+    config.write_text(config.read_text() + f"extra_names = {extra}\n")
+    write_secrets(env.secrets, "export SVC_TOKEN=abcdefgh123\n")
+    monkeypatch.setattr("builtins.input", lambda: "y")
+    assert ss.main(["push", "--item", "svc", "--machines", "all", "SVC_TOKEN"]) == 2
+    assert env.commands() == []
+
+
+def test_allow_name_cannot_override_the_denylist(ss, env, monkeypatch):
+    write_secrets(env.secrets, "export GIT_TOKEN=abcdefgh123\n")
+    monkeypatch.setattr("builtins.input", lambda: "y")
+    assert ss.main(["push", "--item", "g", "--machines", "all", "--allow-name", "GIT_TOKEN", "GIT_TOKEN"]) == 2
+    assert env.commands() == []
 
 
 def test_plan_cannot_carry_values(ss, tmp_path):
