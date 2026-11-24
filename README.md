@@ -68,7 +68,7 @@ Two caveats. User-scoped MCP servers added with `claude mcp add -s user` live in
 
 ### Perplexity Computer MCP server
 
-`scripts/register_perplexity_mcp_servers.sh` registers the Perplexity Computer MCP server (`perplexity-computer`, `https://www.perplexity.ai/rest/computer/mcp`) with the main Claude Code seat. Run it once per host, then sign in with `/mcp` inside `claude`. It skips the server if it exists. The extra seat doesn't get it.
+`scripts/register_perplexity_computer_mcp.sh` registers the Perplexity Computer MCP server (`perplexity-computer`, `https://www.perplexity.ai/rest/computer/mcp`) with the main Claude Code seat. Run it once per host, then sign in with `/mcp` inside `claude`. It skips the server if it exists. The extra seat doesn't get it.
 
 Computer is Perplexity's general-purpose agent. Its usage spends Perplexity account credits, and the Max plan includes a monthly allowance. Perplexity's search API server (`https://api.perplexity.ai/mcp`) is left out because it bills API credits, which the subscription doesn't cover.
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Register the Perplexity Computer MCP server with the main Claude Code seat.
-# Run on each host: bash scripts/register_perplexity_mcp_servers.sh
+# Run on each host: bash scripts/register_perplexity_computer_mcp.sh
 #
 # User-scoped MCP servers live in ~/.claude.json, which install.py never links,
 # so each host needs this once. Only the main seat (bare `claude`) gets it: the
