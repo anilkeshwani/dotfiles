@@ -27,7 +27,8 @@ FAKE_BW = textwrap.dedent(
     session_ok = os.environ.get("BW_SESSION") == state["session_key"]
     with open(log_path, "a") as f:
         f.write(json.dumps({{"argv": sys.argv[1:], "session_ok": session_ok,
-                             "has_session_env": "BW_SESSION" in os.environ}}) + "\\n")
+                             "has_session_env": "BW_SESSION" in os.environ,
+                             "node_options": "NODE_OPTIONS" in os.environ}}) + "\\n")
 
     def save():
         with open(state_path, "w") as f:
@@ -159,6 +160,7 @@ def env(tmp_path, monkeypatch, ss):
     monkeypatch.delenv("BW_SESSION", raising=False)
     monkeypatch.delenv("HISTFILE", raising=False)
     monkeypatch.setattr(ss, "REDACT", ss.Redactor())
+    monkeypatch.setattr(ss, "BW_ENV_ALLOW", ss.BW_ENV_ALLOW | {"FAKE_BW_STATE", "FAKE_BW_LOG"})
     monkeypatch.setattr(ss, "machine_fingerprint", lambda: "fp-test")
     monkeypatch.setattr(ss, "stdio_is_tty", lambda: True)
     assert ss.main(["init", "--machine", "mac"]) == 0

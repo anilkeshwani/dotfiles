@@ -46,7 +46,8 @@ LOCAL_BEGIN = "# >>> secrets-sync local-only >>>"
 LOCAL_END = "# <<< secrets-sync local-only <<<"
 LOCAL_HINT = "# Lines here stay on this machine: pull keeps them as they are and never uploads them."
 
-NAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+# Upper case only: zsh ties lower-case names such as `prompt` to special parameters.
+NAME_RE = re.compile(r"^[A-Z_][A-Z0-9_]*$")
 TAG_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 ASSIGNMENT_RE = re.compile(r"^\s*(export\s+)?([A-Za-z_][A-Za-z0-9_]*)=(.*)$")
 
@@ -59,8 +60,25 @@ DENIED_NAMES = frozenset({
     "PROMPT", "PROMPT_COMMAND", "PS1", "PS2", "PS3", "PS4", "PYTHONHOME", "PYTHONPATH",
     "PYTHONSTARTUP", "RPROMPT", "RUBYOPT", "SHELL", "SSH_ASKPASS", "SSH_AUTH_SOCK",
     "SUDO_ASKPASS", "TERM", "USER", "VISUAL", "ZDOTDIR",
+    # zsh prompts and hooks, and commands other programs run from the environment
+    "RPS1", "RPS2", "PROMPT2", "PROMPT3", "PROMPT4", "SPROMPT", "NULLCMD", "READNULLCMD",
+    "FCEDIT", "LESSOPEN", "LESSCLOSE", "MAIL", "MAILPATH", "TMPDIR",
+    # trust anchors and code paths for language runtimes
+    "SSL_CERT_FILE", "SSL_CERT_DIR", "REQUESTS_CA_BUNDLE", "CURL_CA_BUNDLE", "RUBYLIB",
+    "JAVA_TOOL_OPTIONS", "_JAVA_OPTIONS", "JDK_JAVA_OPTIONS",
 })
-DENIED_PREFIXES = ("BASH_FUNC_", "DYLD_", "LD_", "GIT_CONFIG", "SECRETS_SYNC_")
+DENIED_PREFIXES = (
+    "BASH_FUNC_", "BITWARDENCLI_", "BW_", "DYLD_", "GIT_", "LD_", "NODE_", "NPM_CONFIG_", "PERL",
+    "PIP_", "PYTHON", "SECRETS_SYNC_", "UV_", "XDG_",
+)
+# A tampered item could send real API keys to an attacker's server through these.
+DENIED_SUFFIXES = ("_PROXY", "_BASE_URL")
+# The only variables bw sees, so NODE_OPTIONS or BW_RESPONSE in the shell cannot change it.
+BW_ENV_ALLOW = {
+    "PATH", "HOME", "USER", "LOGNAME", "SHELL", "LANG", "TERM", "TMPDIR", "TZ",
+    "XDG_CONFIG_HOME", "XDG_DATA_HOME", "BITWARDENCLI_APPDATA_DIR", "NODE_EXTRA_CA_CERTS",
+    "HTTPS_PROXY", "HTTP_PROXY", "NO_PROXY", "https_proxy", "http_proxy", "no_proxy",
+}
 
 
 class SecretsSyncError(Exception):
@@ -85,6 +103,7 @@ class Redactor:
     def add(self, value: str | None) -> None:
         if value and len(value) >= self.MIN_LENGTH:
             self._values.add(value)
+            self._values.add(json.dumps(value)[1:-1])  # the form it takes inside bw's JSON
 
     def __call__(self, text: str) -> str:
         for value in sorted(self._values, key=len, reverse=True):
@@ -288,7 +307,9 @@ def parse_shell_value(text: str) -> tuple[str | None, bool]:
                 return None, False
             out_chars.append(text[i + 1])
             i += 2
-        elif c in "$`":
+        elif c in "$`~{*?[" or (c == "=" and i == 0):
+            # Unquoted, these expand: parameters, commands, tildes, braces, globs and
+            # zsh's =command. Report the value as dynamic.
             dynamic = True
             out_chars.append(c)
             i += 1
@@ -305,7 +326,7 @@ def parse_shell_value(text: str) -> tuple[str | None, bool]:
 
 def parse_secrets(text: str) -> ParsedSecrets:
     parsed = ParsedSecrets()
-    lines = text.splitlines()
+    lines = text.split("\n")  # not splitlines(): U+2028 and friends are not line breaks to a shell
     parsed.generated = bool(lines) and lines[0] == HEADER_FIRST_LINE
     in_local = False
     for lineno, line in enumerate(lines, start=1):
@@ -340,11 +361,11 @@ def parse_secrets(text: str) -> ParsedSecrets:
 
 
 def is_denied_name(name: str) -> bool:
-    return name in DENIED_NAMES or name.startswith(DENIED_PREFIXES)
+    return name in DENIED_NAMES or name.startswith(DENIED_PREFIXES) or name.endswith(DENIED_SUFFIXES)
 
 
 def check_value(name: str, value: str) -> None:
-    if any(ord(c) < 0x20 or ord(c) == 0x7F for c in value):
+    if not all(c.isprintable() for c in value):
         raise SecretsSyncError(
             f"{name} contains a newline or control character; secrets-sync only handles "
             "single-line values. Store it another way."
@@ -392,7 +413,7 @@ def bw_executable() -> str:
 
 
 def child_env(session: str | None) -> dict[str, str]:
-    env = {k: v for k, v in os.environ.items() if k not in ("BW_SESSION", "BW_PASSWORD")}
+    env = {k: v for k, v in os.environ.items() if k in BW_ENV_ALLOW or k.startswith("LC_")}
     if session:
         env["BW_SESSION"] = session
     return env
@@ -415,22 +436,22 @@ class Bitwarden:
         self.exe = exe
         self.session = session
 
-    def run(self, args: list[str], stdin: str | None = None) -> str:
+    def run(self, args: list[str], stdin: str | None = None, new_session: bool = False) -> str:
         try:
             proc = subprocess.run(
                 [self.exe, "--nointeraction", *args],
                 input=stdin if stdin is not None else None,
                 stdin=None if stdin is not None else subprocess.DEVNULL,
                 capture_output=True, text=True, env=child_env(self.session),
-                timeout=BW_TIMEOUT_SECONDS,
+                timeout=BW_TIMEOUT_SECONDS, start_new_session=new_session,
             )
         except subprocess.TimeoutExpired:
             raise BwError(f"`bw {args[0]}` timed out") from None
         if proc.returncode != 0:
             lines = [ln for ln in proc.stderr.splitlines() + proc.stdout.splitlines()
                      if ln.strip() and "ServerConfig" not in ln]
-            detail = lines[-1].strip()[:200] if lines else "no message"
-            raise BwError(f"`bw {args[0]}` failed (exit {proc.returncode}): {REDACT(detail)}")
+            detail = REDACT(lines[-1].strip())[:200] if lines else "no message"
+            raise BwError(f"`bw {args[0]}` failed (exit {proc.returncode}): {detail}")
         return proc.stdout
 
     def json(self, args: list[str]) -> object:
@@ -446,7 +467,8 @@ class Bitwarden:
         self.run(["sync"])
 
     def lock(self) -> None:
-        self.run(["lock"])
+        # Its own session, so a hangup sent to the terminal's process group cannot kill it.
+        self.run(["lock"], new_session=True)
 
     def list_folders(self) -> list[dict]:
         return expect_list(self.json(["list", "folders"]), "list folders")
@@ -538,14 +560,17 @@ def vault_session(interactive: bool) -> Iterator[Bitwarden]:
 
 
 def lock_vault(exe: str) -> None:
-    previous = signal.signal(signal.SIGINT, signal.SIG_IGN)  # a second Ctrl-C must not skip the lock
+    """Lock the vault. Ctrl-C, SIGTERM and SIGHUP are held back until bw lock has finished,
+    so a second signal (an ssh hangup is often sent twice) cannot skip the lock."""
+    held = {signal.SIGINT, signal.SIGTERM, signal.SIGHUP}
+    signal.pthread_sigmask(signal.SIG_BLOCK, held)
     try:
         Bitwarden(exe).lock()
         err("secrets-sync: vault locked")
-    except (SecretsSyncError, OSError):
+    except BaseException:
         err("secrets-sync: WARNING: `bw lock` failed. Run `bw lock` yourself now.")
     finally:
-        signal.signal(signal.SIGINT, previous)
+        signal.pthread_sigmask(signal.SIG_UNBLOCK, held)
 
 
 # ---------------------------------------------------------------------------
@@ -864,8 +889,14 @@ def cmd_pull(args: argparse.Namespace, paths: Paths) -> int:
     old = parsed.managed_map()
     dropped = sorted(set(old) - set(mine) - local_only)
     if existing is not None and (dropped or parsed.other_lines):
+        if args.keep_unmanaged and parsed.other_lines:
+            raise SecretsSyncError(
+                f"{paths.secrets} has lines that are not simple assignments "
+                f"({', '.join(map(str, parsed.other_lines))}); moving them could break shell "
+                "syntax, so move them into the local-only block by hand first"
+            )
         if args.keep_unmanaged:
-            raw_lines = existing.data.decode().splitlines()
+            raw_lines = existing.data.decode().split("\n")
             keep = sorted({old[n].lineno for n in dropped} | set(parsed.other_lines))
             local_lines += [raw_lines[i - 1] for i in keep]
             dropped = []
@@ -908,6 +939,8 @@ def cmd_pull(args: argparse.Namespace, paths: Paths) -> int:
     out(f"Wrote {len(mine)} variables to {paths.secrets} for machine tag {config.machine!r}: {names_line(list(mine))}")
     if dropped or changed:
         out("Open a new shell to load the changes; removed variables stay set in shells already open.")
+        out(f"Old values stay in the backups under {paths.backups}; delete them there if this "
+            "machine should no longer hold a removed or rotated key.")
     return 0
 
 
@@ -1102,7 +1135,8 @@ class Doctor:
 def history_findings(paths: Paths) -> list[str]:
     risky = [
         (re.compile(r"BW_SESSION=\S"), "a BW_SESSION value"),
-        (re.compile(r"\bbw\s+unlock\s+[^-\s]"), "a password passed to bw unlock"),
+        (re.compile(r"BW_PASSWORD=\S"), "a BW_PASSWORD value"),
+        (re.compile(r"\bbw\s+unlock\s+(?:--\S+\s+)*[^-\s]"), "a password passed to bw unlock"),
         (re.compile(r"\bbw\s+login\s+\S+\s+[^-\s]"), "a password passed to bw login"),
     ]
     files = {paths.home / ".zsh_history", paths.home / ".bash_history"}
@@ -1214,7 +1248,8 @@ def cmd_doctor(args: argparse.Namespace, paths: Paths) -> int:
             doc.warn(f"the dotfiles repo does not ignore {rel}")
     hooks_path = subprocess.run(["git", "-C", str(dotfiles), "config", "core.hooksPath"],
                                 capture_output=True, text=True, stdin=subprocess.DEVNULL).stdout.strip()
-    if "hooks" in hooks_path:
+    hook_dirs = {(dotfiles / "home/.config/git/hooks").resolve(), (paths.home / ".config/git/hooks").resolve()}
+    if hooks_path and (dotfiles / Path(hooks_path).expanduser()).resolve() in hook_dirs:
         doc.ok(f"dotfiles repo commits go through the hooks in {hooks_path}")
     else:
         doc.warn("the pre-commit secrets guard is not enabled for the dotfiles repo (see docs/secrets-sync.md)")

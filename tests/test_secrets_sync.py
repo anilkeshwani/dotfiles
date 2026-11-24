@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 
+import os
 import shutil
 import stat
 import subprocess
@@ -60,6 +61,18 @@ def test_parse_flags_dynamic_values_and_commands(ss):
     assert parsed.other_lines == [5, 6, 7]
 
 
+@pytest.mark.parametrize("line", ["X=~/x", "X=a:~/y", "X=a{b,c}", "X=*.txt", "X=a?b", "X=[ab]", "X==ls"])
+def test_unquoted_expansions_are_dynamic(ss, line):
+    assert ss.parse_secrets(line).assignments[0].value is None
+
+
+def test_unicode_line_separators_are_not_line_breaks(ss):
+    with pytest.raises(ss.SecretsSyncError):
+        ss.check_value("K", "a\u2028b")
+    parsed = ss.parse_secrets("A='x\u2028y'\nB=2")
+    assert [a.name for a in parsed.assignments] == ["A", "B"]
+
+
 # --- quoting ---------------------------------------------------------------------------
 
 HOSTILE = [
@@ -95,7 +108,12 @@ def test_denied_names_cannot_come_from_the_vault(ss, env, monkeypatch):
     assert not env.secrets.exists()
 
 
-@pytest.mark.parametrize("name", ["LD_PRELOAD", "DYLD_INSERT_LIBRARIES", "PROMPT_COMMAND", "BASH_FUNC_x%%"])
+@pytest.mark.parametrize("name", [
+    "LD_PRELOAD", "DYLD_INSERT_LIBRARIES", "PROMPT_COMMAND", "BASH_FUNC_x%%", "prompt", "RPS1",
+    "LESSOPEN", "GIT_EDITOR", "GIT_PROXY_COMMAND", "XDG_CONFIG_HOME", "BITWARDENCLI_APPDATA_DIR",
+    "PIP_INDEX_URL", "UV_INDEX_URL", "HTTPS_PROXY", "SSL_CERT_FILE", "ANTHROPIC_BASE_URL",
+    "JAVA_TOOL_OPTIONS", "NODE_PATH", "RUBYLIB", "PYTHONWARNINGS",
+])
 def test_denied_name_list(ss, name):
     assert ss.is_denied_name(name) or not ss.NAME_RE.match(name)
 
@@ -226,10 +244,11 @@ def test_hand_written_file_with_unmanaged_entries_is_not_clobbered(ss, env, monk
     monkeypatch.setenv("BW_SESSION", SESSION_KEY)
     assert ss.main(["pull"]) == 2
     assert "ONLY_HERE" in env.secrets.read_text() and "k" * 12 not in env.secrets.read_text()
+    assert ss.main(["pull", "--keep-unmanaged"]) == 2  # line 3 is a command: moving it is unsafe
+    write_secrets(env.secrets, "export K=old\nexport ONLY_HERE=abcdefgh123\n")
     assert ss.main(["pull", "--keep-unmanaged"]) == 0
     parsed = ss.parse_secrets(env.secrets.read_text())
     assert {a.name for a in parsed.local_assignments} == {"ONLY_HERE"}
-    assert "source ~/other" in parsed.local_lines
     assert {a.name: a.value for a in parsed.assignments} == {"K": "k" * 12}
 
 
@@ -456,3 +475,31 @@ def test_doctor_flags_risky_states(ss, env, monkeypatch, capsys):
     assert "BW_SESSION is set" in output
     assert "a BW_SESSION value" in output and "a password passed to bw unlock" in output
     assert "hunter2" not in output and SESSION_KEY not in output
+
+
+def test_lock_survives_a_second_hangup(ss, env, monkeypatch):
+    env.set_items(item("a", {"K": "k" * 12}))
+    original = ss.Bitwarden.lock
+
+    def lock_with_hangup(self):
+        import signal
+        os.kill(os.getpid(), signal.SIGHUP)  # arrives while the lock is running
+        original(self)
+
+    monkeypatch.setattr(ss.Bitwarden, "lock", lock_with_hangup)
+    with pytest.raises(SystemExit):
+        ss.main(["pull"])
+    assert env.commands()[-1] == "lock"
+
+
+def test_bw_gets_a_minimal_environment(ss, env, monkeypatch):
+    monkeypatch.setenv("NODE_OPTIONS", "--require /tmp/evil.js")
+    env.set_items(item("a", {"K": "k" * 12}))
+    assert ss.main(["pull"]) == 0
+    assert not any(c["node_options"] for c in env.calls())
+
+
+def test_redaction_happens_before_truncation(ss):
+    value = "v" * 30
+    ss.REDACT.add(value)
+    assert value[:10] not in ss.REDACT(("x" * 190) + value)[:200]
