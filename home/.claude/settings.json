@@ -153,7 +153,9 @@
       "mcp__plugin_slack_slack__slack_read_channel",
       "mcp__plugin_slack_slack__slack_read_thread",
       "mcp__plugin_slack_slack__slack_read_canvas",
-      "mcp__plugin_slack_slack__slack_read_user_profile"
+      "mcp__plugin_slack_slack__slack_read_user_profile",
+      "mcp__perplexity-computer__models_list",
+      "mcp__perplexity-computer__read_thread"
     ],
     "deny": [
       "Bash(git push --force*)",
