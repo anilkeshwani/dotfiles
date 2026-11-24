@@ -126,7 +126,7 @@ maybe the agent profiles, without adopting my shell, git or editor config.
 | `agents/AGENTS.md` | My global instructions, including the writing style. Read it for ideas, do not install it verbatim | Claude Code, Codex, agy |
 | `agents/skills/` | Skills for every agent: `deslop` | Claude Code, Codex, agy |
 | `home/.claude/skills/` | Claude Code skills: `excalidraw`, `journal` | Claude Code (CLI, desktop, IDE) |
-| `home/.claude/agents/` | Subagent profiles: `architect-reviewer`, `senior-mle-reviewer`, `researcher-reviewer`, `journal-scribe` | Claude Code |
+| `home/.claude/agents/` | Subagent profiles: `architect-reviewer`, `senior-mle-reviewer`, `researcher-reviewer`, `design-reviewer`, `journal-scribe` | Claude Code |
 | `home/.claude/output-styles/` | Output styles | Claude Code |
 | `home/.claude/settings.json` | Permission allow/deny lists, enabled plugins, sandbox rules | Claude Code |
 | `agents/codex/skills/` | Codex skills: `gh-fix-ci`, `gh-address-comments`, `pdf`, `git-commit-staged` | Codex (CLI, IDE extension, ChatGPT desktop) |
