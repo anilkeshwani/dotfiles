@@ -186,6 +186,40 @@ def test_unreadable_secrets_file_blocks(repo, tmp_path):
         secrets_file.chmod(0o600)
 
 
+def add_to_secrets(tmp_path, line: str) -> None:
+    path = tmp_path / "home" / ".secrets"
+    path.write_text(path.read_text() + line + "\n")
+
+
+def test_value_under_an_unusual_name_is_blocked_without_printing_it(repo, tmp_path):
+    # A "/" keeps the value from looking random, and the name has no secret-like word.
+    value = "opaque/" + secrets.token_hex(6)
+    add_to_secrets(tmp_path, f"export WIDGET_HANDLE='{value}'")
+    stage(repo, "docs/setup.md", f"intro\nUse {value} here.\n")
+    result = guard(repo)
+    assert result.returncode == 1
+    assert "docs/setup.md:2" in result.stderr and "WIDGET_HANDLE" in result.stderr
+    assert value not in result.stderr + result.stdout
+
+
+def test_short_values_from_the_secrets_file_are_not_matched(repo, tmp_path):
+    add_to_secrets(tmp_path, "export REGION=eu-1")
+    stage(repo, "notes.md", "deploy to eu-1\n")
+    assert guard(repo).returncode == 0
+
+
+@pytest.mark.parametrize("line", [
+    'DB_PASSPHRASE = "Zq81mXbNw0pLrTy5vC2sKd7G"',
+    'STRIPE_SECRETKEY: "Zq81mXbNw0pLrTy5vC2sKd7G"',
+    'session_cookie = "Zq81mXbNw0pLrTy5vC2sKd7G"',
+    'SENTRY_DSN="Zq81mXbNw0pLrTy5vC2sKd7G"',
+])
+def test_wider_secret_names_trigger_the_assignment_rule(repo, line):
+    stage(repo, "app.cfg", line + "\n")
+    result = guard(repo)
+    assert result.returncode == 1 and "app.cfg:1" in result.stderr
+
+
 def test_secret_like_names_match_whole_words(repo):
     stage(repo, "a.py", 'author = "Zq81mXbNw0pLrTy5vC2s"\nmonkey = "Zq81mXbNw0pLrTy5vC2s"\n')
     assert guard(repo).returncode == 0

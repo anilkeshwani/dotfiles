@@ -113,12 +113,14 @@ If Bitwarden itself holds a wrong value, fix it in the app (its item history kee
 `scripts/secrets_commit_guard.py` reads the staged content of every added, modified, renamed or copied file (the whole file, binary files included) and blocks the commit when it:
 
 - adds a file named `.secrets` or `.secrets.*`
-- contains the literal value of a secret from the local `~/.secrets` (a variable with a secret-like name or a random-looking value), in any format
+- contains the literal value of any variable in the local `~/.secrets` that is 8 or more characters long, whatever the variable is called and in any format
 - assigns a non-placeholder value to a secret-like variable name from `~/.secrets`
 - matches a known token shape (private key headers, AWS, GitHub, Slack, Google, Hugging Face and Linear keys, `sk-` keys)
-- assigns a value of 20 or more characters with high entropy to a name containing `KEY`, `TOKEN`, `SECRET`, `PASSWORD`, `CREDENTIAL`, `AUTH` or `LICENSE`
+- assigns a value of 20 or more characters with high entropy to a secret-like name
 
-It prints the file, line and reason, never the value. Add `secrets-guard: allow` to a line to pass a false positive; the pragma exempts that line from every rule. It fails closed: a staged file it cannot read, or a `~/.secrets` that exists but cannot be read, blocks the commit.
+A secret-like name contains, as a whole word between underscores or camel-case breaks, `KEY`, `API_KEY`, `SECRET_KEY`, `ACCESS_TOKEN`, `TOKEN`, `SECRET`, `PASSWORD`, `PASSPHRASE`, `PASS`, `PWD`, `CREDENTIAL`, `CREDS`, `AUTH`, `BEARER`, `LICENSE`, `SESSION`, `COOKIE`, `DSN`, `SALT`, `PAT` or a close variant (`SECRETKEY`, `APITOKEN`). The value match means a URL or id stored in `~/.secrets` also blocks a commit that contains it; mark such a line with the pragma below.
+
+The guard keeps `~/.secrets` values in memory only. It prints the file, line number and reason (for a value match, the name of the variable), never the value. Add `secrets-guard: allow` to a line to pass a false positive; the pragma exempts that line from every rule. It fails closed: a staged file it cannot read, or a `~/.secrets` that exists but cannot be read, blocks the commit.
 
 The hook wrapper `home/.config/git/hooks/pre-commit` runs the guard from its own directory with `uv run --no-project --no-config`, with `UV_*` and `PYTHON*` variables removed, so a repository's `uv.toml`, `pyproject.toml`, `.python-version` or direnv settings cannot choose its interpreter or package index. It refuses to run a guard that is missing, not owned by me or writable by group or others.
 

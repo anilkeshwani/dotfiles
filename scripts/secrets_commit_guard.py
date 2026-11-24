@@ -28,7 +28,9 @@ from secrets_sync import ALLOW_PRAGMA, SecretsSyncError, parse_secrets  # noqa: 
 
 BLOCKED_PATH_RE = re.compile(r"(^|/)(\.secrets(\..+)?|[^/]*\.secrets)$")
 SECRET_NAME_RE = re.compile(
-    r"(?:^|_)(API_?KEY|KEYS?|TOKEN|SECRET|PASSWORD|PASSWD|PWD|CREDENTIALS?|AUTH|LICENSE)(?:_|$)", re.I
+    r"(?:^|_)(API_?KEY|(?:ACCESS|SECRET|PRIVATE|SIGNING|LICENSE)_?KEY|KEYS?|(?:ACCESS|AUTH|API|REFRESH)_?TOKEN"
+    r"|TOKENS?|SECRETS?|PASSWORD|PASSWD|PASSPHRASE|PASS|PWD|CREDENTIALS?|CREDS|AUTH|BEARER|LICENSE"
+    r"|SESSION|COOKIE|DSN|SALT|PAT)(?:_|$)", re.I
 )
 ASSIGN_RE = re.compile(
     r"""(?P<name>[A-Za-z_][A-Za-z0-9_.-]*)["']?\s*(?:=|:|:=)\s*"""
@@ -76,11 +78,6 @@ def is_secret_name(name: str) -> bool:
     return bool(SECRET_NAME_RE.search(snake))
 
 
-def looks_random(value: str) -> bool:
-    return (len(value) >= ENTROPY_MIN_LENGTH - 4 and "/" not in value
-            and shannon_entropy(value) >= ENTROPY_THRESHOLD)
-
-
 def local_secrets() -> tuple[set[str], dict[str, str]]:
     """Names, and the values worth matching, from ~/.secrets, read without executing it.
     Values stay in this process and are only used for substring checks. A ~/.secrets that
@@ -96,12 +93,9 @@ def local_secrets() -> tuple[set[str], dict[str, str]]:
         raise GuardError(f"~/.secrets exists but cannot be read ({reason}), so its values cannot be checked")
     every = parsed.assignments + parsed.local_assignments
     names = {a.name for a in every}
-    # Match only values that are secrets: a secret-like name or a random-looking value. A
-    # URL or project id from ~/.secrets in a doc is not a leak worth a blocked commit.
-    values = {
-        a.name: a.value for a in every
-        if a.value and len(a.value) >= MIN_VALUE_LENGTH and (is_secret_name(a.name) or looks_random(a.value))
-    }
+    # Every value long enough to be specific, whatever its name: a filter on names or on
+    # how random a value looks lets a secret under an unusual name through.
+    values = {a.name: a.value for a in every if a.value and len(a.value) >= MIN_VALUE_LENGTH}
     return names, values
 
 
