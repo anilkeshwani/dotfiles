@@ -69,7 +69,8 @@ claude_with_config_dir() {
 
 claude-personal() { claude_with_config_dir "${CLAUDE_CONFIG_DIR_PERSONAL}" "$@"; }
 
-claude-work-extra() { claude_with_config_dir "${CLAUDE_CONFIG_DIR_WORK_EXTRA}" "$@"; }
+# Second ai-coustics seat: anil.agent@ai-coustics.com
+claude-extra() { claude_with_config_dir "${CLAUDE_CONFIG_DIR_EXTRA}" "$@"; }
 
 set-gpu() {
     if [ -z "$1" ]; then

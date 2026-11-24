@@ -51,13 +51,21 @@ MERGED_JSON_SETTINGS = (".gemini/antigravity-cli/settings.json",)
 # config dir is a second login, and several subscriptions can run concurrently. These env
 # vars name the extra dirs; set them per host in .env / .env_linux / .env_macos.
 CLAUDE_CONFIG_SUBDIR = ".claude"
-EXTRA_CLAUDE_CONFIG_DIR_VARS = ("CLAUDE_CONFIG_DIR_PERSONAL", "CLAUDE_CONFIG_DIR_WORK_EXTRA")
+EXTRA_CLAUDE_CONFIG_DIR_VARS = ("CLAUDE_CONFIG_DIR_PERSONAL", "CLAUDE_CONFIG_DIR_EXTRA")
 
 # Shared across accounts but not tracked in the repo: marketplace clones are bulky and the
 # enabled plugin set is already pinned by the shared settings.json, so one copy serves all.
-# Anything account-specific (.claude.json, .credentials.json, projects/, history.jsonl,
-# sessions/) is deliberately absent — Claude Code creates it per config dir.
+# Anything account-specific (.claude.json, .credentials.json, history.jsonl, sessions/) is
+# deliberately absent — Claude Code creates it per config dir.
 SHARED_CLAUDE_LOCAL_STATE = ("plugins",)
+
+# Session state shared only with profiles that are a second seat in the same org (extra is
+# the anil.agent@ai-coustics.com seat). projects/ holds auto-memory and transcripts, so
+# memory and `claude --resume` carry across seats; file-history/ and plans/ back rewind and
+# plan mode on those sessions. None of it touches login or billing.
+PROFILE_SHARED_CLAUDE_LOCAL_STATE = {
+    "CLAUDE_CONFIG_DIR_EXTRA": ("projects", "file-history", "plans"),
+}
 
 
 def discover_dotfiles(source: Path) -> list[str]:
@@ -65,8 +73,8 @@ def discover_dotfiles(source: Path) -> list[str]:
     return sorted(str(p.relative_to(source)) for p in source.rglob("*") if p.is_file())
 
 
-def extra_claude_config_dirs(home: Path) -> list[Path]:
-    """Return the additional Claude Code config dirs named by the environment."""
+def extra_claude_config_dirs(home: Path) -> list[tuple[str, Path]]:
+    """Return (env var, dir) for each additional Claude Code config dir in the environment."""
     default_dir = (home / CLAUDE_CONFIG_SUBDIR).resolve()
     config_dirs = []
 
@@ -79,7 +87,7 @@ def extra_claude_config_dirs(home: Path) -> list[Path]:
         if config_dir.resolve() == default_dir:
             LOGGER.warning("%s points at the default config dir %s, skipping", var, default_dir)
             continue
-        config_dirs.append(config_dir)
+        config_dirs.append((var, config_dir))
 
     return config_dirs
 
@@ -104,7 +112,7 @@ def build_install_plan(
     if not codex_only:
         skill_dirs.append(home / AGY_SKILLS_SUBDIR)
         skill_dirs.append(home / CLAUDE_CONFIG_SUBDIR / "skills")
-        skill_dirs.extend(config_dir / "skills" for config_dir in extra_claude_config_dirs(home))
+        skill_dirs.extend(config_dir / "skills" for _, config_dir in extra_claude_config_dirs(home))
     for skill_name in SHARED_SKILLS:
         skill_source = SHARED_SKILLS_DIR / skill_name
         if not skill_source.is_dir():
@@ -116,12 +124,13 @@ def build_install_plan(
         claude_rels = [
             Path(rel) for rel in dotfiles if Path(rel).parts[0] == CLAUDE_CONFIG_SUBDIR
         ]
-        for config_dir in extra_claude_config_dirs(home):
+        for var, config_dir in extra_claude_config_dirs(home):
             for rel in claude_rels:
                 installs.append(
                     (source / rel, config_dir / rel.relative_to(CLAUDE_CONFIG_SUBDIR))
                 )
-            for name in SHARED_CLAUDE_LOCAL_STATE:
+            shared_state = SHARED_CLAUDE_LOCAL_STATE + PROFILE_SHARED_CLAUDE_LOCAL_STATE.get(var, ())
+            for name in shared_state:
                 shared = home / CLAUDE_CONFIG_SUBDIR / name
                 if not shared.exists():
                     LOGGER.warning("Shared Claude state not found, skipping: %s", shared)
