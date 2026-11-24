@@ -66,6 +66,18 @@ The extra profile is a second seat in the same ai-coustics org, so it also links
 
 Two caveats. User-scoped MCP servers added with `claude mcp add -s user` live in `.claude.json` and so do not carry across: re-add them per account, or use project scope. And because `plugins/` is shared, two instances installing or updating plugins concurrently can race; do plugin management from one account at a time.
 
+### Perplexity MCP servers
+
+`scripts/register_perplexity_mcp_servers.sh` registers Perplexity's remote MCP servers with the main Claude Code seat. Run it once per host, then sign in with `/mcp` inside `claude`. It skips servers that are already registered. The extra seat doesn't get them.
+
+| Name | URL | Tools | Billing |
+|---|---|---|---|
+| `perplexity` | `https://api.perplexity.ai/mcp` | `perplexity_search`, `perplexity_ask`, `perplexity_research`, `perplexity_reason` | The Perplexity API organization chosen at sign-in, at API prices |
+| `perplexity-computer` | `https://www.perplexity.ai/rest/computer/mcp` | The Perplexity Computer agent | Perplexity account credits |
+| `perplexity-docs` | `https://docs.perplexity.ai/mcp` | Perplexity's API docs | Free, no sign-in |
+
+On a remote host the OAuth callback goes to `localhost` on that host, so the browser shows a connection error after you approve. Copy the full address from the browser's address bar and paste it into the box `/mcp` shows. `agents/AGENTS.md` tells agents when to use each tool.
+
 ## SSH Keys
 
 When spinning up a new machine, you need to set up SSH keys to authenticate with GitHub

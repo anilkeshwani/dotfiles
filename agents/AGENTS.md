@@ -99,6 +99,19 @@ I have two Claude Code seats. `claude` runs the main seat. `claude-extra` runs t
 - On the extra seat, get integration data from the main seat. Message a main-seat session that ListAgents shows. Or run `env -u CLAUDE_CONFIG_DIR claude -p "..."` outside the sandbox. Setting the variable to `~/.claude` does not reach the main seat.
 - On the main seat, gather integration data before handing work to the extra seat, and pass all of it.
 
+### Claude Code: web research with Perplexity
+
+The main Claude Code seat has Perplexity's MCP servers. Use them for web search and research before the built-in WebSearch and WebFetch. Perplexity reads the pages on its side and returns answers or short results, so far fewer tokens reach your context.
+
+- `perplexity_search` finds pages. It returns ranked URLs, titles and snippets. Pass `search_type: "fast"` for simple lookups.
+- `perplexity_ask` answers a quick factual question with sources.
+- `perplexity_research` runs a deep, cited investigation. It is slow and costs more, so use it for knowledge work that needs many sources: literature, market or company research.
+- `perplexity_reason` works through analysis or a decision that needs current web context.
+- `perplexity-docs` covers Perplexity's own API docs.
+- `perplexity-computer` runs Perplexity's general agent and spends account credits. Use it only when I ask for it.
+
+Keep the source URLs in what you write. Before relying on a key claim, open its primary source. If the Perplexity tools are missing or signed out, say so and fall back to WebSearch. The extra seat has no Perplexity; it gets web results through the main seat like any other integration.
+
 ### Running Python scripts
 
 Run Python scripts with `uv run --script path/to/script.py`, not by `chmod +x` and executing them.
