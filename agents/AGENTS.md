@@ -99,6 +99,19 @@ I have two Claude Code seats. `claude` runs the main seat. `claude-extra` runs t
 - On the extra seat, get integration data from the main seat. Message a main-seat session that ListAgents shows. Or run `env -u CLAUDE_CONFIG_DIR claude -p "..."` outside the sandbox. Setting the variable to `~/.claude` does not reach the main seat.
 - On the main seat, gather integration data before handing work to the extra seat, and pass all of it.
 
+### Claude Code: delegating to Perplexity Computer
+
+The main Claude Code seat has the `perplexity-computer` MCP server. Perplexity Computer is a general-purpose agent: it browses the web, runs code and writes reports. Its work spends Perplexity credits from my Max plan instead of Claude tokens, so hand it self-contained tasks that would otherwise take many Claude tool calls.
+
+- Delegate research that needs many sources, long browsing or data collection. Ask for a compact result with source URLs.
+- Use the built-in WebSearch and WebFetch for quick lookups. A Computer task is slower and costs credits.
+- Start a task with `call_perplexity_computer`. Use `mode: "light"` or `"standard"` unless the task needs more.
+- A call waits up to two minutes. If it returns `timeout`, keep the `thread_id` and poll with `read_thread`. Calling `call_perplexity_computer` again sends a new message instead.
+- Don't send confidential ai-coustics material, credentials or personal data unless I ask.
+- If it returns `insufficient_credits`, stop and tell me.
+
+The extra seat has no Perplexity. It gets Computer results through the main seat like any other integration.
+
 ### Running Python scripts
 
 Run Python scripts with `uv run --script path/to/script.py`, not by `chmod +x` and executing them.
