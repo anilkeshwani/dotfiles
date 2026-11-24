@@ -137,6 +137,36 @@ def test_binary_files_are_scanned(repo):
     assert guard(repo).returncode == 1
 
 
+def stage_bytes(repo, name: str, data: bytes) -> None:
+    work, env, _ = repo
+    (work / name).write_bytes(data)
+    subprocess.run(["git", "add", "-f", "--", name], cwd=work, check=True, env=env)
+
+
+@pytest.mark.parametrize("data", [
+    "# café\nAPI_KEY = 'Zq81mXbNw0pLrTy5vC2sKd7G'\n".encode("latin-1"),
+    b"# one bad byte \xff\nAPI_KEY = 'Zq81mXbNw0pLrTy5vC2sKd7G'\n",
+])
+def test_non_utf8_text_still_gets_the_assignment_rules(repo, data):
+    stage_bytes(repo, "legacy.cfg", data)
+    result = guard(repo)
+    assert result.returncode == 1 and "legacy.cfg:2" in result.stderr
+
+
+def test_nul_byte_after_the_first_8000_bytes_is_still_text(repo):
+    stage_bytes(repo, "big.cfg", b"x" * 8100 + b"\0\nAPI_KEY = 'Zq81mXbNw0pLrTy5vC2sKd7G'\n")
+    assert guard(repo).returncode == 1
+
+
+def test_binary_file_is_checked_for_values_under_unusual_names(repo, tmp_path):
+    value = "opaque/" + secrets.token_hex(6)
+    add_to_secrets(tmp_path, f"export WIDGET_HANDLE='{value}'")
+    stage_bytes(repo, "blob.bin", b"\x00\x01\xff\n" + value.encode() + b"\x00")
+    result = guard(repo)
+    assert result.returncode == 1 and "blob.bin:2" in result.stderr and "WIDGET_HANDLE" in result.stderr
+    assert value not in result.stderr
+
+
 def test_clean_binary_file_passes(repo):
     work, env, _ = repo
     (work / "image.png").write_bytes(bytes(range(256)) * 4)

@@ -49,6 +49,7 @@ TOKEN_PATTERNS = [
 PLACEHOLDER_HINTS = ("xxx", "changeme", "your", "example", "placeholder", "dummy", "redacted",
                      "<", "...", "***", "todo", "fake", "test", "sample", "replace")
 MIN_VALUE_LENGTH = 8
+BINARY_PROBE_BYTES = 8000
 ENTROPY_MIN_LENGTH = 20
 ENTROPY_THRESHOLD = 3.5  # bits per character; hex tops out at 4.0, random base64 near 6
 
@@ -143,11 +144,12 @@ def shown(path: str) -> str:
     return "".join(c if c.isprintable() else repr(c)[1:-1] for c in path)
 
 
-def check_line(line: str, names: set[str], values: dict[str, str], binary: bool = False) -> str | None:
+def check_line(line: str, raw: bytes, names: set[str], values: dict[str, bytes],
+               binary: bool = False) -> str | None:
     if ALLOW_PRAGMA in line:
         return None
     for name, value in values.items():
-        if value in line:
+        if value in raw:
             return f"contains the value of {name} from ~/.secrets"
     for pattern, what in TOKEN_PATTERNS:
         if pattern.search(line):
@@ -174,6 +176,7 @@ def scan(repo: str) -> list[str]:
     except GuardError as exc:
         findings.append(str(exc))
         names, values = set(), {}
+    value_bytes = {name: value.encode() for name, value in values.items()}
     for staged in staged_files(repo):
         label = shown(staged.path)
         if BLOCKED_PATH_RE.search(staged.path):
@@ -185,14 +188,14 @@ def scan(repo: str) -> list[str]:
         except GuardError:
             findings.append(f"{label}: cannot read the staged content, so it cannot be checked")
             continue
-        binary = b"\0" in data
-        try:
-            text = data.decode("utf-8")
-        except UnicodeDecodeError:
-            text = data.decode("latin-1")  # never fails: every byte is still scanned
-            binary = True
-        for lineno, line in enumerate(text.split("\n"), start=1):
-            reason = check_line(line, names, values, binary=binary)
+        # Git's own binary test. A file in another encoding, or with a stray invalid byte,
+        # stays text so the assignment rules still run on it.
+        binary = b"\0" in data[:BINARY_PROBE_BYTES]
+        text = data.decode("latin-1" if binary else "utf-8", errors="replace")
+        # Neither decoding turns a byte into a newline, so text lines and raw lines align.
+        raw_lines = data.split(b"\n")
+        for lineno, (line, raw) in enumerate(zip(text.split("\n"), raw_lines, strict=True), start=1):
+            reason = check_line(line, raw, names, value_bytes, binary=binary)
             if reason:
                 findings.append(f"{label}:{lineno}: {reason}")
     return findings

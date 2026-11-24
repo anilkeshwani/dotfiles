@@ -120,6 +120,8 @@ If Bitwarden itself holds a wrong value, fix it in the app (its item history kee
 
 A secret-like name contains, as a whole word between underscores or camel-case breaks, `KEY`, `API_KEY`, `SECRET_KEY`, `ACCESS_TOKEN`, `TOKEN`, `SECRET`, `PASSWORD`, `PASSPHRASE`, `PASS`, `PWD`, `CREDENTIAL`, `CREDS`, `AUTH`, `BEARER`, `LICENSE`, `SESSION`, `COOKIE`, `DSN`, `SALT`, `PAT` or a close variant (`SECRETKEY`, `APITOKEN`). The value match means a URL or id stored in `~/.secrets` also blocks a commit that contains it; mark such a line with the pragma below.
 
+A file counts as binary only when it has a NUL byte in its first 8000 bytes, the test git uses. Every other file is text, whatever its encoding: invalid UTF-8 bytes are replaced before the rules run, so a Latin-1 file or one stray byte cannot hide an assignment. In a binary file the guard skips the two assignment rules but still matches `~/.secrets` values against the raw bytes and checks the token shapes.
+
 The guard keeps `~/.secrets` values in memory only. It prints the file, line number and reason (for a value match, the name of the variable), never the value. Add `secrets-guard: allow` to a line to pass a false positive; the pragma exempts that line from every rule. It fails closed: a staged file it cannot read, or a `~/.secrets` that exists but cannot be read, blocks the commit.
 
 The hook wrapper `home/.config/git/hooks/pre-commit` runs the guard from its own directory with `uv run --no-project --no-config`, with `UV_*` and `PYTHON*` variables removed, so a repository's `uv.toml`, `pyproject.toml`, `.python-version` or direnv settings cannot choose its interpreter or package index. It refuses to run a guard that is missing, not owned by me or writable by group or others.
