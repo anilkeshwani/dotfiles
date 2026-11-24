@@ -3,3 +3,7 @@
 **/.claude/settings.local.json
 
 **/.claude/.cc-writes/
+
+# Shell secrets files (docs/secrets-sync.md)
+.secrets
+.secrets.*

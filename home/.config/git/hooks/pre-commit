@@ -1,0 +1,18 @@
+#!/bin/sh
+# Blocks commits that stage secret values (see docs/secrets-sync.md). It fails closed: if
+# the guard cannot run, the commit stops.
+self=$(readlink -f "$0")
+repo_root=$(cd "$(dirname "$self")/../../../.." && pwd)
+guard="$repo_root/scripts/secrets_commit_guard.py"
+if ! command -v uv >/dev/null 2>&1 || [ ! -f "$guard" ]; then
+    echo "secrets guard: cannot run ($guard or uv missing); commit blocked" >&2
+    exit 1
+fi
+uv run --quiet --script "$guard" || exit 1
+
+# With a global core.hooksPath, git skips each repository's own .git/hooks, so run the
+# repository's pre-commit hook here.
+repo_hook="$(git rev-parse --git-common-dir)/hooks/pre-commit"
+if [ -x "$repo_hook" ] && [ "$(readlink -f "$repo_hook")" != "$self" ]; then
+    exec "$repo_hook" "$@"
+fi

@@ -216,3 +216,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ~/.secrets and copies of it never belong here (docs/secrets-sync.md)
+.secrets
+.secrets.*
