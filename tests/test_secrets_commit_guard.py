@@ -39,7 +39,7 @@ def stage(repo, name: str, content: str) -> None:
     work, env, _ = repo
     (work / name).parent.mkdir(parents=True, exist_ok=True)
     (work / name).write_text(content)
-    subprocess.run(["git", "add", "-f", name], cwd=work, check=True, env=env)
+    subprocess.run(["git", "add", "-f", "--", name], cwd=work, check=True, env=env)
 
 
 def guard(repo) -> subprocess.CompletedProcess:
@@ -108,3 +108,134 @@ def test_hook_blocks_git_commit_end_to_end(repo):
     assert "commit blocked" in result.stderr and value not in result.stderr
     log = subprocess.run(["git", "log", "--oneline"], cwd=work, env=env, capture_output=True, text=True)
     assert log.stdout == ""
+
+
+# --- staged content is read per blob, never from diff headers -------------------------
+
+
+@pytest.mark.parametrize("name", ["with space.txt", 'quo"te\'s.txt', "café.py", "new\nline.txt", "-dash.txt"])
+def test_unusual_file_names_are_scanned(repo, name):
+    _, _, value = repo
+    stage(repo, name, f"{value}\n")
+    result = guard(repo)
+    assert result.returncode == 1
+    assert "value of KNOWN_SERVICE_KEY" in result.stderr and value not in result.stderr
+
+
+def test_line_starting_with_plus_plus_does_not_hide_the_rest(repo):
+    _, _, value = repo
+    stage(repo, "notes.txt", f"++ b/decoy\n++ \nkey {value}\n")
+    result = guard(repo)
+    assert result.returncode == 1 and "notes.txt:3" in result.stderr
+
+
+def test_binary_files_are_scanned(repo):
+    _, _, value = repo
+    work, env, _ = repo
+    (work / "blob.bin").write_bytes(b"\x00\x01\xff" + value.encode() + b"\x00")
+    subprocess.run(["git", "add", "blob.bin"], cwd=work, check=True, env=env)
+    assert guard(repo).returncode == 1
+
+
+def test_clean_binary_file_passes(repo):
+    work, env, _ = repo
+    (work / "image.png").write_bytes(bytes(range(256)) * 4)
+    subprocess.run(["git", "add", "image.png"], cwd=work, check=True, env=env)
+    assert guard(repo).returncode == 0
+
+
+def commit_without_hook(repo, name: str, content: str) -> None:
+    work, env, _ = repo
+    stage(repo, name, content)
+    subprocess.run(["git", "commit", "-qm", "seed", "--no-verify"], cwd=work, check=True, env=env)
+
+
+def test_deleting_a_file_passes(repo):
+    work, env, value = repo
+    commit_without_hook(repo, "old.txt", f"{value}\n")
+    subprocess.run(["git", "rm", "-q", "old.txt"], cwd=work, check=True, env=env)
+    assert guard(repo).returncode == 0
+
+
+def test_renamed_file_content_is_scanned(repo):
+    work, env, value = repo
+    commit_without_hook(repo, "old.txt", f"{value}\n")
+    subprocess.run(["git", "mv", "old.txt", "renamed dir name.txt"], cwd=work, check=True, env=env)
+    result = guard(repo)
+    assert result.returncode == 1 and "renamed dir name.txt:1" in result.stderr
+
+
+def test_symlinked_secrets_file_is_still_checked(repo, tmp_path):
+    work, env, value = repo
+    home = tmp_path / "home"
+    real = tmp_path / "real-secrets"
+    (home / ".secrets").rename(real)
+    (home / ".secrets").symlink_to(real)
+    stage(repo, "leak.txt", f"{value}\n")
+    assert guard(repo).returncode == 1
+
+
+def test_unreadable_secrets_file_blocks(repo, tmp_path):
+    secrets_file = tmp_path / "home" / ".secrets"
+    secrets_file.chmod(0o000)
+    try:
+        stage(repo, "notes.md", "nothing secret here\n")
+        result = guard(repo)
+        assert result.returncode == 1 and "cannot be read" in result.stderr
+    finally:
+        secrets_file.chmod(0o600)
+
+
+def test_secret_like_names_match_whole_words(repo):
+    stage(repo, "a.py", 'author = "Zq81mXbNw0pLrTy5vC2s"\nmonkey = "Zq81mXbNw0pLrTy5vC2s"\n')
+    assert guard(repo).returncode == 0
+
+
+# --- the hook cannot be redirected by the repository it runs in -----------------------
+
+
+@pytest.mark.skipif(not shutil.which("uv"), reason="uv not installed")
+def test_hostile_repo_config_does_not_redirect_the_hook(repo):
+    work, env, value = repo
+    subprocess.run(["git", "config", "core.hooksPath", str(HOOKS)], cwd=work, check=True, env=env)
+    (work / ".python-version").write_text("2.7\n")
+    (work / "uv.toml").write_text('python-preference = "only-managed"\nindex-url = "http://127.0.0.1:9/simple"\n'
+                                  'python-downloads = "never"\n')
+    (work / "pyproject.toml").write_text('[project]\nname = "x"\nversion = "0"\nrequires-python = "==2.7.*"\n'
+                                         '[tool.uv]\nindex-url = "http://127.0.0.1:9/simple"\n')
+    hostile_env = dict(env, UV_PYTHON="2.7", UV_INDEX_URL="http://127.0.0.1:9/simple")
+    for name in (".python-version", "uv.toml", "pyproject.toml"):
+        subprocess.run(["git", "add", name], cwd=work, check=True, env=env)
+    ok = subprocess.run(["git", "commit", "-qm", "clean"], cwd=work, env=hostile_env, capture_output=True, text=True)
+    assert ok.returncode == 0, ok.stderr
+    stage(repo, "leak.txt", f"{value}\n")
+    blocked = subprocess.run(["git", "commit", "-qm", "leak"], cwd=work, env=hostile_env, capture_output=True, text=True)
+    assert blocked.returncode != 0 and "commit blocked" in blocked.stderr
+
+
+def copy_hook_tree(tmp_path):
+    root = tmp_path / "dotfiles-copy"
+    hooks = root / "home" / ".config" / "git" / "hooks"
+    hooks.mkdir(parents=True)
+    shutil.copy2(HOOKS / "pre-commit", hooks / "pre-commit")
+    (root / "scripts").mkdir()
+    for name in ("secrets_commit_guard.py", "secrets_sync.py"):
+        shutil.copy2(SCRIPTS / name, root / "scripts" / name)
+        (root / "scripts" / name).chmod(0o644)
+    return root, hooks
+
+
+@pytest.mark.parametrize("problem", ["group-writable", "missing"])
+def test_hook_refuses_an_unsafe_or_missing_guard(repo, tmp_path, problem):
+    work, env, _ = repo
+    root, hooks = copy_hook_tree(tmp_path)
+    guard_copy = root / "scripts" / "secrets_commit_guard.py"
+    if problem == "missing":
+        guard_copy.unlink()
+    else:
+        guard_copy.chmod(0o664)
+    subprocess.run(["git", "config", "core.hooksPath", str(hooks)], cwd=work, check=True, env=env)
+    stage(repo, "notes.md", "clean\n")
+    result = subprocess.run(["git", "commit", "-qm", "x"], cwd=work, env=env, capture_output=True, text=True)
+    assert result.returncode != 0
+    assert ("writable by group" if problem == "group-writable" else "missing") in result.stderr

@@ -1,14 +1,34 @@
 #!/bin/sh
 # Blocks commits that stage secret values (see docs/secrets-sync.md). It fails closed: if
-# the guard cannot run, the commit stops.
-self=$(readlink -f "$0")
-repo_root=$(cd "$(dirname "$self")/../../../.." && pwd)
-guard="$repo_root/scripts/secrets_commit_guard.py"
-if ! command -v uv >/dev/null 2>&1 || [ ! -f "$guard" ]; then
-    echo "secrets guard: cannot run ($guard or uv missing); commit blocked" >&2
+# the guard cannot run, the commit stops. The guard runs from this hook's own directory
+# with uv's project and config discovery off, so files in the repository being committed
+# to (uv.toml, pyproject.toml, .python-version) cannot choose its interpreter or index.
+
+fail() {
+    echo "secrets guard: $1; commit blocked" >&2
     exit 1
-fi
-uv run --quiet --script "$guard" || exit 1
+}
+
+self=$(readlink -f "$0") || fail "cannot resolve the hook's own path"
+hook_dir=$(dirname "$self")
+scripts_dir=$(cd "$hook_dir/../../../../scripts" 2>/dev/null && pwd -P) || fail "scripts directory missing"
+guard="$scripts_dir/secrets_commit_guard.py"
+
+for f in "$scripts_dir" "$guard" "$scripts_dir/secrets_sync.py"; do
+    [ -e "$f" ] || fail "$f is missing"
+    [ -n "$(find "$f" -prune -user "$(id -u)")" ] || fail "$f is not owned by you"
+    [ -z "$(find "$f" -prune \( -perm -g+w -o -perm -o+w \))" ] || fail "$f is writable by group or others"
+done
+
+target=$(git rev-parse --show-toplevel) || fail "not inside a git work tree"
+command -v uv >/dev/null 2>&1 || fail "uv is not installed"
+
+# Variables a repository's direnv (or similar) could set to redirect uv or Python.
+for var in $(env | sed -n 's/^\(UV_[A-Za-z0-9_]*\)=.*/\1/p'); do unset "$var"; done
+unset VIRTUAL_ENV PYTHONPATH PYTHONHOME PYTHONSTARTUP
+
+(cd "$hook_dir" && uv run --quiet --no-project --no-config --python '>=3.12' \
+    --script "$guard" "$target") || exit 1
 
 # With a global core.hooksPath, git skips each repository's own .git/hooks, so run the
 # repository's pre-commit hook here.
