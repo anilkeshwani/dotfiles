@@ -81,5 +81,6 @@
     "redhat.telemetry.enabled": false,
     "editor.accessibilitySupport": "off",
     "workbench.preferredLightColorTheme": "Light+",
-    "window.zoomLevel": -1
+    "window.zoomLevel": -1,
+    "workbench.preferredDarkColorTheme": "Bearded Theme Arc"
 }
