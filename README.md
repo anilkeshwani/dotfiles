@@ -62,9 +62,9 @@ The commands are shell functions in `home/.functions` that run `claude` with `CL
 
 Everything account-specific is left for Claude Code to create per dir and is never linked: `.credentials.json` (on macOS a Keychain entry keyed by the config dir), `.claude.json`, `history.jsonl`, `sessions/` and the various caches. Unset a variable on a host where that account is not needed and the installer skips it.
 
-The extra profile is a second seat in the same ai-coustics org, so it also links `projects/`, `file-history/` and `plans/` to `~/.claude`. Auto-memory and session transcripts are then common to both seats, and `claude-extra --resume` can pick up a session started under `claude`. `PROFILE_SHARED_CLAUDE_LOCAL_STATE` in `install.py` sets this per profile; the personal profile keeps its own.
+The extra profile is a second seat in the same ai-coustics org, so it also links `projects/`, `file-history/` and `plans/` to `~/.claude`. Auto-memory and session transcripts are then common to both seats, and `claude-extra --resume` can pick up a session started under `claude`. `PROFILE_SHARED_CLAUDE_LOCAL_STATE` in `install.py` sets this per profile; the personal profile keeps its own. The extra seat is for usage only and gets no MCP servers of its own; sessions on it fetch integration data through the main seat, as `agents/AGENTS.md` describes.
 
-Two caveats. User-scoped MCP servers added with `claude mcp add -s user` live in `.claude.json` and so do not carry across: re-add them per account (for example `CLAUDE_CONFIG_DIR=~/.claude-extra claude mcp add -s user --transport http posthog https://mcp.posthog.com/mcp`), or use project scope. And because `plugins/` is shared, two instances installing or updating plugins concurrently can race; do plugin management from one account at a time.
+Two caveats. User-scoped MCP servers added with `claude mcp add -s user` live in `.claude.json` and so do not carry across: re-add them per account, or use project scope. And because `plugins/` is shared, two instances installing or updating plugins concurrently can race; do plugin management from one account at a time.
 
 ## SSH Keys
 
