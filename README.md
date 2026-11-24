@@ -74,6 +74,18 @@ Computer is Perplexity's general-purpose agent. Its usage spends Perplexity acco
 
 On a remote host the OAuth callback goes to `localhost` on that host, so the browser shows a connection error after you approve. Copy the full address from the browser's address bar and paste it into the box `/mcp` shows. `agents/AGENTS.md` tells agents when to delegate to Computer.
 
+## Secrets
+
+`~/.secrets` holds API keys as shell variables and is sourced by `.zshrc` and `.bashrc`. It is never committed. `secrets-sync` generates it on each machine from a folder in my personal Bitwarden vault, giving each machine only the items tagged for it, and a pre-commit guard blocks commits that stage secret values. [docs/secrets-sync.md](docs/secrets-sync.md) has the storage model, the migration checklist, rotation and the threat model.
+
+```bash
+secrets-sync check   # compare ~/.secrets with Bitwarden by name
+secrets-sync pull    # rewrite ~/.secrets from Bitwarden (unlocks, then locks)
+secrets-sync doctor  # report risky states without unlocking
+```
+
+Tests for the tool and the guard run with `uv run --with pytest pytest tests`.
+
 ## SSH Keys
 
 When spinning up a new machine, you need to set up SSH keys to authenticate with GitHub
