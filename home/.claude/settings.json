@@ -278,6 +278,11 @@
     ]
   },
   "effortLevel": "medium",
+  "modelSettings": {
+    "claude-fable-5-2": {
+      "effortLevel": "medium"
+    }
+  },
   "autoUpdatesChannel": "latest",
   "minimumVersion": "2.1.85",
   "tui": "fullscreen",
@@ -291,10 +296,5 @@
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
   "voiceEnabled": true,
-  "model": "fable",
-  "modelSettings": {
-    "claude-fable-5-2": {
-      "effortLevel": "medium"
-    }
-  }
+  "advisorModel": "fable"
 }
